@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import AppBar from "@material-ui/core/AppBar";
@@ -51,7 +51,7 @@ export default function Navbar(props) {
                   <MenuItem color="secondary" onClick={handleClose}>Projects</MenuItem>
                 </Link>
                 <Link className="navbar-link" to="/admin">
-                  <MenuItem color="secondary" onClick={handleClose}>Admin</MenuItem>
+                  <MenuItem color="secondary" onClick={handleClose}>Admin Home</MenuItem>
                 </Link>
                 <Link className="navbar-link" to="/admin/projects">
                   <MenuItem color="secondary" onClick={handleClose}>Manage Projects</MenuItem>

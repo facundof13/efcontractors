@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import Axios from 'axios'
 
 export default class Logout extends React.Component {
   constructor() {
@@ -11,7 +12,7 @@ export default class Logout extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/logout')
+    Axios.get('/logout')
     .then(() => {
       this.setState({loggedOut: true})
       this.props.updateUser({

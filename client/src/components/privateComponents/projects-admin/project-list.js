@@ -2,9 +2,8 @@ import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { Paper, IconButton, Grid } from "@material-ui/core";
+import { Paper, IconButton } from "@material-ui/core";
 import Axios from "axios";
-import ProjectsCreate from "./projects-create";
 
 export default class ProjectList extends React.Component {
   constructor(props) {

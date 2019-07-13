@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import ProjectsUpload from "./projects-upload";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography"
 
 class Project extends Component {

@@ -1,14 +1,6 @@
-import React, { Component } from "react";
-import Container from "@material-ui/core/Container";
-import { Link } from "react-router-dom";
+import React from "react";
 import "../App.css";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuIcon from "@material-ui/icons/Menu";
 
 export default function Footer(props) {
   return (
