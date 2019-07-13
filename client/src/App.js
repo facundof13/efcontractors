@@ -12,16 +12,20 @@ import ProjectsPage from "./components/privateComponents/projects-admin/projects
 import ViewProjects from "./components/ViewProjects";
 import Footer from "./components/footer";
 import NotFound from "./components/not-found";
+import PrivateRoute from './components/privateComponents/private-route'
+
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      loggedIn: true
     };
     
     this.getUser = this.getUser.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.updateUser = this.updateUser.bind(this);
+    this.render = this.render.bind(this);
   }
   
   componentDidMount() {
@@ -38,8 +42,10 @@ class App extends Component {
         this.setState({
           loggedIn: true
         });
+        // return true;
       } else {
         this.setState({loggedIn: false})
+        // return false;
       }
     });
   }
@@ -67,11 +73,11 @@ class App extends Component {
                 />
               )}
             />
-            <Route
-              exact
+            <PrivateRoute 
               path="/admin"
-              render={() => <Admin loggedIn={this.state.loggedIn} />}
-            />
+              component={Admin}
+              isAuthenticated={this.state.loggedIn}
+              />
             <Route
               exact
               path="/admin/projects"
