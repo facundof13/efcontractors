@@ -56,6 +56,9 @@ export default function Navbar(props) {
                 <Link className="navbar-link" to="/admin/projects">
                   <MenuItem color="secondary" onClick={handleClose}>Manage Projects</MenuItem>
                 </Link>
+                <Link className="navbar-link" to="/admin/estimates">
+                  <MenuItem color="secondary" onClick={handleClose}>Manage Estimates</MenuItem>
+                </Link>
               </div>
             ) : (
               <div>

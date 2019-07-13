@@ -12,8 +12,8 @@ import ProjectsPage from "./components/privateComponents/projects-admin/projects
 import ViewProjects from "./components/ViewProjects";
 import Footer from "./components/footer";
 import NotFound from "./components/not-found";
-import PrivateRoute from './components/privateComponents/private-route'
-
+import PrivateRoute from "./components/privateComponents/private-route";
+import Estimates from './components/privateComponents/estimates'
 
 class App extends Component {
   constructor() {
@@ -21,21 +21,21 @@ class App extends Component {
     this.state = {
       loggedIn: true
     };
-    
+
     this.getUser = this.getUser.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.render = this.render.bind(this);
   }
-  
+
   componentDidMount() {
-    this.getUser()
+    this.getUser();
   }
-  
+
   updateUser(userObject) {
     this.setState(userObject);
   }
-  
+
   getUser() {
     axios.get("/user").then(response => {
       if (response.data) {
@@ -44,12 +44,12 @@ class App extends Component {
         });
         // return true;
       } else {
-        this.setState({loggedIn: false})
+        this.setState({ loggedIn: false });
         // return false;
       }
     });
   }
-  
+
   render() {
     return (
       <div className="App">
@@ -73,15 +73,20 @@ class App extends Component {
                 />
               )}
             />
-            <PrivateRoute 
+            <PrivateRoute
               path="/admin"
               component={Admin}
               isAuthenticated={this.state.loggedIn}
-              />
+            />
+            <Route
+              exact
+              path="/admin/estimates"
+              render={() => <Estimates/>}
+            />
             <Route
               exact
               path="/admin/projects"
-              render={() => <ProjectsPage loggedIn={this.state.loggedIn} />}
+              render={() => <ProjectsPage/>}
             />
             <Route component={NotFound} />
           </Switch>
