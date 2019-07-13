@@ -13,7 +13,7 @@ import ViewProjects from "./components/ViewProjects";
 import Footer from "./components/footer";
 import NotFound from "./components/not-found";
 import PrivateRoute from "./components/privateComponents/private-route";
-import Estimates from './components/privateComponents/estimates'
+import Estimates from "./components/privateComponents/estimates";
 
 class App extends Component {
   constructor() {
@@ -74,19 +74,21 @@ class App extends Component {
               )}
             />
             <PrivateRoute
+              exact
+              path="/admin/estimates"
+              isAuthenticated={this.state.loggedIn}
+              component={Estimates}
+            />
+            <PrivateRoute
+              exact
+              path="/admin/projects"
+              isAuthenticated={this.state.loggedIn}
+              component={ProjectsPage}
+            />
+            <PrivateRoute
               path="/admin"
               component={Admin}
               isAuthenticated={this.state.loggedIn}
-            />
-            <Route
-              exact
-              path="/admin/estimates"
-              render={() => <Estimates/>}
-            />
-            <Route
-              exact
-              path="/admin/projects"
-              render={() => <ProjectsPage/>}
             />
             <Route component={NotFound} />
           </Switch>
