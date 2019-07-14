@@ -75,7 +75,7 @@ input {
     width: 30%;
     max-width: 315px !important;
     margin-left: 50px;
-    height: 35rem;
+    height: 500px;
   }
 
   .container {
@@ -106,7 +106,7 @@ input {
     /* padding-left: 10%; */
     /* margin-top: -40px; */
     flex-grow: 2;
-    height: 35rem;
+    height: 500px;
     overflow-y: auto;
     width:60%;
   }
