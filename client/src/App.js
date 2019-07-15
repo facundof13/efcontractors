@@ -13,7 +13,7 @@ import ViewProjects from "./components/ViewProjects";
 import Footer from "./components/footer";
 import NotFound from "./components/not-found";
 import PrivateRoute from "./components/privateComponents/private-route";
-import Estimates from "./components/privateComponents/estimates";
+import Estimates from "./components/privateComponents/estimates-admin/estimates";
 
 class App extends Component {
   constructor() {
@@ -37,17 +37,18 @@ class App extends Component {
   }
 
   getUser() {
-    axios.get("/user").then(response => {
-      if (response.data) {
-        this.setState({
-          loggedIn: true
-        });
-        // return true;
-      } else {
-        this.setState({ loggedIn: false });
-        // return false;
-      }
-    });
+    // axios.get("/user").then(response => {
+    //   if (response.data) {
+    //     this.setState({
+    //       loggedIn: true
+    //     });
+    //     // return true;
+    //   } else {
+    //     this.setState({ loggedIn: false });
+    //     // return false;
+    //   }
+    // });
+    this.setState({loggedIn: true})
   }
 
   render() {

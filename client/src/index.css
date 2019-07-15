@@ -115,3 +115,11 @@ input {
 .hide {
   display: none;
 }
+.MuiCheckbox-root {
+  color: #ffff00 !important;
+
+}
+.MuiTypography-body1 {
+  color: #ffff00 !important;
+
+}

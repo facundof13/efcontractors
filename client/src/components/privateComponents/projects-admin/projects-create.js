@@ -39,7 +39,7 @@ class ProjectsCreate extends Component {
   render() {
     return (
       <div className="create-container">
-        <form autocomplete="off" id="create-form" onSubmit={this.handleSubmit}>
+        <form autoComplete="off" id="create-form" onSubmit={this.handleSubmit}>
           <TextField
             name="name"
             type="text"
