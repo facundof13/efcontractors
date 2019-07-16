@@ -3,9 +3,9 @@ import Typography from "@material-ui/core/Typography";
 import CreateEstimate from "./create-estimates";
 
 export default class Estimates extends React.Component {
-  constructor() {
-    super();
-  }
+  // constructor() {
+  //   super();
+  // }
 
   //post to db
   postEstimate(info) {
