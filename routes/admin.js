@@ -3,6 +3,8 @@ var router = express.Router();
 var services = require("../models/services.js");
 var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
+var invoices = require("../models/invoices");
+
 
 /* GET admins listing. */
 
@@ -156,5 +158,10 @@ router.delete('/deleteproject', function(req, res, next) {
   console.log(id)
   projects.deleteEntireProject(id)
   res.end()
+})
+
+router.get('/invoiceServices', async function(req, res, next) {
+  const serv = invoices.getServices()
+  res.json(serv)
 })
 module.exports = router;

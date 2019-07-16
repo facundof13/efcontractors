@@ -7,7 +7,6 @@ var users = require("../models/users");
 var projects = require("../models/projects");
 
 router.use(function(req, res, next) {
-  console.log(req.user);
   next();
 });
 
