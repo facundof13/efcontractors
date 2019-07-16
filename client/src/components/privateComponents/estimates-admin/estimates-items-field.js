@@ -21,7 +21,7 @@ export default class ItemField extends React.Component {
       expense: false,
       quantity: 1,
       num: 0,
-      helperText: "Required"
+      helperText: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
@@ -35,11 +35,17 @@ export default class ItemField extends React.Component {
     });
   }
 
+  showError() {
+    this.setState({helperText:"Required"})
+  }
+
   handleOpen() {
     this.setState({ helperText: "Required" });
+    this.showError()
   }
 
   handleChange(event) {
+    this.showError()
     this.setState(
       {
         [event.target.name]: event.target.value
@@ -66,6 +72,7 @@ export default class ItemField extends React.Component {
       <form>
         <FormControl>
           <Select
+          className='estimate-item-select-width'
             onChange={this.handleChange}
             onOpen={this.handleOpen}
             value={this.state.serviceItem}
@@ -80,7 +87,7 @@ export default class ItemField extends React.Component {
                 ))
               : ""}
           </Select>
-          <FormHelperText>{this.state.helperText}</FormHelperText>
+          <FormHelperText>{this.state.serviceItem === "" ? this.state.helperText : ""}</FormHelperText>
         </FormControl>
 
           <TextField
@@ -101,6 +108,9 @@ export default class ItemField extends React.Component {
           color="secondary"
           required
           placeholder="Quantity"
+          helperText={
+            this.state.quantity === "" ? this.state.helperText : ""
+          }
           value={this.state.quantity}
           onChange={this.handleChange}
         />

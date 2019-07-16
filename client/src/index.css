@@ -141,3 +141,7 @@ ul {
 .MuiFormHelperText-root{
   color: red !important;
 }
+
+.estimate-item-select-width {
+  width: 150px;
+}

@@ -67,7 +67,7 @@ export default class CreateEstimate extends React.Component {
         removeItem={this.removeItem}
         services={this.state.services}
         updateItems={this.updateItems}
-        error={this.state.itemError}
+        helperText={this.state.helperText}
       />
     );
     this.setState(prevState => ({
@@ -76,12 +76,14 @@ export default class CreateEstimate extends React.Component {
   }
 
   removeItem(date) {
+    console.log(this.state)
+    console.log(date)
     if (this.state.itemsField.length === 1) {
       window.alert("Cannot remove first item");
     } else {
       this.setState(prevState => ({
         itemsField: prevState.itemsField.filter(function(item) {
-          return date !== item.key;
+          return date != item.key;
         })
       }));
     }
@@ -123,7 +125,7 @@ export default class CreateEstimate extends React.Component {
   submitInvoice() {
     this.filterItemsArr();
     this.setState({
-      helperText: "Field required"
+      helperText: "Required"
     });
     // if ()
   }
