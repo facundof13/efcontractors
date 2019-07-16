@@ -11,18 +11,31 @@ import ItemField from "./estimates-items-field";
 export default class CreateEstimate extends React.Component {
   constructor() {
     super();
-    this.state = { services: [], numItems: 1, itemsField: []};
+    this.state = { services: [], numItems: 1, itemsField: [] };
     this.handleChange = this.handleChange.bind(this);
-    this.addItem = this.addItem.bind(this);    
+    this.addItem = this.addItem.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+    this.renderItems = this.renderItems.bind(this);
   }
 
   componentDidMount() {
-    this.getServices();
-    var items = [];
-    for (let i = 0; i < this.state.numItems; i++) {
-      items.push(<ItemField key={i} removeItem={this.removeItem} num ={i} services={this.state.services} />);
-    }
-    this.setState({itemsField: items})
+    this.getServices().then(() => {
+      this.renderItems();
+    });
+  }
+
+  renderItems() {
+    //dont pass the num, instead pass its index in the array youre pusshing maybe??
+    //change the way things are added to array
+    var item = (
+      <ItemField
+        key={this.state.numItems}
+        removeItem={this.removeItem}
+        num={this.state.numItems}
+        services={this.state.services}
+      />
+    );
+    this.setState({ itemsField: [...this.state.itemsField, item] });
   }
 
   handleChange(event) {
@@ -37,23 +50,40 @@ export default class CreateEstimate extends React.Component {
   }
 
   getServices() {
-    Axios.get("/admin/invoiceServices").then(res => {
-      this.setState({ services: res.data });
+    return new Promise((resolve, reject) => {
+      Axios.get("/admin/invoiceServices").then(res => {
+        this.setState({ services: res.data });
+        resolve();
+      });
     });
   }
 
   addItem() {
-    var numItems = this.state.numItems
-    this.setState({numItems: ++numItems})
+    console.log("newItems");
+    this.setState(
+      prevState => ({
+        numItems: prevState.numItems + 1,
+      })
+      ,
+      () => {
+        this.renderItems();
+      }
+    );
+    // this.setState(prevState => { numItems: prevState.numItems++ });
   }
 
   removeItem(num) {
-    console.log(num)
+    num = num - 1;
+    this.setState(prevState => ({
+      itemsField: prevState.itemsField.filter(function(item, index) {
+        return !(index === (num))
+      }),
+      numItems: (prevState.numItems - 1),
+    }), () =>  console.log(this.state));
   }
 
   render() {
-    
-
+    console.log(this.state);
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">

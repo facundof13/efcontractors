@@ -73,7 +73,11 @@ export default class ItemField extends React.Component {
           labelPlacement="end"
           onChange={this.handleCheckbox}
         />
-        <IconButton color="secondary" onClick={this.props.removeItem(this.props.num)}>
+        <IconButton
+          color="secondary"
+          onClick={() => this.props.removeItem(this.props.num)}
+          // onClick={this.props.removeItem(this.props.num)}
+        >
           <DeleteOutlinedIcon />
         </IconButton>
       </form>
