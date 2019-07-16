@@ -31,13 +31,13 @@ export default class CreateEstimate extends React.Component {
     this.updateItems = this.updateItems.bind(this);
     this.filterItemsArr = this.filterItemsArr.bind(this);
   }
-  
+
   componentDidMount() {
     this.getServices().then(() => {
       this.addItem();
     });
   }
-  
+
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
@@ -76,8 +76,6 @@ export default class CreateEstimate extends React.Component {
   }
 
   removeItem(date) {
-    console.log(this.state)
-    console.log(date)
     if (this.state.itemsField.length === 1) {
       window.alert("Cannot remove first item");
     } else {
@@ -88,7 +86,6 @@ export default class CreateEstimate extends React.Component {
       }));
     }
   }
-
 
   updateItems(itemArr) {
     this.setState(prevState => ({
@@ -127,7 +124,21 @@ export default class CreateEstimate extends React.Component {
     this.setState({
       helperText: "Required"
     });
-    // if ()
+
+    if (
+      this.state.name !== "" &&
+      this.state.address !== "" &&
+      this.state.cityState !== "" &&
+      this.state.zip !== "" &&
+      this.state.expiration !== "" &&
+      this.state.title !== "" &&
+      this.state.email !== ""
+    ) {
+      if (this.state.zip.match(/\d{5}/)) {
+        console.log("zip ok");
+      }
+      console.log("all fields filled");
+    }
   }
 
   render() {
@@ -158,7 +169,7 @@ export default class CreateEstimate extends React.Component {
             />
             <TextField
               value={this.state.email}
-              helperText={this.state.email === "" ? this.state.helperText : ""}
+              helperText={this.state.email === "" || !this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/) ? this.state.helperText : ""}
               name="email"
               type="email"
               color="secondary"
@@ -178,7 +189,9 @@ export default class CreateEstimate extends React.Component {
             />
             <TextField
               value={this.state.cityState}
-              helperText={this.state.cityState === "" ? this.state.helperText : ""}
+              helperText={
+                this.state.cityState === "" || !this.state.cityState.match(/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Z]{2})/) ? this.state.helperText : ""
+              }
               name="cityState"
               type="text"
               color="secondary"
@@ -187,17 +200,19 @@ export default class CreateEstimate extends React.Component {
             />
             <TextField
               value={this.state.zip}
-              helperText={this.state.zip === "" ? this.state.helperText : ""}
+              helperText={this.state.zip === "" || !this.state.zip.match(/\d{5}/) ? this.state.helperText : ""}
               name="zip"
               type="text"
-              pattern="[0-9]{5}"
+              maxLength="2"
               color="secondary"
               placeholder="Client Zip Code"
               onChange={this.handleChange}
             />
             <TextField
               value={this.state.expiration}
-              helperText={this.state.expiration === "" ? this.state.helperText : ""}
+              helperText={
+                this.state.expiration === "" || !this.state.expiration.match(/\d{1,3}/) ? this.state.helperText : ""
+              }
               name="expiration"
               type="number"
               pattern="[0-9]"

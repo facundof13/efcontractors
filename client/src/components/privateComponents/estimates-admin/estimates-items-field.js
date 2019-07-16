@@ -7,7 +7,8 @@ import {
   MenuItem,
   IconButton,
   FormHelperText,
-  FormControl
+  FormControl,
+  FormLabel
 } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
@@ -21,7 +22,9 @@ export default class ItemField extends React.Component {
       expense: false,
       quantity: 1,
       num: 0,
-      helperText: ""
+      dollarAmount: 0,
+      helperText: "",
+      helperTextList: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
@@ -40,12 +43,12 @@ export default class ItemField extends React.Component {
   }
 
   handleOpen() {
-    this.setState({ helperText: "Required" });
+    this.setState({ helperTextList: "Required" });
     this.showError()
   }
 
   handleChange(event) {
-    this.showError()
+    this.setState({helperText:"Required"})
     this.setState(
       {
         [event.target.name]: event.target.value
@@ -87,10 +90,11 @@ export default class ItemField extends React.Component {
                 ))
               : ""}
           </Select>
-          <FormHelperText>{this.state.serviceItem === "" ? this.state.helperText : ""}</FormHelperText>
+          <FormHelperText>{this.state.serviceItem === "" ? this.state.helperTextList : ""}</FormHelperText>
         </FormControl>
 
           <TextField
+            label="Description"
             name="itemDescription"
             type="text"
             color="secondary"
@@ -103,6 +107,7 @@ export default class ItemField extends React.Component {
           />
 
         <TextField
+        label="Quantity"
           name="quantity"
           type="number"
           color="secondary"
@@ -112,6 +117,19 @@ export default class ItemField extends React.Component {
             this.state.quantity === "" ? this.state.helperText : ""
           }
           value={this.state.quantity}
+          onChange={this.handleChange}
+        />
+         <TextField
+         label='Amount'
+          name="dollarAmount"
+          type="number"
+          color="secondary"
+          required
+          placeholder="$0.00"
+          helperText={
+            this.state.dollarAmount === "" ? this.state.helperText : ""
+          }
+          value={this.state.dollarAmount}
           onChange={this.handleChange}
         />
         <FormControlLabel
