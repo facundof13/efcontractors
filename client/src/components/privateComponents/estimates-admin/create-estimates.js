@@ -11,31 +11,18 @@ import ItemField from "./estimates-items-field";
 export default class CreateEstimate extends React.Component {
   constructor() {
     super();
-    this.state = { services: [], numItems: 1, itemsField: [] };
+    this.state = { services: [], itemsField: [], items: [], name: '', title: '', email: '', address: '', cityState: '', zip: '', expiration: '' };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.removeItem = this.removeItem.bind(this);
-    this.renderItems = this.renderItems.bind(this);
+    this.submitInvoice = this.submitInvoice.bind(this);
+    this.updateItems = this.updateItems.bind(this);
   }
 
   componentDidMount() {
     this.getServices().then(() => {
-      this.renderItems();
+      this.addItem();
     });
-  }
-
-  renderItems() {
-    //dont pass the num, instead pass its index in the array youre pusshing maybe??
-    //change the way things are added to array
-    var item = (
-      <ItemField
-        key={this.state.numItems}
-        removeItem={this.removeItem}
-        num={this.state.numItems}
-        services={this.state.services}
-      />
-    );
-    this.setState({ itemsField: [...this.state.itemsField, item] });
   }
 
   handleChange(event) {
@@ -59,31 +46,45 @@ export default class CreateEstimate extends React.Component {
   }
 
   addItem() {
-    console.log("newItems");
-    this.setState(
-      prevState => ({
-        numItems: prevState.numItems + 1,
-      })
-      ,
-      () => {
-        this.renderItems();
-      }
+    let date = Date.now();
+    let newItem = (
+      <ItemField
+        key={date}
+        num={date}
+        removeItem={this.removeItem}
+        services={this.state.services}
+        updateItems={this.updateItems}
+      />
     );
-    // this.setState(prevState => { numItems: prevState.numItems++ });
+    this.setState(prevState => ({
+      itemsField: [...prevState.itemsField, newItem]
+    }));
   }
 
-  removeItem(num) {
-    num = num - 1;
-    this.setState(prevState => ({
-      itemsField: prevState.itemsField.filter(function(item, index) {
-        return !(index === (num))
-      }),
-      numItems: (prevState.numItems - 1),
-    }), () =>  console.log(this.state));
+  removeItem(date) {
+    if (this.state.itemsField.length === 1) {
+      window.alert("Cannot remove first item");
+    } else {
+      this.setState(prevState => ({
+        itemsField: prevState.itemsField.filter(function(item) {
+          return date != item.key;
+        })
+      }));
+    }
   }
+
+  updateItems(itemArr) {
+    this.setState(prevState => ({
+      items: [...prevState.items, itemArr]
+    }))
+  }
+
+  submitInvoice() {
+    console.log(this.state)
+  }
+
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">
@@ -146,6 +147,7 @@ export default class CreateEstimate extends React.Component {
         </div>
         <Button onClick={this.addItem}>Add Item</Button>
         {this.state.itemsField}
+        <Button onClick={this.submitInvoice}>Submit Invoice</Button>
       </div>
     );
   }

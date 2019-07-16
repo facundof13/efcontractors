@@ -23,13 +23,22 @@ export default class ItemField extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+    this.setState(
+      {
+        [event.target.name]: event.target.value
+      },
+      () => this.updateValues()
+    );
   }
 
   handleCheckbox(event, isChecked) {
-    this.setState({ [event.target.name]: isChecked });
+    this.setState({ [event.target.name]: isChecked }, () =>
+      this.updateValues()
+    );
+  }
+
+  updateValues() {
+    this.props.updateItems(this.state);
   }
 
   render() {
@@ -39,6 +48,7 @@ export default class ItemField extends React.Component {
           onChange={this.handleChange}
           value={this.state.serviceItem}
           name="serviceItem"
+          required
         >
           {this.props.services
             ? this.props.services.map(item => (
@@ -52,6 +62,7 @@ export default class ItemField extends React.Component {
           name="itemDescription"
           type="text"
           color="secondary"
+          required
           placeholder="Description"
           onChange={this.handleChange}
         />
