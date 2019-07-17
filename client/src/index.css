@@ -182,4 +182,13 @@ ul {
 }
 .add-item-btn {
   margin-top: 20px !important;
+  color: #9e9e9e;
+}
+.MuiInputLabel-animated {
+  color: #9e9e9e !important;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }

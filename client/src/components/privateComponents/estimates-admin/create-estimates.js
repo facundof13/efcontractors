@@ -282,24 +282,24 @@ export default class CreateEstimate extends React.Component {
           <Divider />
         </div>
         <Button
+        color='secondary'
           className="add-item-btn"
-          color="secondary"
           onClick={this.addItem}
         >
           Add Item
         </Button>
         {this.state.itemsField}
         <Button
+        color='secondary'
           className="add-item-btn"
-          color="secondary"
           onClick={this.checkForm}
           disabled={false}
         >
           Save Form
         </Button>
         <Button
+        color='secondary'
           className="add-item-btn"
-          color="secondary"
           onClick={this.submitInvoice}
           disabled={this.state.disabled}
         >
