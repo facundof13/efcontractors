@@ -156,14 +156,9 @@ export default class ItemField extends React.Component {
         quantity: this.state.quantity,
         amount: this.state.dollarAmount,
         tax: this.state.tax,
-        expense: this.state.expense
+        expense: this.state.expense,
+        num: this.props.num
       };
-      // if (this.state.tax) {
-      //   itemsToReturn.push('tax');
-      // }
-      // if (this.state.expense) {
-      //   itemsToReturn.push('expense');
-      // }
       this.props.updateItems(itemsToReturn);
     }
   }
@@ -266,16 +261,6 @@ export default class ItemField extends React.Component {
               name="expense"
               control={<Checkbox color="secondary" />}
               label="Expense"
-              labelPlacement="end"
-              onChange={this.handleCheckbox}
-            />
-            <FormControlLabel
-              color="secondary"
-              checked={this.state.neither}
-              className="unselectable"
-              name="neither"
-              control={<Checkbox color="secondary" />}
-              label="Neither"
               labelPlacement="end"
               onChange={this.handleCheckbox}
             />

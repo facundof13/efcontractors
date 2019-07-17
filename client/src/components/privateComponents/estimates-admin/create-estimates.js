@@ -18,12 +18,12 @@ export default class CreateEstimate extends React.Component {
       zip: "",
       expiration: "",
       itemError: "",
-      uncheckedBox: false,
+      disabled: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.removeItem = this.removeItem.bind(this);
-    this.submitInvoice = this.submitInvoice.bind(this);
+    this.checkForm = this.checkForm.bind(this);
     this.updateItems = this.updateItems.bind(this);
     this.filterItemsArr = this.filterItemsArr.bind(this);
   }
@@ -32,10 +32,6 @@ export default class CreateEstimate extends React.Component {
     this.getServices().then(() => {
       this.addItem();
     });
-  }
-
-  componentDidUpdate() {
-    console.log(this.state)
   }
 
   handleChange(event) {
@@ -97,72 +93,76 @@ export default class CreateEstimate extends React.Component {
   }
 
   filterItemsArr() {
-    var arrCopy = [...this.state.items];
-    var arrDatesunFiltered = [];
-    var arrDates = [];
-    var cleanArr = [];
-    for (let i = 0; i < arrCopy.length; i++) {
-      arrDatesunFiltered.push(arrCopy[i].num);
-    }
+    return new Promise((resolve, reject) => {
+      var arrCopy = [...this.state.items];
+      var arrDatesunFiltered = [];
+      var arrDates = [];
+      var cleanArr = [];
+      for (let i = 0; i < arrCopy.length; i++) {
+        arrDatesunFiltered.push(arrCopy[i].num);
+      }
 
-    arrDates = [...new Set(arrDatesunFiltered)];
-    for (let x = 0; x < arrDates.length; x++) {
-      for (let y = arrCopy.length - 1; y >= 0; y--) {
-        if (arrDates[x] === arrCopy[y].num) {
-          cleanArr.push(arrCopy[y]);
-          break;
+      arrDates = [...new Set(arrDatesunFiltered)];
+      for (let x = 0; x < arrDates.length; x++) {
+        for (let y = arrCopy.length - 1; y >= 0; y--) {
+          if (arrDates[x] === arrCopy[y].num) {
+            cleanArr.push(arrCopy[y]);
+            break;
+          }
         }
       }
-    }
-    this.setState(
-      {
+      this.setState({
         items: cleanArr
-      }
-    );
+      });
+      resolve()
+    });
   }
 
-  submitInvoice() {
-    this.filterItemsArr();
-    this.setState({
-      helperText: "Required"
-    });
+  checkForm() {
+    this.filterItemsArr().then(() => {
+      this.setState({
+        helperText: "Required"
+      });
 
-    let zipOk = false;
-    let itemsOk = false;
+      let zipOk = false;
+      let itemsOk = false;
 
-    console.log(this.state);
+      console.log(this.state);
 
-    if (
-      this.state.name !== "" &&
-      this.state.address !== "" &&
-      this.state.cityState !== "" &&
-      this.state.zip !== "" &&
-      this.state.expiration !== "" &&
-      this.state.title !== "" &&
-      this.state.email !== ""
-    ) {
-      if (this.state.zip.match(/\d{5}/)) {
-        zipOk = true;
-      } else {
+      if (
+        this.state.name !== "" &&
+        this.state.address !== "" &&
+        this.state.cityState !== "" &&
+        this.state.zip !== "" &&
+        this.state.expiration !== "" &&
+        this.state.title !== "" &&
+        this.state.email !== ""
+      ) {
+        if (this.state.zip.match(/\d{5}/)) {
+          zipOk = true;
+        } else {
+          window.alert("Zip code is incorrect.");
+        }
 
-        window.alert("Zip code is incorrect.");
+        this.state.items.forEach(item => {
+          if (
+            item.itemDescription === "" ||
+            item.serviceItem === "" ||
+            item.quantity === "" ||
+            item.dollarAmount === ""
+          ) {
+            // window.alert("An item is empty/incorrect.");
+          } else {
+            itemsOk = true;
+          }
+        });
       }
 
-      this.state.items.forEach(item => {
-        if (
-          item.itemDescription === "" ||
-          item.serviceItem === "" ||
-          item.quantity === "" ||
-          item.dollarAmount === ""
-        ) {
-          // window.alert("An item is empty/incorrect.");
-        } else {
-          itemsOk = true;
-        }
-      });
-    }
-
-    console.log(`items: ${itemsOk} zip: ${zipOk}`)
+      if (itemsOk && zipOk) {
+        this.setState({ disabled: false });
+      }
+      console.log(`items: ${itemsOk} zip: ${zipOk}`);
+    });
   }
 
   render() {
@@ -292,7 +292,16 @@ export default class CreateEstimate extends React.Component {
         <Button
           className="add-item-btn"
           color="secondary"
+          onClick={this.checkForm}
+          disabled={false}
+        >
+          Save Form
+        </Button>
+        <Button
+          className="add-item-btn"
+          color="secondary"
           onClick={this.submitInvoice}
+          disabled={this.state.disabled}
         >
           Submit Invoice
         </Button>
