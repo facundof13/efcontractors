@@ -20,9 +20,9 @@ export default class ItemField extends React.Component {
       itemDescription: "",
       tax: false,
       expense: false,
-      quantity: 1,
+      quantity: "",
       num: 0,
-      dollarAmount: 0,
+      dollarAmount: "",
       helperText: "",
       helperTextList: ""
     };
@@ -39,16 +39,16 @@ export default class ItemField extends React.Component {
   }
 
   showError() {
-    this.setState({helperText:"Required"})
+    this.setState({ helperText: "Required" });
   }
 
   handleOpen() {
     this.setState({ helperTextList: "Required" });
-    this.showError()
+    this.showError();
   }
 
   handleChange(event) {
-    this.setState({helperText:"Required"})
+    this.setState({ helperText: "Required" });
     this.setState(
       {
         [event.target.name]: event.target.value
@@ -73,9 +73,10 @@ export default class ItemField extends React.Component {
   render() {
     return (
       <form>
+        <span>Item</span>
         <FormControl>
           <Select
-          className='estimate-item-select-width'
+            className="estimate-item-select-width"
             onChange={this.handleChange}
             onOpen={this.handleOpen}
             value={this.state.serviceItem}
@@ -90,41 +91,39 @@ export default class ItemField extends React.Component {
                 ))
               : ""}
           </Select>
-          <FormHelperText>{this.state.serviceItem === "" ? this.state.helperTextList : ""}</FormHelperText>
+          <FormHelperText>
+            {this.state.serviceItem === "" ? this.state.helperTextList : ""}
+          </FormHelperText>
         </FormControl>
 
-          <TextField
-            label="Description"
-            name="itemDescription"
-            type="text"
-            color="secondary"
-            required
-            placeholder="Description"
-            helperText={
-              this.state.itemDescription === "" ? this.state.helperText : ""
-            }
-            onChange={this.handleChange}
-          />
+        <TextField
+          label="Description"
+          name="itemDescription"
+          type="text"
+          color="secondary"
+          placeholder="Description"
+          multiline={true}
+          helperText={
+            this.state.itemDescription === "" ? this.state.helperText : ""
+          }
+          onChange={this.handleChange}
+        />
 
         <TextField
-        label="Quantity"
+          label="Quantity"
           name="quantity"
           type="number"
           color="secondary"
-          required
           placeholder="Quantity"
-          helperText={
-            this.state.quantity === "" ? this.state.helperText : ""
-          }
+          helperText={this.state.quantity === "" ? this.state.helperText : ""}
           value={this.state.quantity}
           onChange={this.handleChange}
         />
-         <TextField
-         label='Amount'
+        <TextField
+          label="Amount"
           name="dollarAmount"
           type="number"
           color="secondary"
-          required
           placeholder="$0.00"
           helperText={
             this.state.dollarAmount === "" ? this.state.helperText : ""

@@ -161,7 +161,8 @@ router.delete('/deleteproject', function(req, res, next) {
 })
 
 router.get('/invoiceServices', async function(req, res, next) {
-  const serv = invoices.getServices()
-  res.json(serv)
+  invoices.getServices().then(item => {
+    res.json(item)
+  })
 })
 module.exports = router;
