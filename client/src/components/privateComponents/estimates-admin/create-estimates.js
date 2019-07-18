@@ -185,7 +185,7 @@ export default class CreateEstimate extends React.Component {
       title: this.state.title,
       email: this.state.email,
       items: this.state.items,
-      dateSubmitted: dateString
+      dateSubmitted: new Date()
     }).then(res => {
       if (res.status === 200) {
         console.log("all ok");

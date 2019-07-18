@@ -7,7 +7,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton
+  IconButton,
+  TableSortLabel
 } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import Axios from "axios";
@@ -43,6 +44,10 @@ export default class EstimatesTable extends React.Component {
     }
   }
 
+  sortDate() {
+    console.log('sort')
+  }
+
   render() {
     return (
       <div>
@@ -61,13 +66,15 @@ export default class EstimatesTable extends React.Component {
                   <TableCell align="right">Client Street Address</TableCell>
                   <TableCell align="right">Clienty City, State</TableCell>
                   <TableCell align="right">Client Zip Code</TableCell>
-                  <TableCell align="right">Date Created</TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel onClick={this.sortDate}>Date Created</TableSortLabel>
+                  </TableCell>
                   <TableCell align="right" />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {this.state.customers.map(row => (
-                  <TableRow key={row.name}>
+                  <TableRow key={row._id}>
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>

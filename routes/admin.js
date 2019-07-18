@@ -4,8 +4,8 @@ var services = require("../models/services.js");
 var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
-const titleize = require('titleize')
-const moment = require('moment')
+const titleize = require("titleize");
+const moment = require("moment");
 
 /* GET admins listing. */
 
@@ -107,10 +107,10 @@ router.get("/projects", function(req, res, next) {
   });
 });
 
-router.get('/projectname', async function(req, res, next) {
+router.get("/projectname", async function(req, res, next) {
   const result = await projects.getProjectById(req.query.id);
   res.json(result);
-})
+});
 
 // admin/newproject
 router.post("/newproject", async function(req, res, next) {
@@ -136,50 +136,53 @@ router.post("/newproject", async function(req, res, next) {
     // add project to db
     //check if s3 has a folder with project
     // const matchingFolder = await projects.findMatchingFolder(name + "/");
-    res.end()
+    res.end();
   }
 });
 
-
 router.delete("/deleteimg", function(req, res, next) {
-  const id = req.body.id
-  const imagesrc = req.body.image
+  const id = req.body.id;
+  const imagesrc = req.body.image;
 
-  
-  
-  projects.removeImageFromFolder(id, imagesrc)
-  path = imagesrc.replace(/.+amazonaws.com\//g, '')
-  console.log(`path:${path}`)
-  projects.deleteImageFromS3(path)
-  res.end()
+  projects.removeImageFromFolder(id, imagesrc);
+  path = imagesrc.replace(/.+amazonaws.com\//g, "");
+  console.log(`path:${path}`);
+  projects.deleteImageFromS3(path);
+  res.end();
 });
 
-router.delete('/deleteproject', function(req, res, next) {
-  const id = req.body.id
-  console.log(id)
-  projects.deleteEntireProject(id)
-  res.end()
-})
+router.delete("/deleteproject", function(req, res, next) {
+  const id = req.body.id;
+  console.log(id);
+  projects.deleteEntireProject(id);
+  res.end();
+});
 
-router.get('/invoiceServices', async function(req, res, next) {
+router.get("/invoiceServices", async function(req, res, next) {
   invoices.getServices().then(item => {
-    res.json(item)
-  })
-})
+    res.json(item);
+  });
+});
 
-router.get('/invoiceCustomers', async function(req, res, next) {
-  invoices.getInvoiceCustomers().then(item => {
+router.get("/invoiceCustomers", async function(req, res, next) {
+  invoices.getInvoiceCustomers().then(items => {
     //sort here
-    res.json(item)
-  })
-})
+    items.sort(
+      (a, b) =>
+        new moment(b.date) -
+        new moment(a.date)
+    );
+    res.json(items);
+    // res.end()
+  });
+});
 
-router.delete('/invoiceCustomerId', function(req, res, next) {
-  invoices.deleteCustomer(req.body.id)
-  res.end()
-})
+router.delete("/invoiceCustomerId", function(req, res, next) {
+  invoices.deleteCustomer(req.body.id);
+  res.end();
+});
 
-router.post('/invoice', function(req, res, next) {
+router.post("/invoice", function(req, res, next) {
   let name = titleize(req.body.name);
   let address = titleize(req.body.address);
   let cityState = titleize(req.body.cityState);
@@ -200,10 +203,10 @@ router.post('/invoice', function(req, res, next) {
     email: email,
     items: items,
     date: date
-  }
+  };
 
-  invoices.addInvoiceCustomer(query)
+  invoices.addInvoiceCustomer(query);
 
-  res.end()
-})
+  res.end();
+});
 module.exports = router;
