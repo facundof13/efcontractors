@@ -2,7 +2,6 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import CreateEstimate from "./create-estimates";
 import { Button } from "@material-ui/core";
-import { Collapse } from "react-collapse";
 
 //components
 import EstimatesTable from "./estimates-table";
@@ -10,7 +9,7 @@ import EstimatesTable from "./estimates-table";
 export default class Estimates extends React.Component {
   constructor() {
     super();
-    this.state = { showCreateEstimate: false, showTable: false };
+    this.state = { showCreateEstimate: false, showTable: true };
 
     this.toggleCreate = this.toggleCreate.bind(this);
     this.toggleTable = this.toggleTable.bind(this);
@@ -23,7 +22,6 @@ export default class Estimates extends React.Component {
     this.setState(prevState => ({
       showCreateEstimate: !prevState.showCreateEstimate
     }));
-
   }
 
   toggleTable() {
@@ -33,7 +31,6 @@ export default class Estimates extends React.Component {
     this.setState(prevState => ({
       showTable: !prevState.showTable
     }));
-
   }
 
   render() {
@@ -48,25 +45,22 @@ export default class Estimates extends React.Component {
         <Button color="secondary" onClick={this.toggleTable}>
           {this.state.showTable ? "Hide Table" : "Show Table"}
         </Button>
-        <Collapse
-          forceInitialAnimation={true}
-          isOpened={this.state.showCreateEstimate}
-          springConfig={{ stiffness: 300, damping: 40 }}
-        >
-          <div>
+
+        {this.state.showCreateEstimate ? (
+          <div id="showCreateEstimate">
             <CreateEstimate />
           </div>
-        </Collapse>
+        ) : (
+          ""
+        )}
 
-        <Collapse
-          forceInitialAnimation={true}
-          isOpened={this.state.showTable}
-          springConfig={{ stiffness: 300, damping: 40 }}
-        >
-          <div>
-            <p>Test</p>
+        {this.state.showTable ? (
+          <div id="showEstimateTable">
+            <EstimatesTable />
           </div>
-        </Collapse>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

@@ -30,7 +30,6 @@ export default class CreateEstimate extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted')
     this.getServices().then(() => {
       this.addItem();
     });
@@ -184,7 +183,7 @@ export default class CreateEstimate extends React.Component {
       title: this.state.title,
       email: this.state.email,
       items: this.state.items,
-      dateSubmitted: new Date()
+      dateSubmitted: new Date().toISOString().split('T')[0]
     }).then(res => {
       if (res.status === 200) {
         console.log("all ok");

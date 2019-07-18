@@ -173,6 +173,10 @@ ul {
   width: 300px;
 }
 
+.copyright-spacer {
+  margin-right: 10px;
+  margin-left: 10px;
+}
 #item-form {
   display: flex;
   flex-direction: row;
@@ -187,10 +191,10 @@ ul {
 .MuiInputLabel-animated {
   color: #9e9e9e !important;
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .bg-light {
@@ -200,7 +204,21 @@ input[type=number]::-webkit-outer-spin-button {
 .footer-items {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
-.footer-items p { 
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  .footer-items p {
+    flex-shrink: 0;
+    font-size: 3vw;
+  }
+}
+
+#table {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  /* width: 90% */
+  overflow-x: auto;
 }

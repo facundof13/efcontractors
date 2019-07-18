@@ -28,8 +28,13 @@ function addInvoiceCustomer(query) {
     console.log(`Added doc id ${res.ops[0]._id} to db`)
   );
 }
+
+function deleteCustomer(id) {
+  invoices.deleteOne({ _id: ObjectId(id) }, (err, results) => {});
+}
 module.exports = {
   getServices,
   addInvoiceCustomer,
-  getInvoiceCustomers
+  getInvoiceCustomers,
+  deleteCustomer
 };

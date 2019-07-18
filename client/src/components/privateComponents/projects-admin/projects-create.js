@@ -30,7 +30,7 @@ class ProjectsCreate extends Component {
         window.alert(res.data.error);
       } else if (res.status === 200) {
         this.setState({name: "", location: ""})
-        document.getElementById("create-form").reset()
+        document.getElementById("project-form").reset()
         this.props.handleSubmit();
       }
     });

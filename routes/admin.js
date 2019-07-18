@@ -4,7 +4,7 @@ var services = require("../models/services.js");
 var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
-
+const titleize = require('titleize')
 
 /* GET admins listing. */
 
@@ -172,13 +172,18 @@ router.get('/invoiceCustomers', async function(req, res, next) {
   })
 })
 
+router.delete('/invoiceCustomerId', function(req, res, next) {
+  invoices.deleteCustomer(req.body.id)
+  res.end()
+})
+
 router.post('/invoice', function(req, res, next) {
-  let name = req.body.name;
-  let address = req.body.address;
-  let cityState = req.body.cityState;
+  let name = titleize(req.body.name);
+  let address = titleize(req.body.address);
+  let cityState = titleize(req.body.cityState);
   let zip = req.body.zip;
   let expiration = req.body.expiration;
-  let title = req.body.title;
+  let title = titleize(req.body.title);
   let email = req.body.email;
   let items = req.body.items;
   let date = req.body.dateSubmitted;
