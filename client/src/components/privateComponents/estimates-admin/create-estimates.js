@@ -26,9 +26,11 @@ export default class CreateEstimate extends React.Component {
     this.checkForm = this.checkForm.bind(this);
     this.updateItems = this.updateItems.bind(this);
     this.filterItemsArr = this.filterItemsArr.bind(this);
+    this.submitInvoice = this.submitInvoice.bind(this);
   }
 
   componentDidMount() {
+    console.log('mounted')
     this.getServices().then(() => {
       this.addItem();
     });
@@ -42,7 +44,7 @@ export default class CreateEstimate extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    document.getElementById("create-form").reset();
+    // document.getElementById("create-form").reset();
   }
 
   getServices() {
@@ -126,6 +128,8 @@ export default class CreateEstimate extends React.Component {
 
       let zipOk = false;
       let itemsOk = false;
+      let cityStateOk = false;
+      let emailOk = false;
 
       console.log(this.state);
 
@@ -140,8 +144,13 @@ export default class CreateEstimate extends React.Component {
       ) {
         if (this.state.zip.match(/\d{5}/)) {
           zipOk = true;
-        } else {
-          window.alert("Zip code is incorrect.");
+        } 
+        if(this.state.cityState.match(/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/))  { 
+          cityStateOk = true;
+        }
+
+        if (this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/)) {
+          emailOk = true;
         }
 
         this.state.items.forEach(item => {
@@ -158,11 +167,47 @@ export default class CreateEstimate extends React.Component {
         });
       }
 
-      if (itemsOk && zipOk) {
+      if (itemsOk && zipOk && cityStateOk && emailOk) {
         this.setState({ disabled: false });
       }
-      console.log(`items: ${itemsOk} zip: ${zipOk}`);
+      console.log(`items: ${itemsOk} zip: ${zipOk} cityState: ${cityStateOk} email:${emailOk}`);
     });
+  }
+
+  submitInvoice() {
+    Axios.post('/admin/invoice', {
+      name: this.state.name,
+      address: this.state.address,
+      cityState: this.state.cityState,
+      zip: this.state.zip,
+      expiration: this.state.expiration,
+      title: this.state.title,
+      email: this.state.email,
+      items: this.state.items,
+      dateSubmitted: new Date()
+    }).then(res => {
+      if (res.status === 200) {
+        console.log("all ok");
+        this.setState({
+          name: "",
+          address: "",
+          cityState: "",
+          zip: "",
+          expiration: "",
+          title: "",
+          email: "",
+          items: [],
+          itemsField: [],
+          itemError: "",
+          disabled: true,
+          helperText: ""
+        }, () => {
+          this.addItem()
+        })
+
+
+      }
+    })
   }
 
   render() {
@@ -238,7 +283,7 @@ export default class CreateEstimate extends React.Component {
                     : ""
                 }
                 name="cityState"
-                label="Clienty City, State"
+                label="Client City, State"
                 type="text"
                 color="secondary"
                 placeholder="Client City, State"

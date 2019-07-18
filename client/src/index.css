@@ -192,3 +192,15 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+.bg-light {
+  background-color: #616161;
+}
+
+.footer-items {
+  display: flex;
+  flex-direction: row;
+}
+
+.footer-items p { 
+}

@@ -165,4 +165,38 @@ router.get('/invoiceServices', async function(req, res, next) {
     res.json(item)
   })
 })
+
+router.get('/invoiceCustomers', async function(req, res, next) {
+  invoices.getInvoiceCustomers().then(item => {
+    res.json(item)
+  })
+})
+
+router.post('/invoice', function(req, res, next) {
+  let name = req.body.name;
+  let address = req.body.address;
+  let cityState = req.body.cityState;
+  let zip = req.body.zip;
+  let expiration = req.body.expiration;
+  let title = req.body.title;
+  let email = req.body.email;
+  let items = req.body.items;
+  let date = req.body.dateSubmitted;
+
+  query = {
+    name: name,
+    address: address,
+    cityState: cityState,
+    zip: zip,
+    expiration: expiration,
+    title: title,
+    email: email,
+    items: items,
+    date: date
+  }
+
+  invoices.addInvoiceCustomer(query)
+
+  res.end()
+})
 module.exports = router;
