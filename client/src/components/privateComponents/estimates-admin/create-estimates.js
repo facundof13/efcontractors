@@ -174,6 +174,8 @@ export default class CreateEstimate extends React.Component {
   }
 
   submitInvoice() {
+    let date = new Date()
+    let dateString = (1 + date.getMonth()).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear();
     Axios.post('/admin/invoice', {
       name: this.state.name,
       address: this.state.address,
@@ -183,7 +185,7 @@ export default class CreateEstimate extends React.Component {
       title: this.state.title,
       email: this.state.email,
       items: this.state.items,
-      dateSubmitted: new Date().toISOString().split('T')[0]
+      dateSubmitted: dateString
     }).then(res => {
       if (res.status === 200) {
         console.log("all ok");

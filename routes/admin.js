@@ -5,6 +5,7 @@ var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
 const titleize = require('titleize')
+const moment = require('moment')
 
 /* GET admins listing. */
 
@@ -168,6 +169,7 @@ router.get('/invoiceServices', async function(req, res, next) {
 
 router.get('/invoiceCustomers', async function(req, res, next) {
   invoices.getInvoiceCustomers().then(item => {
+    //sort here
     res.json(item)
   })
 })
