@@ -18,6 +18,7 @@ export default class CreateEstimate extends React.Component {
       zip: "",
       expiration: "",
       itemError: "",
+      phone: '',
       disabled: true
     };
     this.handleChange = this.handleChange.bind(this);
@@ -129,8 +130,8 @@ export default class CreateEstimate extends React.Component {
       let itemsOk = false;
       let cityStateOk = false;
       let emailOk = false;
-
-      console.log(this.state);
+      let phoneOk = false; 
+      
 
       if (
         this.state.name !== "" &&
@@ -138,8 +139,9 @@ export default class CreateEstimate extends React.Component {
         this.state.cityState !== "" &&
         this.state.zip !== "" &&
         this.state.expiration !== "" &&
-        this.state.title !== "" &&
-        this.state.email !== ""
+        // this.state.title !== "" &&
+        this.state.email !== "" &&
+        this.state.phone !== ""
       ) {
         if (this.state.zip.match(/\d{5}/)) {
           zipOk = true;
@@ -150,6 +152,10 @@ export default class CreateEstimate extends React.Component {
 
         if (this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/)) {
           emailOk = true;
+        }
+
+        if (this.state.phone.match(/^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g)){
+          phoneOk = true;
         }
 
         this.state.items.forEach(item => {
@@ -166,7 +172,7 @@ export default class CreateEstimate extends React.Component {
         });
       }
 
-      if (itemsOk && zipOk && cityStateOk && emailOk) {
+      if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk) {
         this.setState({ disabled: false });
       }
       console.log(`items: ${itemsOk} zip: ${zipOk} cityState: ${cityStateOk} email:${emailOk}`);
@@ -185,7 +191,8 @@ export default class CreateEstimate extends React.Component {
       title: this.state.title,
       email: this.state.email,
       items: this.state.items,
-      dateSubmitted: new Date()
+      phone: this.state.phone,
+      dateSubmitted: dateString
     }).then(res => {
       if (res.status === 200) {
         console.log("all ok");
@@ -201,7 +208,8 @@ export default class CreateEstimate extends React.Component {
           itemsField: [],
           itemError: "",
           disabled: true,
-          helperText: ""
+          helperText: "",
+          phone: '',
         }, () => {
           this.addItem()
         })
@@ -232,9 +240,9 @@ export default class CreateEstimate extends React.Component {
               />
               <TextField
                 value={this.state.title}
-                helperText={
-                  this.state.title === "" ? this.state.helperText : ""
-                }
+                // helperText={
+                //   this.state.title === "" ? this.state.helperText : ""
+                // }
                 name="title"
                 label="Title"
                 type="text"
@@ -257,6 +265,23 @@ export default class CreateEstimate extends React.Component {
                 type="email"
                 color="secondary"
                 placeholder="Client Email"
+                onChange={this.handleChange}
+              />
+              <TextField
+                value={this.state.phone}
+                helperText={
+                  this.state.phone === "" ||
+                  !this.state.phone.match(
+                    /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+                  )
+                    ? this.state.helperText
+                    : ""
+                }
+                name="phone"
+                label="Client Phone Number"
+                type="text"
+                color="secondary"
+                placeholder="Client Phone Number"
                 onChange={this.handleChange}
               />
             </div>

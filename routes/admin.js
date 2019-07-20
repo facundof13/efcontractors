@@ -166,12 +166,6 @@ router.get("/invoiceServices", async function(req, res, next) {
 
 router.get("/invoiceCustomers", async function(req, res, next) {
   invoices.getInvoiceCustomers().then(items => {
-    //sort here
-    items.sort(
-      (a, b) =>
-        new moment(b.date) -
-        new moment(a.date)
-    );
     res.json(items);
     // res.end()
   });
@@ -191,6 +185,7 @@ router.post("/invoice", function(req, res, next) {
   let title = titleize(req.body.title);
   let email = req.body.email;
   let items = req.body.items;
+  let phone = req.body.phone;
   let date = req.body.dateSubmitted;
 
   query = {
@@ -202,7 +197,8 @@ router.post("/invoice", function(req, res, next) {
     title: title,
     email: email,
     items: items,
-    date: date
+    date: date,
+    phone: phone
   };
 
   invoices.addInvoiceCustomer(query);
