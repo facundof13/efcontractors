@@ -20,8 +20,14 @@ const invertDirection = {
   asc: "desc",
   desc: "asc"
 };
-const headerRow = ['Item', 'Description', 'Quantity', 'Amount', 'Tax', 'Expense']
-
+const headerRow = [
+  "Item",
+  "Description",
+  "Quantity",
+  "Amount",
+  "Tax",
+  "Expense"
+];
 
 export default class EstimatesTable extends React.Component {
   constructor() {
@@ -56,7 +62,7 @@ export default class EstimatesTable extends React.Component {
         if (res.status === 200 || res.status === 304) {
           this.setState({
             customerItems: []
-          })
+          });
           this.getCustomers();
         }
       });
@@ -75,10 +81,9 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleClick(row) {
-    console.log(row)
     this.setState({
       customerItems: row.items
-    })
+    });
   }
 
   render() {
@@ -89,7 +94,7 @@ export default class EstimatesTable extends React.Component {
         </Typography>
 
         <Grid container justify="center">
-          <Paper className='customer-table'>
+          <Paper className="customer-table">
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -161,19 +166,23 @@ export default class EstimatesTable extends React.Component {
                   <TableCell align="right" />
                 </TableRow>
               </TableHead>
-              <TableBody >
+              <TableBody>
                 {orderBy(
                   this.state.customers,
                   this.state.columnToSort,
                   this.state.sortDirection
                 ).map(row => (
-                  <TableRow hover={true} onClick={() => this.handleClick(row)} key={row._id}>
+                  <TableRow
+                    hover={true}
+                    onClick={() => this.handleClick(row)}
+                    key={row._id}
+                  >
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
                     <TableCell align="right">{row.title}</TableCell>
                     <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align='right'>{row.phone}</TableCell>
+                    <TableCell align="right">{row.phone}</TableCell>
                     <TableCell align="right">{row.address}</TableCell>
                     <TableCell align="right">{row.cityState}</TableCell>
                     <TableCell align="right">{row.zip}</TableCell>
@@ -192,9 +201,12 @@ export default class EstimatesTable extends React.Component {
             </Table>
           </Paper>
           {this.state.customerItems.length > 0 ? (
-            <CustomerItemTable key='1' headerRow={headerRow}/>
-          ) : 
-          (
+            <CustomerItemTable
+              key="1"
+              items={this.state.customerItems}
+              headerRow={headerRow}
+            />
+          ) : (
             ""
           )}
         </Grid>
