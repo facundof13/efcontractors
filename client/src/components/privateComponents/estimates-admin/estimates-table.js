@@ -21,6 +21,7 @@ export default class EstimatesTable extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.deleteCustomer = this.deleteCustomer.bind(this);
+    this.sortDate = this.sortDate.bind(this);
   }
 
   componentDidMount() {
@@ -45,7 +46,13 @@ export default class EstimatesTable extends React.Component {
   }
 
   sortDate() {
-    console.log('sort')
+    console.log("sort");
+    this.setState(
+      prevState => ({
+        customers: prevState.customers.sort((a, b) => a.date - b.date)
+      }),
+      () => console.log(this.state.customers)
+    );
   }
 
   render() {
@@ -67,7 +74,9 @@ export default class EstimatesTable extends React.Component {
                   <TableCell align="right">Clienty City, State</TableCell>
                   <TableCell align="right">Client Zip Code</TableCell>
                   <TableCell align="right">
-                    <TableSortLabel onClick={this.sortDate}>Date Created</TableSortLabel>
+                    <TableSortLabel onClick={this.sortDate}>
+                      Date Created
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell align="right" />
                 </TableRow>
