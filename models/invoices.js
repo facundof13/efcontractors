@@ -18,7 +18,6 @@ function getInvoiceCustomers() {
     invoices
       .find({ "Name": {"$exists": false} })
       .toArray((err, items) => {
-        console.log(items);
         resolve(items)
       });
   });

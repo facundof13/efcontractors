@@ -116,7 +116,7 @@ export default class CreateEstimate extends React.Component {
         items: cleanArr
       });
       resolve()
-    });
+  });
   }
 
   checkForm() {

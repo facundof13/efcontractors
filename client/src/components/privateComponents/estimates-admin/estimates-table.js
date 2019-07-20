@@ -1,4 +1,5 @@
 import React from "react";
+import orderBy from 'lodash/orderBy'
 import {
   Typography,
   Paper,
@@ -8,20 +9,30 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  TableSortLabel
+  TableSortLabel,
+  Grid
 } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import Axios from "axios";
 
+const invertDirection = {
+  asc: "desc",
+  desc: "asc"
+};
+
 export default class EstimatesTable extends React.Component {
   constructor() {
     super();
-    this.state = { customers: [] };
+    this.state = {
+      customers: [],
+      columnToSort: "Date Created",
+      sortDirection: "desc"
+    };
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.deleteCustomer = this.deleteCustomer.bind(this);
-    this.sortDate = this.sortDate.bind(this);
+    this.handleSort = this.handleSort.bind(this);
   }
 
   componentDidMount() {
@@ -36,7 +47,7 @@ export default class EstimatesTable extends React.Component {
 
   deleteCustomer(customer) {
     var id = customer._id;
-    if (window.confirm(`Delete customer ${customer.name}?`)) {
+    if (window.confirm(`Delete client ${customer.name}?`)) {
       Axios.delete("/admin/invoiceCustomerId", { data: { id } }).then(res => {
         if (res.status === 200 || res.status === 304) {
           this.getCustomers();
@@ -45,14 +56,25 @@ export default class EstimatesTable extends React.Component {
     }
   }
 
-  sortDate() {
-    console.log("sort");
+  handleSort(name) {
+    // var column = event.target.outerText;
     this.setState(
       prevState => ({
-        customers: prevState.customers.sort((a, b) => a.date - b.date)
-      }),
-      () => console.log(this.state.customers)
+        columnToSort: name,
+        sortDirection:
+          prevState.columnToSort === name
+            ? invertDirection[prevState.sortDirection]
+            : "asc",
+      })
     );
+
+    // console.log("sort");
+    // this.setState(
+    //   prevState => ({
+    //     customers: prevState.customers.sort((a, b) => a.date - b.date)
+    //   }),
+    //   () => console.log(this.state.customers)
+    // );
   }
 
   render() {
@@ -62,19 +84,65 @@ export default class EstimatesTable extends React.Component {
           <h5>Estimates</h5>
         </Typography>
 
-        <div id="table">
+        <Grid container justify='center'>
           <Paper>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>Client Name</TableCell>
-                  <TableCell align="right">Title</TableCell>
-                  <TableCell align="right">Client Email</TableCell>
-                  <TableCell align="right">Client Street Address</TableCell>
-                  <TableCell align="right">Clienty City, State</TableCell>
-                  <TableCell align="right">Client Zip Code</TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      align="left"
+                      onClick={() => this.handleSort('name')}
+                    >
+                      Client Name
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="right">
-                    <TableSortLabel onClick={this.sortDate}>
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('title')}
+                    >
+                      Title
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('email')}
+                    >
+                      Client Email
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('address')}
+                    >
+                      Client Street Address
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('cityState')}
+                    >
+                      Client City, State
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('zip')}
+                    >
+                      Client Zip Code
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      direction={this.state.sortDirection}
+                      onClick={() => this.handleSort('date')}
+                    >
                       Date Created
                     </TableSortLabel>
                   </TableCell>
@@ -82,7 +150,7 @@ export default class EstimatesTable extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.customers.map(row => (
+                {(orderBy(this.state.customers, this.state.columnToSort, this.state.sortDirection)).map(row => (
                   <TableRow key={row._id}>
                     <TableCell component="th" scope="row">
                       {row.name}
@@ -94,7 +162,10 @@ export default class EstimatesTable extends React.Component {
                     <TableCell align="right">{row.zip}</TableCell>
                     <TableCell align="right">{row.date}</TableCell>
                     <TableCell align="right">
-                      <IconButton onClick={() => this.deleteCustomer(row)}>
+                      <IconButton
+                        size="small"
+                        onClick={() => this.deleteCustomer(row)}
+                      >
                         <DeleteOutlinedIcon />
                       </IconButton>
                     </TableCell>
@@ -103,7 +174,7 @@ export default class EstimatesTable extends React.Component {
               </TableBody>
             </Table>
           </Paper>
-        </div>
+        </Grid>
       </div>
     );
   }
