@@ -40,6 +40,7 @@ class ProjectsCreate extends Component {
     return (
       <div className="create-container">
         <form autoComplete="off" id="project-form" onSubmit={this.handleSubmit}>
+          <div className='login'>
           <TextField
             name="name"
             type="text"
@@ -62,6 +63,7 @@ class ProjectsCreate extends Component {
           >
             Create new project
           </Button>
+          </div>
         </form>
       </div>
     );

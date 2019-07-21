@@ -51,21 +51,43 @@ body {
   color: #ffff00;
 }
 
-input {
+
+.login input {
   color: #ffff00 !important;
 }
+.MuiTableCell-body input {
+  color:black !important;
+  font-size: 12px;
+  width: 100%;
+}
+
+
 
 /* .notchedOutline {
   border-width: 1px;
   border-color: yellow !important;
 } */
-.MuiInput-underline:after {
+
+.login .MuiInput-underline:after {
   border-bottom: 2px solid #ffff00 !important;
   border-bottom-width: 2px !important;
   border-bottom-style: solid !important;
   border-bottom-color: #ffff00 !important;
 }
-.MuiInput-underline:before {
+.login .MuiInput-underline:before {
+  border-bottom: 1px solid #ffff00 !important;
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+  border-bottom-color: #ffff00 !important;
+}
+
+FormControl .MuiInput-underline:after {
+  border-bottom: 2px solid #ffff00 !important;
+  border-bottom-width: 2px !important;
+  border-bottom-style: solid !important;
+  border-bottom-color: #ffff00 !important;
+}
+FormControl .MuiInput-underline:before {
   border-bottom: 1px solid #ffff00 !important;
   border-bottom-width: 1px !important;
   border-bottom-style: solid !important;
@@ -217,6 +239,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .customer-table {
   margin-bottom: 30px;
+  max-width: 90%;
 }
 
 .item-table {

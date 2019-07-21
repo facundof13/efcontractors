@@ -48,7 +48,6 @@ class LoginForm extends Component {
   }
 
   render() {
-
     if (this.state.redirectTo) {
       return <Redirect to={{ pathname: this.state.redirectTo }} />;
     } else {
@@ -64,40 +63,42 @@ class LoginForm extends Component {
                   Username
                 </label>
               </Typography>
-              <TextField
-                type="text"
-                id="username"
-                name="username"
-                color="secondary"
-                placeholder="Username"
-                variant="outlined"
-                value={this.state.username}
-                onChange={this.handleChange}
-              />
-              <Typography color="secondary">
-                <label htmlFor="password">Password:{" "}</label>
-              </Typography>
+              <div className="login">
+                <TextField
+                  type="text"
+                  id="username"
+                  name="username"
+                  color="secondary"
+                  placeholder="Username"
+                  variant="outlined"
+                  value={this.state.username}
+                  onChange={this.handleChange}
+                />
+                <Typography color="secondary">
+                  <label htmlFor="password">Password: </label>
+                </Typography>
 
-              <TextField
-                name="password"
-                type="password"
-                placeholder="password"
-                color="secondary"
-                variant="outlined"
-                value={this.state.password}
-                onChange={this.handleChange}
-              />
+                <TextField
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                  color="secondary"
+                  variant="outlined"
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                />
+              </div>
             </div>
-            <div className='btn-login'>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleSubmit}
-              type="submit"
-              className="btn-login"
-            >
-              Login
-            </Button>
+            <div className="btn-login">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.handleSubmit}
+                type="submit"
+                className="btn-login"
+              >
+                Login
+              </Button>
             </div>
           </form>
         </div>

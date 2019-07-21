@@ -166,7 +166,7 @@ export default class ItemField extends React.Component {
   render() {
     return (
       <form id="item-form">
-        <div>
+        <div className='login'>
           <FormControl>
             <InputLabel htmlFor="item-select">Item</InputLabel>
             <Select
@@ -191,81 +191,85 @@ export default class ItemField extends React.Component {
             </FormHelperText>
           </FormControl>
 
-          <TextField
-            label="Description"
-            name="itemDescription"
-            type="text"
-            color="secondary"
-            placeholder="Description"
-            className="description"
-            multiline={true}
-            value={this.state.itemDescription}
-            helperText={
-              this.state.itemDescription === ""
-                ? this.state.descriptionError
-                : ""
-            }
-            onChange={this.handleChange}
-          />
+          {/* <div className="login"> */}
+            <TextField
+              label="Description"
+              name="itemDescription"
+              type="text"
+              color="secondary"
+              placeholder="Description"
+              className="description"
+              multiline={true}
+              value={this.state.itemDescription}
+              helperText={
+                this.state.itemDescription === ""
+                  ? this.state.descriptionError
+                  : ""
+              }
+              onChange={this.handleChange}
+            />
 
-          <TextField
-            className="quantity-amount-width"
-            label="Quantity"
-            name="quantity"
-            type="number"
-            color="secondary"
-            placeholder="Quantity"
-            helperText={
-              this.state.quantity === "" ? this.state.quantityError : ""
-            }
-            value={this.state.quantity}
-            onChange={this.handleChange}
-          />
-          <TextField
-            className="quantity-amount-width"
-            label="Amount"
-            name="dollarAmount"
-            type="text"
-            color="secondary"
-            placeholder="$0.00"
-            helperText={
-              this.state.dollarAmount === "" || this.state.dollarAmount === "$"
-                ? this.state.amountError
-                : ""
-            }
-            value={this.state.dollarAmount}
-            onChange={this.handleMoney}
-          />
-          <IconButton
-            color="secondary"
-            onClick={() => this.props.removeItem(this.props.num)}
-          >
-            <DeleteOutlinedIcon />
-          </IconButton>
-          {/* checkboxes */}
-          <div>
-            <FormControlLabel
-              checked={this.state.tax}
+            <TextField
+              className="quantity-amount-width"
+              label="Quantity"
+              name="quantity"
+              type="number"
               color="secondary"
-              className="unselectable"
-              name="tax"
-              control={<Checkbox color="secondary" />}
-              label="Tax"
-              labelPlacement="end"
-              onChange={this.handleCheckbox}
+              placeholder="Quantity"
+              helperText={
+                this.state.quantity === "" ? this.state.quantityError : ""
+              }
+              value={this.state.quantity}
+              onChange={this.handleChange}
             />
-            <FormControlLabel
-              checked={this.state.expense}
+            <TextField
+              className="quantity-amount-width"
+              label="Amount"
+              name="dollarAmount"
+              type="text"
               color="secondary"
-              className="unselectable"
-              name="expense"
-              control={<Checkbox color="secondary" />}
-              label="Expense"
-              labelPlacement="end"
-              onChange={this.handleCheckbox}
+              placeholder="$0.00"
+              helperText={
+                this.state.dollarAmount === "" ||
+                this.state.dollarAmount === "$"
+                  ? this.state.amountError
+                  : ""
+              }
+              value={this.state.dollarAmount}
+              onChange={this.handleMoney}
             />
+
+            <IconButton
+              color="secondary"
+              onClick={() => this.props.removeItem(this.props.num)}
+            >
+              <DeleteOutlinedIcon />
+            </IconButton>
+            {/* checkboxes */}
+            <div>
+              <FormControlLabel
+                checked={this.state.tax}
+                color="secondary"
+                className="unselectable"
+                name="tax"
+                control={<Checkbox color="secondary" />}
+                label="Tax"
+                labelPlacement="end"
+                onChange={this.handleCheckbox}
+              />
+              <FormControlLabel
+                checked={this.state.expense}
+                color="secondary"
+                className="unselectable"
+                name="expense"
+                control={<Checkbox color="secondary" />}
+                label="Expense"
+                labelPlacement="end"
+                onChange={this.handleCheckbox}
+              />
+            </div>
           </div>
-        </div>
+        {/* </div> */}
       </form>
     );
   }

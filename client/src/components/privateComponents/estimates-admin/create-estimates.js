@@ -227,7 +227,7 @@ export default class CreateEstimate extends React.Component {
         </Typography>
         <div>
           <form autoComplete="off" id="create-form">
-            <div className="top">
+            <div className="top login">
               <TextField
                 value={this.state.name}
                 helperText={this.state.name === "" ? this.state.helperText : ""}
@@ -285,7 +285,7 @@ export default class CreateEstimate extends React.Component {
                 onChange={this.handleChange}
               />
             </div>
-            <div>
+            <div className='login'>
               <TextField
                 value={this.state.address}
                 helperText={

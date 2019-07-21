@@ -15,11 +15,9 @@ function getServices() {
 
 function getInvoiceCustomers() {
   return new Promise((resolve, reject) => {
-    invoices
-      .find({ "Name": {"$exists": false} })
-      .toArray((err, items) => {
-        resolve(items)
-      });
+    invoices.find({ Name: { $exists: false } }).toArray((err, items) => {
+      resolve(items);
+    });
   });
 }
 function addInvoiceCustomer(query) {
@@ -31,9 +29,25 @@ function addInvoiceCustomer(query) {
 function deleteCustomer(id) {
   invoices.deleteOne({ _id: ObjectId(id) }, (err, results) => {});
 }
+
+function updateCustomer(id, query) {
+  invoices.updateOne(
+    {
+      _id: ObjectId(id)
+    },
+    {
+      $set: query
+    },
+    (err, item) => {
+      console.log(`Updated customer ${id}`);
+    }
+  );
+}
+
 module.exports = {
   getServices,
   addInvoiceCustomer,
   getInvoiceCustomers,
-  deleteCustomer
+  deleteCustomer,
+  updateCustomer
 };

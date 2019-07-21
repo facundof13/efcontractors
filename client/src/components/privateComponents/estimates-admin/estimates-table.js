@@ -1,5 +1,6 @@
 import React from "react";
 import orderBy from "lodash/orderBy";
+import _ from "lodash";
 import {
   Typography,
   Paper,
@@ -10,9 +11,15 @@ import {
   TableBody,
   IconButton,
   TableSortLabel,
-  Grid
+  Grid,
+  TextField
 } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
+import KeyboardArrowDownOutlined from "@material-ui/icons/KeyboardArrowDownOutlined";
+import KeyboardArrowUpOutlined from "@material-ui/icons/KeyboardArrowUpOutlined";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import Axios from "axios";
 import CustomerItemTable from "./customer-item-table";
 
@@ -36,13 +43,20 @@ export default class EstimatesTable extends React.Component {
       customers: [],
       columnToSort: "date",
       sortDirection: "desc",
-      customerItems: []
+      customerItems: [],
+      currentlyEditing: false,
+      customerToEdit: [],
+      unChangedArray: []
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.deleteCustomer = this.deleteCustomer.bind(this);
     this.handleSort = this.handleSort.bind(this);
+    this.editCustomer = this.editCustomer.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   componentDidMount() {
@@ -81,11 +95,103 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleClick(row) {
-    this.setState({
-      customerItems: row.items
-    });
+    // console.log(row)
+    if (this.state.customerItems === row) {
+      this.setState({ customerItems: [] });
+    } else {
+      this.setState({
+        customerItems: row
+      });
+    }
   }
 
+  editCustomer(row) {
+    console.log(row);
+    this.setState(
+      prevState => ({
+        currentlyEditing: true,
+        customerItems: [],
+        customerToEdit: [JSON.parse(JSON.stringify(row))],
+        unChangedArray: [JSON.parse(JSON.stringify(row))]
+      }),
+      console.log(this.state)
+    );
+  }
+
+  handleChange(event) {
+    let changedArray = [...this.state.customerToEdit];
+    changedArray[0][event.target.name] = event.target.value;
+    this.setState(prevState => ({
+      customerToEdit: changedArray
+    }));
+    console.log(event.target.name);
+    // console.log(this.state.customerToEdit)
+    // console.log(changedArray)
+  }
+
+  handleSave() {
+    // console.log(this.state)
+    let updatedCustomer = this.state.customerToEdit[0];
+    //check to make sure email, phone, cityState, zipcode, and date match
+    let emailOk = false;
+    let phoneOk = false;
+    let cityStateOk = false;
+    let zipOk = false;
+    let dateOk = false;
+
+    if (
+      this.state.customerToEdit[0]["email"].match(
+        /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/
+      )
+    ) {
+      emailOk = true;
+    } else emailOk = false;
+    if (
+      this.state.customerToEdit[0]["phone"].match(
+        /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+      )
+    ) {
+      phoneOk = true;
+    } else phoneOk = false;
+    if (
+      this.state.customerToEdit[0]["cityState"].match(
+        /([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
+      )
+    ) {
+      cityStateOk = true;
+    } else cityStateOk = false;
+    if (this.state.customerToEdit[0]["zip"].match(/^\d{5}$/)) {
+      zipOk = true;
+    } else zipOk = false;
+    if (
+      this.state.customerToEdit[0]["date"].match(/^\d{2}\/\d{2}\/20\d\d$/gm)
+    ) {
+      dateOk = true;
+    } else dateOk = false;
+
+    if (emailOk && phoneOk && cityStateOk && zipOk && dateOk) {
+      this.setState({ currentlyEditing: false, customerToEdit: [] });
+      Axios.post("/admin/updateCustomer", { customer: updatedCustomer });
+      console.log(updatedCustomer);
+      this.getCustomers();
+    } else {
+      let alertString = "The following fields are incorrect: ";
+      if (!emailOk) alertString += "email ";
+      if (!phoneOk) alertString += "phone ";
+      if (!cityStateOk) alertString += "city/state ";
+      if (!zipOk) alertString += "zip ";
+      if (!dateOk) alertString += "date ";
+
+      window.alert(alertString);
+    }
+  }
+
+  handleCancel() {
+    this.setState({
+      currentlyEditing: false,
+      customerToEdit: [...this.state.unChangedArray]
+    });
+  }
   render() {
     return (
       <div>
@@ -167,36 +273,124 @@ export default class EstimatesTable extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orderBy(
-                  this.state.customers,
-                  this.state.columnToSort,
-                  this.state.sortDirection
-                ).map(row => (
-                  <TableRow
-                    hover={true}
-                    onClick={() => this.handleClick(row)}
-                    key={row._id}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.title}</TableCell>
-                    <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align="right">{row.phone}</TableCell>
-                    <TableCell align="right">{row.address}</TableCell>
-                    <TableCell align="right">{row.cityState}</TableCell>
-                    <TableCell align="right">{row.zip}</TableCell>
-                    <TableCell align="right">{row.date}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => this.deleteCustomer(row)}
-                      >
-                        <DeleteOutlinedIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {this.state.currentlyEditing
+                  ? this.state.customerToEdit.map(customer => (
+                      <TableRow key={customer._id}>
+                        <TableCell component="th" scope="row" align="left">
+                          <TextField
+                            name="name"
+                            onChange={this.handleChange}
+                            value={customer.name}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="title"
+                            onChange={this.handleChange}
+                            value={customer.title}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="email"
+                            onChange={this.handleChange}
+                            value={customer.email}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="phone"
+                            onChange={this.handleChange}
+                            value={customer.phone}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="address"
+                            onChange={this.handleChange}
+                            value={customer.address}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="cityState"
+                            onChange={this.handleChange}
+                            value={customer.cityState}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="zip"
+                            onChange={this.handleChange}
+                            value={customer.zip}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            name="date"
+                            onChange={this.handleChange}
+                            value={customer.date}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <IconButton size="small" onClick={this.handleSave}>
+                            <SaveOutlinedIcon />
+                          </IconButton>
+                          <IconButton size="small" onClick={this.handleCancel}>
+                            <CancelOutlinedIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : orderBy(
+                      this.state.customers,
+                      this.state.columnToSort,
+                      this.state.sortDirection
+                    ).map(row => (
+                      <TableRow hover={true} key={row._id}>
+                        <TableCell component="th" scope="row">
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="right">{row.title}</TableCell>
+                        <TableCell align="right">{row.email}</TableCell>
+                        <TableCell align="right">{row.phone}</TableCell>
+                        <TableCell align="right">{row.address}</TableCell>
+                        <TableCell align="right">{row.cityState}</TableCell>
+                        <TableCell align="right">{row.zip}</TableCell>
+                        <TableCell align="right">{row.date}</TableCell>
+                        <TableCell align="right">
+                          <div>
+                            {this.state.customerItems === row.items ? (
+                              <IconButton
+                                size="small"
+                                onClick={() => this.handleClick(row.items)}
+                              >
+                                <KeyboardArrowUpOutlined />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                size="small"
+                                onClick={() => this.handleClick(row.items)}
+                              >
+                                <KeyboardArrowDownOutlined />
+                              </IconButton>
+                            )}
+                            <IconButton
+                              size="small"
+                              onClick={() => this.editCustomer(row)}
+                            >
+                              <CreateOutlinedIcon />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => this.deleteCustomer(row)}
+                            >
+                              <DeleteOutlinedIcon />
+                            </IconButton>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
               </TableBody>
             </Table>
           </Paper>
