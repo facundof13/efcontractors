@@ -188,17 +188,28 @@ router.post("/invoice", function(req, res, next) {
   let phone = req.body.phone;
   let date = req.body.dateSubmitted;
 
+  let total = 0
+  items.forEach(item => {
+    total += Number(item.amount.replace('$', ''))
+  })
+
+  let invoice = {
+    items: items,
+    total: total,
+    expiration: expiration,
+    title: title,
+    date: date
+  };
+
   let query = {
     name: name,
     address: address,
     cityState: cityState,
     zip: zip,
-    expiration: expiration,
-    title: title,
     email: email,
-    items: items,
     date: date,
-    phone: phone
+    phone: phone,
+    estimates: invoice
   };
 
   invoices.addInvoiceCustomer(query);
@@ -206,8 +217,8 @@ router.post("/invoice", function(req, res, next) {
   res.end();
 });
 
-router.post('/updateCustomer', function(req,res,next) {
-  let id = req.body.customer._id
+router.post("/updateCustomer", function(req, res, next) {
+  let id = req.body.customer._id;
   let name = titleize(req.body.customer.name);
   let address = titleize(req.body.customer.address);
   let cityState = titleize(req.body.customer.cityState);
@@ -228,7 +239,7 @@ router.post('/updateCustomer', function(req,res,next) {
     date: date
   };
 
-  invoices.updateCustomer(id, query)
-  res.end()
-})
+  invoices.updateCustomer(id, query);
+  res.end();
+});
 module.exports = router;

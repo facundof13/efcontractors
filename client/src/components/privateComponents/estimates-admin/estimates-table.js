@@ -115,16 +115,12 @@ export default class EstimatesTable extends React.Component {
   }
 
   editCustomer(row) {
-    console.log(row);
-    this.setState(
-      prevState => ({
-        currentlyEditing: true,
-        customerItems: [],
-        customerToEdit: [JSON.parse(JSON.stringify(row))],
-        unChangedArray: [JSON.parse(JSON.stringify(row))]
-      }),
-      console.log(this.state)
-    );
+    this.setState(prevState => ({
+      currentlyEditing: true,
+      customerItems: [],
+      customerToEdit: [JSON.parse(JSON.stringify(row))],
+      unChangedArray: [JSON.parse(JSON.stringify(row))]
+    }));
   }
 
   handleChange(event) {
@@ -222,14 +218,14 @@ export default class EstimatesTable extends React.Component {
                       Client Name
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="right">
+                  {/* <TableCell align="right">
                     <TableSortLabel
                       direction={this.state.sortDirection}
                       onClick={() => this.handleSort("title")}
                     >
                       Title
-                    </TableSortLabel>
-                  </TableCell>
+                    </TableSortLabel> 
+                  </TableCell> */}
                   <TableCell align="right">
                     <TableSortLabel
                       direction={this.state.sortDirection}
@@ -278,7 +274,7 @@ export default class EstimatesTable extends React.Component {
                       Date Created
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="right" />
+                  <TableCell align='right' />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -292,13 +288,13 @@ export default class EstimatesTable extends React.Component {
                             value={customer.name}
                           />
                         </TableCell>
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                           <TextField
                             name="title"
                             onChange={this.handleChange}
                             value={customer.title}
                           />
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell align="right">
                           <TextField
                             name="email"
@@ -360,7 +356,6 @@ export default class EstimatesTable extends React.Component {
                         <TableCell component="th" scope="row">
                           {row.name}
                         </TableCell>
-                        <TableCell align="right">{row.title}</TableCell>
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phone}</TableCell>
                         <TableCell align="right">{row.address}</TableCell>
