@@ -49,6 +49,8 @@ export default class EstimatesTable extends React.Component {
       unChangedArray: []
     };
 
+    this.dummyRef = React.createRef();
+
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.deleteCustomer = this.deleteCustomer.bind(this);
@@ -99,9 +101,16 @@ export default class EstimatesTable extends React.Component {
     if (this.state.customerItems === row) {
       this.setState({ customerItems: [] });
     } else {
-      this.setState({
-        customerItems: row
-      });
+      this.setState(
+        {
+          customerItems: row
+        },
+        () => {
+          if (this.state.customerItems.length > 0) {
+            window.scrollTo(0, window.innerHeight);
+          }
+        }
+      );
     }
   }
 
@@ -404,6 +413,7 @@ export default class EstimatesTable extends React.Component {
             ""
           )}
         </Grid>
+        <div ref={this.dummyRef} />
       </div>
     );
   }
