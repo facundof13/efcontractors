@@ -176,6 +176,30 @@ router.delete("/invoiceCustomerId", function(req, res, next) {
   res.end();
 });
 
+router.post("/invoiceupdate", function(req, res, next) {
+  let expiration = req.body.expiration;
+  let title = titleize(req.body.title);
+  let items = req.body.items;
+  let date = req.body.date;
+  let id = req.body.id;
+
+  let total = 0;
+  items.forEach(item => {
+    total += Number(item.amount.replace("$", ""));
+  });
+
+  let query = {
+    expiration: expiration,
+    title: title,
+    items: items,
+    date: date,
+    total: total
+  }
+
+  invoices.addEstimateToCustomer(id, query)
+  res.end();
+});
+
 router.post("/invoice", function(req, res, next) {
   let name = titleize(req.body.name);
   let address = titleize(req.body.address);
@@ -188,10 +212,10 @@ router.post("/invoice", function(req, res, next) {
   let phone = req.body.phone;
   let date = req.body.dateSubmitted;
 
-  let total = 0
+  let total = 0;
   items.forEach(item => {
-    total += Number(item.amount.replace('$', ''))
-  })
+    total += Number(item.amount.replace("$", ""));
+  });
 
   let invoice = {
     items: items,
@@ -209,7 +233,7 @@ router.post("/invoice", function(req, res, next) {
     email: email,
     date: date,
     phone: phone,
-    estimates: invoice
+    estimates: [invoice]
   };
 
   invoices.addInvoiceCustomer(query);

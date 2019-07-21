@@ -28,12 +28,10 @@ const invertDirection = {
   desc: "asc"
 };
 const headerRow = [
-  "Item",
-  "Description",
-  "Quantity",
-  "Amount",
-  "Tax",
-  "Expense"
+  "Title",
+  "Expiration",
+  "Total",
+  "Date Created",
 ];
 
 export default class EstimatesTable extends React.Component {
@@ -98,12 +96,12 @@ export default class EstimatesTable extends React.Component {
 
   handleClick(row) {
     // console.log(row)
-    if (this.state.customerItems === row) {
+    if (this.state.customerItems === row.estimates) {
       this.setState({ customerItems: [] });
     } else {
       this.setState(
         {
-          customerItems: row
+          customerItems: row.estimates
         },
         () => {
           if (this.state.customerItems.length > 0) {
@@ -364,17 +362,17 @@ export default class EstimatesTable extends React.Component {
                         <TableCell align="right">{row.date}</TableCell>
                         <TableCell align="right">
                           <div>
-                            {this.state.customerItems === row.items ? (
+                            {this.state.customerItems === row.estimates ? (
                               <IconButton
                                 size="small"
-                                onClick={() => this.handleClick(row.items)}
+                                onClick={() => this.handleClick(row)}
                               >
                                 <KeyboardArrowUpOutlined />
                               </IconButton>
                             ) : (
                               <IconButton
                                 size="small"
-                                onClick={() => this.handleClick(row.items)}
+                                onClick={() => this.handleClick(row)}
                               >
                                 <KeyboardArrowDownOutlined />
                               </IconButton>
@@ -398,6 +396,9 @@ export default class EstimatesTable extends React.Component {
               </TableBody>
             </Table>
           </Paper>
+        </Grid>
+        <Grid container justify='center'>
+          <div>
           {this.state.customerItems.length > 0 ? (
             <CustomerItemTable
               key="1"
@@ -407,8 +408,8 @@ export default class EstimatesTable extends React.Component {
           ) : (
             ""
           )}
+          </div>
         </Grid>
-        <div ref={this.dummyRef} />
       </div>
     );
   }

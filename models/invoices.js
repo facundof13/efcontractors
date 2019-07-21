@@ -26,6 +26,11 @@ function addInvoiceCustomer(query) {
   );
 }
 
+function addEstimateToCustomer(id, query) {
+  console.log(id)
+  console.log(query)
+}
+
 function deleteCustomer(id) {
   invoices.deleteOne({ _id: ObjectId(id) }, (err, results) => {});
 }
@@ -49,5 +54,6 @@ module.exports = {
   addInvoiceCustomer,
   getInvoiceCustomers,
   deleteCustomer,
-  updateCustomer
+  updateCustomer,
+  addEstimateToCustomer,
 };

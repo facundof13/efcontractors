@@ -46,6 +46,7 @@ export default class CustomerItemTable extends React.Component {
   }
 
   render() {
+    console.log(this.props.items);
     return (
       <div>
         <Paper>
@@ -54,7 +55,7 @@ export default class CustomerItemTable extends React.Component {
               <TableRow>
                 {this.props.headerRow.map(item => (
                   <TableCell
-                    align={item === "Item" ? "left" : "right"}
+                    align={item === "Title" ? "left" : "right"}
                     key={item}
                   >
                     <TableSortLabel
@@ -67,28 +68,20 @@ export default class CustomerItemTable extends React.Component {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
-              {orderBy(
-                this.props.items,
-                this.state.columnToSort,
-                this.state.sortDirection
-              ).map(row => (
-                <TableRow
-                  // onClick={() => this.logItems(row)}
-                  hover={true}
-                  key={row.num}
-                >
-                  <TableCell align="left">{row.item}</TableCell>
-                  <TableCell align="right">{row.description}</TableCell>
-                  <TableCell align="right">{row.quantity}</TableCell>
-                  <TableCell align="right">{row.amount}</TableCell>
-                  <TableCell align="right">{row.tax ? "yes" : "no"}</TableCell>
-                  <TableCell align="right">
-                    {row.expense ? "yes" : "no"}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+              <TableBody>
+                {this.props.items.map(row => (
+                  <TableRow
+                    // onClick={() => this.logItems(row)}
+                    hover={true}
+                    key={row.total}
+                  >
+                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="right">{row.expiration}</TableCell>
+                    <TableCell align="right">${row.total}</TableCell>
+                    <TableCell align="right">{row.date}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
           </Table>
         </Paper>
       </div>

@@ -1,8 +1,17 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
-import { TextField, Button, Divider } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@material-ui/core";
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
+import SelectExistingClient from "./select-existing-client";
 export default class CreateEstimate extends React.Component {
   constructor() {
     super();
@@ -18,8 +27,13 @@ export default class CreateEstimate extends React.Component {
       zip: "",
       expiration: "",
       itemError: "",
-      phone: '',
-      disabled: true
+      phone: "",
+      disabled: true,
+      selectedItem: [],
+      customers: [],
+      client: [],
+      clientSelected: false,
+      idToUpdate: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -28,12 +42,16 @@ export default class CreateEstimate extends React.Component {
     this.updateItems = this.updateItems.bind(this);
     this.filterItemsArr = this.filterItemsArr.bind(this);
     this.submitInvoice = this.submitInvoice.bind(this);
+    this.getCustomers = this.getCustomers.bind(this);
+    this.fillWithSelectedCustomer = this.fillWithSelectedCustomer.bind(this);
   }
 
   componentDidMount() {
     this.getServices().then(() => {
       this.addItem();
     });
+
+    this.getCustomers();
   }
 
   handleChange(event) {
@@ -45,6 +63,38 @@ export default class CreateEstimate extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // document.getElementById("create-form").reset();
+  }
+
+  getCustomers() {
+    Axios.get("/admin/invoiceCustomers").then(res => {
+      this.setState({ customers: res.data });
+      console.log(res.data);
+    });
+  }
+
+  fillWithSelectedCustomer(client) {
+    if (client) {
+      this.setState({
+        clientSelected: true,
+        name: client.name,
+        email: client.email,
+        address: client.address,
+        cityState: client.cityState,
+        zip: client.zip,
+        phone: client.phone,
+        idToUpdate: client._id
+      });
+    } else {
+      this.setState({
+        clientSelected: false,
+        name: "",
+        email: "",
+        address: "",
+        cityState: "",
+        zip: "",
+        phone: ""
+      });
+    }
   }
 
   getServices() {
@@ -116,8 +166,8 @@ export default class CreateEstimate extends React.Component {
       this.setState({
         items: cleanArr
       });
-      resolve()
-  });
+      resolve();
+    });
   }
 
   checkForm() {
@@ -130,8 +180,7 @@ export default class CreateEstimate extends React.Component {
       let itemsOk = false;
       let cityStateOk = false;
       let emailOk = false;
-      let phoneOk = false; 
-      
+      let phoneOk = false;
 
       if (
         this.state.name !== "" &&
@@ -145,8 +194,12 @@ export default class CreateEstimate extends React.Component {
       ) {
         if (this.state.zip.match(/\d{5}/)) {
           zipOk = true;
-        } 
-        if(this.state.cityState.match(/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/))  { 
+        }
+        if (
+          this.state.cityState.match(
+            /([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
+          )
+        ) {
           cityStateOk = true;
         }
 
@@ -154,7 +207,11 @@ export default class CreateEstimate extends React.Component {
           emailOk = true;
         }
 
-        if (this.state.phone.match(/^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g)){
+        if (
+          this.state.phone.match(
+            /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+          )
+        ) {
           phoneOk = true;
         }
 
@@ -175,48 +232,72 @@ export default class CreateEstimate extends React.Component {
       if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk) {
         this.setState({ disabled: false });
       }
-      console.log(`items: ${itemsOk} zip: ${zipOk} cityState: ${cityStateOk} email:${emailOk}`);
+      console.log(
+        `items: ${itemsOk} zip: ${zipOk} cityState: ${cityStateOk} email:${emailOk}`
+      );
     });
   }
 
   submitInvoice() {
-    let date = new Date()
-    let dateString = (1 + date.getMonth()).toString().padStart(2, '0') + '/' + date.getDate().toString().padStart(2, '0') + '/' + date.getFullYear();
-    Axios.post('/admin/invoice', {
-      name: this.state.name,
-      address: this.state.address,
-      cityState: this.state.cityState,
-      zip: this.state.zip,
-      expiration: this.state.expiration,
-      title: this.state.title,
-      email: this.state.email,
-      items: this.state.items,
-      phone: this.state.phone,
-      dateSubmitted: dateString
-    }).then(res => {
-      if (res.status === 200) {
-        console.log("all ok");
-        this.setState({
-          name: "",
-          address: "",
-          cityState: "",
-          zip: "",
-          expiration: "",
-          title: "",
-          email: "",
-          items: [],
-          itemsField: [],
-          itemError: "",
-          disabled: true,
-          helperText: "",
-          phone: '',
-        }, () => {
-          this.addItem()
-        })
+    var date = new Date();
+    var dateString =
+      (1 + date.getMonth()).toString().padStart(2, "0") +
+      "/" +
+      date
+        .getDate()
+        .toString()
+        .padStart(2, "0") +
+      "/" +
+      date.getFullYear();
 
+    if (this.state.clientSelected) {
+      
+      Axios.post('/admin/invoiceupdate', {
+        id: this.state.idToUpdate,
+        expiration: this.state.expiration,
+        items: this.state.items,
+        title: this.state.title,
+        date: dateString
 
-      }
-    })
+      })
+    } else {
+      Axios.post("/admin/invoice", {
+        name: this.state.name,
+        address: this.state.address,
+        cityState: this.state.cityState,
+        zip: this.state.zip,
+        expiration: this.state.expiration,
+        title: this.state.title,
+        email: this.state.email,
+        items: this.state.items,
+        phone: this.state.phone,
+        dateSubmitted: dateString
+      }).then(res => {
+        if (res.status === 200) {
+          console.log("all ok");
+          this.setState(
+            {
+              name: "",
+              address: "",
+              cityState: "",
+              zip: "",
+              expiration: "",
+              title: "",
+              email: "",
+              items: [],
+              itemsField: [],
+              itemError: "",
+              disabled: true,
+              helperText: "",
+              phone: ""
+            },
+            () => {
+              this.addItem();
+            }
+          );
+        }
+      });
+    }
   }
 
   render() {
@@ -225,6 +306,17 @@ export default class CreateEstimate extends React.Component {
         <Typography variant="h5" component="span" color="secondary">
           <h5>Create an Estimate</h5>
         </Typography>
+
+        {/* //update existing customer */}
+        {this.state.customers.length > 0 ? (
+          <SelectExistingClient
+            update={this.fillWithSelectedCustomer}
+            customers={this.state.customers}
+          />
+        ) : (
+          ""
+        )}
+
         <div>
           <form autoComplete="off" id="create-form">
             <div className="top login">
@@ -232,6 +324,7 @@ export default class CreateEstimate extends React.Component {
                 value={this.state.name}
                 helperText={this.state.name === "" ? this.state.helperText : ""}
                 name="name"
+                disabled={this.state.clientSelected}
                 type="text"
                 label="Client Name"
                 color="secondary"
@@ -261,6 +354,7 @@ export default class CreateEstimate extends React.Component {
                     : ""
                 }
                 name="email"
+                disabled={this.state.clientSelected}
                 label="Client Email"
                 type="email"
                 color="secondary"
@@ -278,6 +372,7 @@ export default class CreateEstimate extends React.Component {
                     : ""
                 }
                 name="phone"
+                disabled={this.state.clientSelected}
                 label="Client Phone Number"
                 type="text"
                 color="secondary"
@@ -285,7 +380,7 @@ export default class CreateEstimate extends React.Component {
                 onChange={this.handleChange}
               />
             </div>
-            <div className='login'>
+            <div className="login">
               <TextField
                 value={this.state.address}
                 helperText={
@@ -293,6 +388,7 @@ export default class CreateEstimate extends React.Component {
                 }
                 name="address"
                 label="Client Street Address"
+                disabled={this.state.clientSelected}
                 type="text"
                 color="secondary"
                 placeholder="Client Street Address"
@@ -309,6 +405,7 @@ export default class CreateEstimate extends React.Component {
                     : ""
                 }
                 name="cityState"
+                disabled={this.state.clientSelected}
                 label="Client City, State"
                 type="text"
                 color="secondary"
@@ -324,6 +421,7 @@ export default class CreateEstimate extends React.Component {
                 }
                 name="zip"
                 label="Client Zip Code"
+                disabled={this.state.clientSelected}
                 type="text"
                 maxLength="2"
                 color="secondary"
@@ -353,7 +451,7 @@ export default class CreateEstimate extends React.Component {
           <Divider />
         </div>
         <Button
-        color='secondary'
+          color="secondary"
           className="add-item-btn"
           onClick={this.addItem}
         >
@@ -361,7 +459,7 @@ export default class CreateEstimate extends React.Component {
         </Button>
         {this.state.itemsField}
         <Button
-        color='secondary'
+          color="secondary"
           className="add-item-btn"
           onClick={this.checkForm}
           disabled={false}
@@ -369,7 +467,7 @@ export default class CreateEstimate extends React.Component {
           Save Form
         </Button>
         <Button
-        color='secondary'
+          color="secondary"
           className="add-item-btn"
           onClick={this.submitInvoice}
           disabled={this.state.disabled}
