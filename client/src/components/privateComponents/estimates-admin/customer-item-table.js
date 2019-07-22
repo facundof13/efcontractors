@@ -6,13 +6,10 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
-  TableSortLabel,
-  Grid,
-  TextField
+  TableSortLabel
 } from "@material-ui/core";
 import orderBy from "lodash/orderBy";
-import prettifyDate from '../helperComponents/prettify-date'
+import prettifyDate from "../helperComponents/prettify-date";
 
 const invertDirection = {
   asc: "desc",
@@ -78,7 +75,9 @@ export default class CustomerItemTable extends React.Component {
                   key={row.title}
                 >
                   <TableCell align="left">{row.title}</TableCell>
-                  <TableCell align="right">{prettifyDate(row.expiration)}</TableCell>
+                  <TableCell align="right">
+                    {prettifyDate(row.expiration)}
+                  </TableCell>
                   <TableCell align="right">${row.total}</TableCell>
                   <TableCell align="right">{prettifyDate(row.date)}</TableCell>
                 </TableRow>

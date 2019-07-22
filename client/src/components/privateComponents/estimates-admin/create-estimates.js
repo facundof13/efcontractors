@@ -1,14 +1,6 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
-import {
-  TextField,
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from "@material-ui/core";
+import { TextField, Button, Divider } from "@material-ui/core";
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
 import SelectExistingClient from "./select-existing-client";
@@ -45,6 +37,8 @@ export default class CreateEstimate extends React.Component {
     this.getCustomers = this.getCustomers.bind(this);
     this.fillWithSelectedCustomer = this.fillWithSelectedCustomer.bind(this);
   }
+
+  // TODO: - change create page to have title and expiration at bottom
 
   componentDidMount() {
     this.getServices().then(() => {
@@ -181,6 +175,7 @@ export default class CreateEstimate extends React.Component {
       let cityStateOk = false;
       let emailOk = false;
       let phoneOk = false;
+      let titleOk = false;
 
       if (
         this.state.name !== "" &&
@@ -188,10 +183,11 @@ export default class CreateEstimate extends React.Component {
         this.state.cityState !== "" &&
         this.state.zip !== "" &&
         this.state.expiration !== "" &&
-        // this.state.title !== "" &&
+        this.state.title !== "" &&
         this.state.email !== "" &&
         this.state.phone !== ""
       ) {
+        titleOk = true;
         if (this.state.zip.match(/\d{5}/)) {
           zipOk = true;
         }
@@ -209,7 +205,7 @@ export default class CreateEstimate extends React.Component {
 
         if (
           this.state.phone.match(
-            /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+            /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
           )
         ) {
           phoneOk = true;
@@ -229,7 +225,7 @@ export default class CreateEstimate extends React.Component {
         });
       }
 
-      if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk) {
+      if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk && titleOk) {
         this.setState({ disabled: false });
       }
       console.log(
@@ -239,39 +235,19 @@ export default class CreateEstimate extends React.Component {
   }
 
   submitInvoice() {
-    var date = new Date();
-    var dateString =
-      (1 + date.getMonth()).toString().padStart(2, "0") +
-      "/" +
-      date
-        .getDate()
-        .toString()
-        .padStart(2, "0") +
-      "/" +
-      date.getFullYear();
+    var expirationDate = new Date();
+    expirationDate.setDate(
+      expirationDate.getDate() + Number(this.state.expiration)
+    );
 
-      var expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + Number(this.state.expiration))
-      // var expirationDateString = (1 + expirationDate.getMonth()).toString().padStart(2, "0") +
-      // "/" +
-      // expirationDate
-      //   .getDate()
-      //   .toString()
-      //   .padStart(2, "0") +
-      // "/" +
-      // expirationDate.getFullYear();
     if (this.state.clientSelected) {
-      
-      Axios.post('/admin/invoiceupdate', {
+      Axios.post("/admin/invoiceupdate", {
         id: this.state.idToUpdate,
         expiration: expirationDate,
         items: this.state.items,
         title: this.state.title,
         date: new Date()
-        
-
-      })
-      .then(res => {
+      }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
           this.setState(
@@ -295,7 +271,7 @@ export default class CreateEstimate extends React.Component {
             }
           );
         }
-      })
+      });
     } else {
       Axios.post("/admin/invoice", {
         name: this.state.name,
@@ -367,18 +343,7 @@ export default class CreateEstimate extends React.Component {
                 placeholder="Client Name"
                 onChange={this.handleChange}
               />
-              <TextField
-                value={this.state.title}
-                // helperText={
-                //   this.state.title === "" ? this.state.helperText : ""
-                // }
-                name="title"
-                label="Title"
-                type="text"
-                color="secondary"
-                placeholder="Title"
-                onChange={this.handleChange}
-              />
+
               <TextField
                 value={this.state.email}
                 helperText={
@@ -402,7 +367,7 @@ export default class CreateEstimate extends React.Component {
                 helperText={
                   this.state.phone === "" ||
                   !this.state.phone.match(
-                    /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+                    /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
                   )
                     ? this.state.helperText
                     : ""
@@ -462,6 +427,20 @@ export default class CreateEstimate extends React.Component {
                 maxLength="2"
                 color="secondary"
                 placeholder="Client Zip Code"
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="login">
+              <TextField
+                value={this.state.title}
+                helperText={
+                  this.state.title === "" ? this.state.helperText : ""
+                }
+                name="title"
+                label="Title"
+                type="text"
+                color="secondary"
+                placeholder="Title"
                 onChange={this.handleChange}
               />
               <TextField

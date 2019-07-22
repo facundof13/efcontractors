@@ -4,7 +4,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  FormHelperText
 } from "@material-ui/core";
 export default class SelectExistingClient extends React.Component {
   constructor(props) {

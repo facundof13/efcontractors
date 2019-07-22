@@ -1,7 +1,7 @@
 import React from "react";
 import orderBy from "lodash/orderBy";
 import _ from "lodash";
-import prettifyDate from '../helperComponents/prettify-date'
+import prettifyDate from "../helperComponents/prettify-date";
 import {
   Typography,
   Paper,
@@ -28,12 +28,7 @@ const invertDirection = {
   asc: "desc",
   desc: "asc"
 };
-const headerRow = [
-  "Title",
-  "Expiration",
-  "Total",
-  "Date Created",
-];
+const headerRow = ["Title", "Expiration", "Total", "Date Created"];
 
 export default class EstimatesTable extends React.Component {
   constructor() {
@@ -151,7 +146,7 @@ export default class EstimatesTable extends React.Component {
     } else emailOk = false;
     if (
       this.state.customerToEdit[0]["phone"].match(
-        /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/g
+        /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
       )
     ) {
       phoneOk = true;
@@ -168,13 +163,14 @@ export default class EstimatesTable extends React.Component {
     } else zipOk = false;
 
     if (emailOk && phoneOk && cityStateOk && zipOk) {
-      Axios.post("/admin/updateCustomer", { customer: this.state.customerToEdit[0] })
-      .then(res => {
+      Axios.post("/admin/updateCustomer", {
+        customer: this.state.customerToEdit[0]
+      }).then(res => {
         if (res.status === 200 || res.status === 304) {
           this.setState({ currentlyEditing: false, customerToEdit: [] });
           this.getCustomers();
         }
-      })
+      });
     } else {
       let alertString = "The following fields are incorrect: ";
       if (!emailOk) alertString += "email ";
@@ -269,7 +265,7 @@ export default class EstimatesTable extends React.Component {
                       Date Created
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align='right' />
+                  <TableCell align="right" />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -357,7 +353,9 @@ export default class EstimatesTable extends React.Component {
                         <TableCell align="right">{row.address}</TableCell>
                         <TableCell align="right">{row.cityState}</TableCell>
                         <TableCell align="right">{row.zip}</TableCell>
-                        <TableCell align="right">{prettifyDate(row.date)}</TableCell>
+                        <TableCell align="right">
+                          {prettifyDate(row.date)}
+                        </TableCell>
                         <TableCell align="right">
                           <div>
                             {this.state.customerItems === row.estimates ? (
@@ -395,17 +393,17 @@ export default class EstimatesTable extends React.Component {
             </Table>
           </Paper>
         </Grid>
-        <Grid container justify='center'>
+        <Grid container justify="center">
           <div>
-          {this.state.customerItems.length > 0 ? (
-            <CustomerItemTable
-              key="1"
-              items={this.state.customerItems}
-              headerRow={headerRow}
-            />
-          ) : (
-            ""
-          )}
+            {this.state.customerItems.length > 0 ? (
+              <CustomerItemTable
+                key="1"
+                items={this.state.customerItems}
+                headerRow={headerRow}
+              />
+            ) : (
+              ""
+            )}
           </div>
         </Grid>
       </div>

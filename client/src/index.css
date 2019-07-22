@@ -51,17 +51,14 @@ body {
   color: #ffff00;
 }
 
-
 .login input {
   color: #ffff00 !important;
 }
 .MuiTableCell-body input {
-  color:black !important;
+  color: black !important;
   font-size: 12px;
   width: 100%;
 }
-
-
 
 /* .notchedOutline {
   border-width: 1px;
