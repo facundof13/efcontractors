@@ -12,6 +12,7 @@ import {
   TextField
 } from "@material-ui/core";
 import orderBy from "lodash/orderBy";
+import prettifyDate from '../helperComponents/prettify-date'
 
 const invertDirection = {
   asc: "desc",
@@ -19,12 +20,10 @@ const invertDirection = {
 };
 
 const getItemToSort = {
-  Item: "item",
-  Description: "description",
-  Quantity: "quantity",
-  Amount: "amount",
-  Tax: "tax",
-  Expense: "expense"
+  Title: "title",
+  Expiration: "expiration",
+  Total: "total",
+  "Date Created": "date"
 };
 
 export default class CustomerItemTable extends React.Component {
@@ -46,7 +45,6 @@ export default class CustomerItemTable extends React.Component {
   }
 
   render() {
-    console.log(this.props.items);
     return (
       <div>
         <Paper>
@@ -68,20 +66,24 @@ export default class CustomerItemTable extends React.Component {
                 ))}
               </TableRow>
             </TableHead>
-              <TableBody>
-                {this.props.items.map(row => (
-                  <TableRow
-                    // onClick={() => this.logItems(row)}
-                    hover={true}
-                    key={row.total}
-                  >
-                    <TableCell align="left">{row.title}</TableCell>
-                    <TableCell align="right">{row.expiration}</TableCell>
-                    <TableCell align="right">${row.total}</TableCell>
-                    <TableCell align="right">{row.date}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+            <TableBody>
+              {orderBy(
+                this.props.items,
+                this.state.columnToSort,
+                this.state.sortDirection
+              ).map(row => (
+                <TableRow
+                  // onClick={() => this.logItems(row)}
+                  hover={true}
+                  key={row.title}
+                >
+                  <TableCell align="left">{row.title}</TableCell>
+                  <TableCell align="right">{prettifyDate(row.expiration)}</TableCell>
+                  <TableCell align="right">${row.total}</TableCell>
+                  <TableCell align="right">{prettifyDate(row.date)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </Paper>
       </div>

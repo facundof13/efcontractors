@@ -250,15 +250,51 @@ export default class CreateEstimate extends React.Component {
       "/" +
       date.getFullYear();
 
+      var expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + Number(this.state.expiration))
+      // var expirationDateString = (1 + expirationDate.getMonth()).toString().padStart(2, "0") +
+      // "/" +
+      // expirationDate
+      //   .getDate()
+      //   .toString()
+      //   .padStart(2, "0") +
+      // "/" +
+      // expirationDate.getFullYear();
     if (this.state.clientSelected) {
       
       Axios.post('/admin/invoiceupdate', {
         id: this.state.idToUpdate,
-        expiration: this.state.expiration,
+        expiration: expirationDate,
         items: this.state.items,
         title: this.state.title,
-        date: dateString
+        date: new Date()
+        
 
+      })
+      .then(res => {
+        if (res.status === 200) {
+          console.log("all ok");
+          this.setState(
+            {
+              name: "",
+              address: "",
+              cityState: "",
+              zip: "",
+              expiration: "",
+              title: "",
+              email: "",
+              items: [],
+              itemsField: [],
+              itemError: "",
+              disabled: true,
+              helperText: "",
+              phone: ""
+            },
+            () => {
+              this.addItem();
+            }
+          );
+        }
       })
     } else {
       Axios.post("/admin/invoice", {
@@ -266,12 +302,12 @@ export default class CreateEstimate extends React.Component {
         address: this.state.address,
         cityState: this.state.cityState,
         zip: this.state.zip,
-        expiration: this.state.expiration,
+        expiration: expirationDate,
         title: this.state.title,
         email: this.state.email,
         items: this.state.items,
         phone: this.state.phone,
-        dateSubmitted: dateString
+        dateSubmitted: new Date()
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");

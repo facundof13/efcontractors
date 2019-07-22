@@ -1,6 +1,7 @@
 import React from "react";
 import orderBy from "lodash/orderBy";
 import _ from "lodash";
+import prettifyDate from '../helperComponents/prettify-date'
 import {
   Typography,
   Paper,
@@ -134,13 +135,12 @@ export default class EstimatesTable extends React.Component {
 
   handleSave() {
     // console.log(this.state)
-    let updatedCustomer = this.state.customerToEdit[0];
+    // let updatedCustomer = this.state.customerToEdit[0];
     //check to make sure email, phone, cityState, zipcode, and date match
     let emailOk = false;
     let phoneOk = false;
     let cityStateOk = false;
     let zipOk = false;
-    let dateOk = false;
 
     if (
       this.state.customerToEdit[0]["email"].match(
@@ -166,24 +166,21 @@ export default class EstimatesTable extends React.Component {
     if (this.state.customerToEdit[0]["zip"].match(/^\d{5}$/)) {
       zipOk = true;
     } else zipOk = false;
-    if (
-      this.state.customerToEdit[0]["date"].match(/^\d{2}\/\d{2}\/20\d\d$/gm)
-    ) {
-      dateOk = true;
-    } else dateOk = false;
 
-    if (emailOk && phoneOk && cityStateOk && zipOk && dateOk) {
-      this.setState({ currentlyEditing: false, customerToEdit: [] });
-      Axios.post("/admin/updateCustomer", { customer: updatedCustomer });
-      console.log(updatedCustomer);
-      this.getCustomers();
+    if (emailOk && phoneOk && cityStateOk && zipOk) {
+      Axios.post("/admin/updateCustomer", { customer: this.state.customerToEdit[0] })
+      .then(res => {
+        if (res.status === 200 || res.status === 304) {
+          this.setState({ currentlyEditing: false, customerToEdit: [] });
+          this.getCustomers();
+        }
+      })
     } else {
       let alertString = "The following fields are incorrect: ";
       if (!emailOk) alertString += "email ";
       if (!phoneOk) alertString += "phone ";
       if (!cityStateOk) alertString += "city/state ";
       if (!zipOk) alertString += "zip ";
-      if (!dateOk) alertString += "date ";
 
       window.alert(alertString);
     }
@@ -330,9 +327,10 @@ export default class EstimatesTable extends React.Component {
                         </TableCell>
                         <TableCell align="right">
                           <TextField
+                            disabled
                             name="date"
                             onChange={this.handleChange}
-                            value={customer.date}
+                            value={prettifyDate(customer.date)}
                           />
                         </TableCell>
                         <TableCell align="right">
@@ -359,7 +357,7 @@ export default class EstimatesTable extends React.Component {
                         <TableCell align="right">{row.address}</TableCell>
                         <TableCell align="right">{row.cityState}</TableCell>
                         <TableCell align="right">{row.zip}</TableCell>
-                        <TableCell align="right">{row.date}</TableCell>
+                        <TableCell align="right">{prettifyDate(row.date)}</TableCell>
                         <TableCell align="right">
                           <div>
                             {this.state.customerItems === row.estimates ? (

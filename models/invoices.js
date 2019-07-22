@@ -29,6 +29,15 @@ function addInvoiceCustomer(query) {
 function addEstimateToCustomer(id, query) {
   console.log(id)
   console.log(query)
+  invoices.updateOne(
+    { _id: ObjectId(id) },
+    {
+      $push: {estimates: query}
+    },
+    (err, item) => {
+      console.log(`Updated customer ${id}`);
+    }
+  );
 }
 
 function deleteCustomer(id) {
@@ -36,12 +45,23 @@ function deleteCustomer(id) {
 }
 
 function updateCustomer(id, query) {
+  console.log(id)
+  console.log(query)
+
   invoices.updateOne(
     {
       _id: ObjectId(id)
     },
     {
-      $set: query
+      $set: {
+      name: query.name,
+      address: query.address,
+      cityState: query.cityState,
+      zip: query.zip,
+      email: query.email,
+      date: query.date,
+      phone: query.phone
+      }
     },
     (err, item) => {
       console.log(`Updated customer ${id}`);

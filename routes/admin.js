@@ -242,28 +242,9 @@ router.post("/invoice", function(req, res, next) {
 });
 
 router.post("/updateCustomer", function(req, res, next) {
-  let id = req.body.customer._id;
-  let name = titleize(req.body.customer.name);
-  let address = titleize(req.body.customer.address);
-  let cityState = titleize(req.body.customer.cityState);
-  let zip = req.body.customer.zip;
-  let title = titleize(req.body.customer.title);
-  let email = req.body.customer.email;
-  let phone = req.body.customer.phone;
-  let date = req.body.customer.date;
+  var id = req.body.customer._id;
 
-  let query = {
-    name: name,
-    address: address,
-    cityState: cityState,
-    zip: zip,
-    title: title,
-    email: email,
-    phone: phone,
-    date: date
-  };
-
-  invoices.updateCustomer(id, query);
+  invoices.updateCustomer(id, req.body.customer);
   res.end();
 });
 module.exports = router;
