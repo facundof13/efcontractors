@@ -40,7 +40,8 @@ export default class EstimatesTable extends React.Component {
       customerItems: [],
       currentlyEditing: false,
       customerToEdit: [],
-      unChangedArray: []
+      unChangedArray: [],
+      customerInfo: []
     };
 
     this.dummyRef = React.createRef();
@@ -91,13 +92,13 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleClick(row) {
-    // console.log(row)
     if (this.state.customerItems === row.estimates) {
       this.setState({ customerItems: [] });
     } else {
       this.setState(
         {
-          customerItems: row.estimates
+          customerItems: row.estimates,
+          customerInfo: row
         },
         () => {
           if (this.state.customerItems.length > 0) {
@@ -400,6 +401,7 @@ export default class EstimatesTable extends React.Component {
                 key="1"
                 items={this.state.customerItems}
                 headerRow={headerRow}
+                customerInfo = {this.state.customerInfo}
               />
             ) : (
               ""
