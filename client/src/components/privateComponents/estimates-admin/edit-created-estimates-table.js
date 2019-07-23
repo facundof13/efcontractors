@@ -1,4 +1,5 @@
 import React from "react";
+import update from "immutability-helper";
 import {
   TableHead,
   Paper,
@@ -11,10 +12,12 @@ import {
   Checkbox,
   InputLabel,
   FormControl,
+  IconButton,
   Select,
   MenuItem
 } from "@material-ui/core";
 import Axios from "axios";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import { subtractDates, prettifyDate } from "../helperComponents/prettify-date";
 
 export default class EditCreatedEstimatesTable extends React.Component {
@@ -43,12 +46,10 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   getSelector(item) {
-    console.log(this.state);
-    console.log(item);
     return (
       <FormControl className="item-select">
         <Select
-          //   className="estimate-item-select-width"
+          className="edit-estimate-item-selector"
           onChange={this.handleChange}
           value={item}
           displayEmpty={true}
@@ -82,14 +83,21 @@ export default class EditCreatedEstimatesTable extends React.Component {
     });
   }
 
-  handleChange(event, isChecked) {
+  handleChange(i, event) {
+    console.log(i)
     if (
       event.target.name === "contractAttached" ||
       event.target.name === "invoice"
     ) {
-      console.log(event.target.name, isChecked);
+      this.setState({ [event.target.name]: event.target.checked });
+    } else if (event.target.name === "tax" || event.target.name === "expense") {
+      this.setState({});
     }
     console.log(event.target.name, event.target.value);
+  }
+
+  handleSave() {
+    console.log(this.state);
   }
 
   render() {
@@ -142,6 +150,15 @@ export default class EditCreatedEstimatesTable extends React.Component {
                   onChange={this.handleChange}
                 />
               </TableCell>
+              <TableCell>
+                <IconButton
+                  size="small"
+                  title="Save estimate"
+                  onClick={this.handleSave}
+                >
+                  <SaveOutlinedIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           </TableBody>
           <TableHead>
@@ -155,7 +172,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.items.map(item => (
+            {this.state.items.map((item, i) => (
               <TableRow key={item.num}>
                 <TableCell>{this.getSelector(item.item)}</TableCell>
                 <TableCell>
@@ -163,6 +180,38 @@ export default class EditCreatedEstimatesTable extends React.Component {
                     name="description"
                     onChange={this.handleChange}
                     value={item.description}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name="quantity"
+                    onChange={this.handleChange}
+                    value={item.quantity}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name="amount"
+                    onChange={(e) => this.handleChange(e)}
+                    value={item.amount}
+                  />
+                </TableCell>
+                <TableCell>
+                  <FormControlLabel
+                    checked={item.tax}
+                    name="tax"
+                    className="estimate-checkbox"
+                    control={<Checkbox />}
+                    onChange={(e) => this.handleChange(i, e)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <FormControlLabel
+                    checked={item.expense}
+                    name="expense"
+                    className="estimate-checkbox"
+                    control={<Checkbox />}
+                    onChange={this.handleChange.bind(i)}
                   />
                 </TableCell>
               </TableRow>
