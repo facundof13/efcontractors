@@ -15,3 +15,11 @@ export default function prettifyDate(date) {
     // console.log(ret)
     return dateString
 }
+
+export function subtractDates(created, expiration) {
+  let createdDate = new Date(created)
+  let expirationDate = new Date(expiration)
+
+  expirationDate -= createdDate
+  return (Math.round(expirationDate/86400000))
+}

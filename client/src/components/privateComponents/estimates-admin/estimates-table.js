@@ -331,10 +331,18 @@ export default class EstimatesTable extends React.Component {
                           />
                         </TableCell>
                         <TableCell align="right">
-                          <IconButton size="small" onClick={this.handleSave}>
+                          <IconButton
+                            size="small"
+                            title="Save estimate"
+                            onClick={this.handleSave}
+                          >
                             <SaveOutlinedIcon />
                           </IconButton>
-                          <IconButton size="small" onClick={this.handleCancel}>
+                          <IconButton
+                            size="small"
+                            title="Cancel"
+                            onClick={this.handleCancel}
+                          >
                             <CancelOutlinedIcon />
                           </IconButton>
                         </TableCell>
@@ -362,6 +370,7 @@ export default class EstimatesTable extends React.Component {
                             {this.state.customerItems === row.estimates ? (
                               <IconButton
                                 size="small"
+                                title="Hide estimates"
                                 onClick={() => this.handleClick(row)}
                               >
                                 <KeyboardArrowUpOutlined />
@@ -369,6 +378,7 @@ export default class EstimatesTable extends React.Component {
                             ) : (
                               <IconButton
                                 size="small"
+                                title="Show estimates"
                                 onClick={() => this.handleClick(row)}
                               >
                                 <KeyboardArrowDownOutlined />
@@ -376,12 +386,14 @@ export default class EstimatesTable extends React.Component {
                             )}
                             <IconButton
                               size="small"
+                              title="Edit client info"
                               onClick={() => this.editCustomer(row)}
                             >
                               <CreateOutlinedIcon />
                             </IconButton>
                             <IconButton
                               size="small"
+                              title="Delete client"
                               onClick={() => this.deleteCustomer(row)}
                             >
                               <DeleteOutlinedIcon />
@@ -401,7 +413,7 @@ export default class EstimatesTable extends React.Component {
                 key="1"
                 items={this.state.customerItems}
                 headerRow={headerRow}
-                customerInfo = {this.state.customerInfo}
+                customerInfo={this.state.customerInfo}
               />
             ) : (
               ""

@@ -168,7 +168,7 @@ export default class ItemField extends React.Component {
       <form id="item-form">
         <div className='login'>
           <FormControl>
-            <InputLabel htmlFor="item-select">Item</InputLabel>
+            <InputLabel htmlFor="customer-select">Item</InputLabel>
             <Select
               className="estimate-item-select-width"
               id="item-select"
@@ -242,6 +242,7 @@ export default class ItemField extends React.Component {
             <IconButton
               color="secondary"
               onClick={() => this.props.removeItem(this.props.num)}
+              title="Delete"
             >
               <DeleteOutlinedIcon />
             </IconButton>

@@ -10,8 +10,13 @@ import {
   IconButton
 } from "@material-ui/core";
 import InsertDriveFileOutlined from "@material-ui/icons/InsertDriveFileOutlined";
+import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
+import SendOutlined from "@material-ui/icons/SendOutlined";
+import AttachMoneyOutlined from "@material-ui/icons/AttachMoneyOutlined";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
+import EditCreatedEstimatesTable from "./edit-created-estimates-table";
 
 const invertDirection = {
   asc: "desc",
@@ -29,9 +34,15 @@ export default class CustomerItemTable extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { columnToSort: "item", sortDirection: "desc" };
+    this.state = {
+      columnToSort: "item",
+      sortDirection: "desc",
+      currentlyEditing: false,
+      estimateToEdit: []
+    };
     this.handleSort = this.handleSort.bind(this);
     this.createPdf = this.createPdf.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handleSort(item) {
@@ -49,56 +60,96 @@ export default class CustomerItemTable extends React.Component {
     console.log(row);
   }
 
+  handleEdit(row) {
+    this.setState({
+      currentlyEditing: true,
+      estimateToEdit: JSON.parse(JSON.stringify(row))
+    });
+  }
+
   render() {
     return (
       <div>
-        <Paper>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                {this.props.headerRow.map(item => (
-                  <TableCell
-                    align={item === "Title" ? "left" : "right"}
-                    key={item}
-                  >
-                    <TableSortLabel
-                      direction={this.state.sortDirection}
-                      onClick={() => this.handleSort(item)}
+        {this.state.currentlyEditing ? (
+          <EditCreatedEstimatesTable
+            estimateToEdit={this.state.estimateToEdit}
+          />
+        ) : (
+          <Paper>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  {this.props.headerRow.map(item => (
+                    <TableCell
+                      align={item === "Title" ? "left" : "right"}
+                      key={item}
                     >
-                      {item}
-                    </TableSortLabel>
-                  </TableCell>
-                ))}
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orderBy(
-                this.props.items,
-                this.state.columnToSort,
-                this.state.sortDirection
-              ).map(row => (
-                <TableRow
-                  // onClick={() => this.logItems(row)}
-                  hover={true}
-                  key={row.title}
-                >
-                  <TableCell align="left">{row.title}</TableCell>
-                  <TableCell align="right">
-                    {prettifyDate(row.expiration)}
-                  </TableCell>
-                  <TableCell align="right">${row.total}</TableCell>
-                  <TableCell align="right">{prettifyDate(row.date)}</TableCell>
-                  <TableCell align="right">
-                    <IconButton size="small" onClick={() => this.createPdf(row)}>
-                      <InsertDriveFileOutlined />
-                    </IconButton>
-                  </TableCell>
+                      <TableSortLabel
+                        direction={this.state.sortDirection}
+                        onClick={() => this.handleSort(item)}
+                      >
+                        {item}
+                      </TableSortLabel>
+                    </TableCell>
+                  ))}
+                  <TableCell />
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
+              </TableHead>
+              <TableBody>
+                {orderBy(
+                  this.props.items,
+                  this.state.columnToSort,
+                  this.state.sortDirection
+                ).map(row => (
+                  <TableRow
+                    // onClick={() => this.logItems(row)}
+                    hover={true}
+                    key={row.title}
+                  >
+                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="right">
+                      {prettifyDate(row.expiration)}
+                    </TableCell>
+                    <TableCell align="right">${row.total}</TableCell>
+                    <TableCell align="right">
+                      {prettifyDate(row.date)}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        size="small"
+                        title="Edit estimate"
+                        onClick={() => this.handleEdit(row)}
+                      >
+                        <CreateOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        title="Send estimate"
+                        onClick={() => this.createPdf(row)}
+                      >
+                        <SendOutlined />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        title="Make invoice"
+                        onClick={() => this.createPdf(row)}
+                      >
+                        <AttachMoneyOutlined />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        title="Delete estimate"
+                        onClick={() => this.createPdf(row)}
+                      >
+                        <DeleteOutlinedIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        )}
       </div>
     );
   }

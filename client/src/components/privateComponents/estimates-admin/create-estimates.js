@@ -62,7 +62,6 @@ export default class CreateEstimate extends React.Component {
   getCustomers() {
     Axios.get("/admin/invoiceCustomers").then(res => {
       this.setState({ customers: res.data });
-      console.log(res.data);
     });
   }
 
@@ -487,7 +486,7 @@ export default class CreateEstimate extends React.Component {
           onClick={this.submitInvoice}
           disabled={this.state.disabled}
         >
-          Submit Invoice
+          Submit Estimate
         </Button>
       </div>
     );

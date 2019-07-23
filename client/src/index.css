@@ -59,6 +59,12 @@ body {
   font-size: 12px;
   width: 100%;
 }
+.estimate-checkbox .MuiTouchRipple-root {
+  color: black !important;
+}
+.estimate-checkbox .MuiCheckbox-root {
+  color: black !important;
+}
 
 /* .notchedOutline {
   border-width: 1px;
@@ -241,4 +247,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .item-table {
   max-width: 50%;
+}
+
+.item-select .MuiInputBase-input {
+  color: black !important;
 }
