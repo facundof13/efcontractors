@@ -25,7 +25,9 @@ export default class CreateEstimate extends React.Component {
       customers: [],
       client: [],
       clientSelected: false,
-      idToUpdate: ""
+      idToUpdate: "",
+      invoice: false,
+      attachContract: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -245,7 +247,9 @@ export default class CreateEstimate extends React.Component {
         expiration: expirationDate,
         items: this.state.items,
         title: this.state.title,
-        date: new Date()
+        date: new Date(),
+        invoice: false,
+        attachContract: false
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -263,7 +267,9 @@ export default class CreateEstimate extends React.Component {
               itemError: "",
               disabled: true,
               helperText: "",
-              phone: ""
+              phone: "",
+              invoice: false,
+              attachContract: false
             },
             () => {
               this.addItem();
@@ -282,7 +288,9 @@ export default class CreateEstimate extends React.Component {
         email: this.state.email,
         items: this.state.items,
         phone: this.state.phone,
-        dateSubmitted: new Date()
+        dateSubmitted: new Date(),
+        invoice: false,
+        attachContract: false
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");

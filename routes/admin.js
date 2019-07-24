@@ -222,7 +222,9 @@ router.post("/invoice", function(req, res, next) {
     total: total,
     expiration: expiration,
     title: title,
-    date: date
+    date: date,
+    invoice: req.body.invoice,
+    contractAttached: req.body.contractAttached,
   };
 
   let query = {
@@ -255,5 +257,12 @@ router.post('/updateestimate', function(req, res, next) {
   .then(
     res.sendStatus(200)
   )
+})
+
+router.delete('/deleteestimate', function(req, res, next) {
+  let query = req.body.obj
+  
+  invoices.deleteEstimate(query)
+  res.end()
 })
 module.exports = router;

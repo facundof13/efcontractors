@@ -12,7 +12,6 @@ import {
 import InsertDriveFileOutlined from "@material-ui/icons/InsertDriveFileOutlined";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import SendOutlined from "@material-ui/icons/SendOutlined";
-import AttachMoneyOutlined from "@material-ui/icons/AttachMoneyOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
@@ -80,6 +79,10 @@ export default class CustomerEstimateTable extends React.Component {
     this.setState({ currentlyEditing: false, estimateToEdit: [] });
   }
 
+  handleEstimateDelete(estimate) {
+    console.log(estimate)
+  }
+
   render() {
     return (
       <div>
@@ -143,21 +146,21 @@ export default class CustomerEstimateTable extends React.Component {
                       <IconButton
                         size="small"
                         title="Send estimate"
-                        onClick={() => this.createPdf(row)}
+                        onClick={() => this.sendEstimate(row)}
                       >
                         <SendOutlined />
                       </IconButton>
                       <IconButton
                         size="small"
-                        title="Make invoice"
+                        title="Show pdf"
                         onClick={() => this.createPdf(row)}
                       >
-                        <AttachMoneyOutlined />
+                        <InsertDriveFileOutlined />
                       </IconButton>
                       <IconButton
                         size="small"
                         title="Delete estimate"
-                        onClick={() => this.createPdf(row)}
+                        onClick={() => this.props.handleDelete(row)}
                       >
                         <DeleteOutlinedIcon />
                       </IconButton>

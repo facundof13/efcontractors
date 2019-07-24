@@ -83,15 +83,23 @@ function updateEstimate(query) {
         "estimates.date": query.date
       },
       {
-        $set:
-        {
-          "estimates.$" : query
+        $set: {
+          "estimates.$": query
         }
       }
     );
-    resolve()
-  })
+    resolve();
+  });
+}
 
+function deleteEstimate(query) {
+  console.log(query);
+  invoices.updateOne(
+    {'_id': ObjectId("5d38e367158079e7a97592aa")}, 
+    { $pull: { "estimates" : { date: query.date } } },
+false,
+true 
+);
 }
 
 module.exports = {
@@ -101,5 +109,6 @@ module.exports = {
   deleteCustomer,
   updateCustomer,
   addEstimateToCustomer,
-  updateEstimate
+  updateEstimate,
+  deleteEstimate
 };

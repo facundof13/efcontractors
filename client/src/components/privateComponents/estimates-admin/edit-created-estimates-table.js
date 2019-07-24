@@ -29,7 +29,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       selectItem: null,
       services: [],
       date: this.props.estimateToEdit.date,
-      contractAttached: this.props.estimateToEdit.contractAttached,
+      contractAttached: false,
       expiration: subtractDates(
         this.props.estimateToEdit.date,
         this.props.estimateToEdit.expiration
@@ -137,6 +137,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <Paper>
         <Table size="small">
@@ -175,10 +176,10 @@ export default class EditCreatedEstimatesTable extends React.Component {
               </TableCell>
               <TableCell>
                 <FormControlLabel
-                  checked={this.state.invoice}
                   name="invoice"
                   className="estimate-checkbox"
                   control={<Checkbox />}
+                  checked={this.state.invoice}
                   onChange={event => this.handleChange(event)}
                 />
               </TableCell>

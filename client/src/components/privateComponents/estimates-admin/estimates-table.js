@@ -56,6 +56,7 @@ export default class EstimatesTable extends React.Component {
     this.handleCancel = this.handleCancel.bind(this);
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleEstimateDelete = this.handleEstimateDelete.bind(this);
   }
 
   componentDidMount() {
@@ -68,14 +69,14 @@ export default class EstimatesTable extends React.Component {
         if (changeItems) {
           let id = this.state.customerInfo._id;
           let idx = 0;
-          for (let i = 0; i < this.state.items.length; i++) {
-            if (this.state.items[i]._id === id) {
+          for (let i = 0; i < this.state.customers.length; i++) {
+            if (this.state.customers[i]._id === id) {
               idx = i;
             }
           }
-          console.log(idx);
+          // console.log(idx);
           this.setState({
-            customerItems: this.state.items[idx].estimates
+            customerItems: this.state.customers[idx].estimates
           });
         }
       });
@@ -204,23 +205,17 @@ export default class EstimatesTable extends React.Component {
     let id = this.state.customerInfo._id;
     Axios.post("/admin/updateestimate", { id: id, obj: obj }).then(() => {
       this.getCustomers(true);
-      // () {
-      // console.log(this.state);
-      // let customersCopy = [...this.state.customers]
-      // let idx = 0;
-      // for (let i = 0; i < customersCopy.length; i++) {
-      //   if (customersCopy[i]._id === id) {
-      //     idx = i;
-      //   }
-      // }
-      // console.log(idx);
-      // this.setState({
-      //   customerItems: customersCopy[idx].estimates
-      // });
-      // });
-      // this.setState({customerItems: this.state.customers[idx].estimates}, () =)
     });
   };
+
+  handleEstimateDelete(obj) {
+    console.log(this.state.customerInfo._id)
+    console.log(obj)
+    Axios.delete('/admin/deleteestimate', {data: {obj: obj}})
+    .then(() => {
+
+    })
+  }
 
   handleCancel() {
     this.setState({
@@ -440,6 +435,7 @@ export default class EstimatesTable extends React.Component {
                 headerRow={headerRow}
                 customerInfo={this.state.customerInfo}
                 handleSave={this.handleEstimateSave}
+                handleDelete={this.handleEstimateDelete}
               />
             ) : (
               ""
