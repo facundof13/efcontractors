@@ -55,16 +55,29 @@ export default class EstimatesTable extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
     this.getCustomers();
   }
 
-  getCustomers() {
-    return new Promise((resolve, reject) => {
-      Axios.get("/admin/invoiceCustomers").then(res => {
-        this.setState({ customers: res.data });
+  getCustomers(changeItems) {
+    Axios.get("/admin/invoiceCustomers").then(res => {
+      this.setState({ customers: res.data }, function() {
+        if (changeItems) {
+          let id = this.state.customerInfo._id;
+          let idx = 0;
+          for (let i = 0; i < this.state.items.length; i++) {
+            if (this.state.items[i]._id === id) {
+              idx = i;
+            }
+          }
+          console.log(idx);
+          this.setState({
+            customerItems: this.state.items[idx].estimates
+          });
+        }
       });
     });
   }
@@ -187,23 +200,27 @@ export default class EstimatesTable extends React.Component {
     }
   }
 
-  handleEstimateSave(obj) {
+  handleEstimateSave = obj => {
     let id = this.state.customerInfo._id;
     Axios.post("/admin/updateestimate", { id: id, obj: obj }).then(() => {
-      this.getCustomers()
-      .then(() => {
-        let idx = 0;
-        this.state.customers.forEach((customer, index) => {
-          if(customer._id === id) {
-            idx = index
-          }
-        })
-        this.setState({customerItems: this.state.customers[idx].estimates}, () =)
-        console.log(this.state)
-        console.log(idx)
-      })
+      this.getCustomers(true);
+      // () {
+      // console.log(this.state);
+      // let customersCopy = [...this.state.customers]
+      // let idx = 0;
+      // for (let i = 0; i < customersCopy.length; i++) {
+      //   if (customersCopy[i]._id === id) {
+      //     idx = i;
+      //   }
+      // }
+      // console.log(idx);
+      // this.setState({
+      //   customerItems: customersCopy[idx].estimates
+      // });
+      // });
+      // this.setState({customerItems: this.state.customers[idx].estimates}, () =)
     });
-  }
+  };
 
   handleCancel() {
     this.setState({
