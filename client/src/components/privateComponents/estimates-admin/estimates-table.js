@@ -207,6 +207,7 @@ export default class EstimatesTable extends React.Component {
       this.getCustomers(true);
     });
   };
+  // todo here
 
   handleEstimateDelete(obj) {
     console.log(this.state.customerInfo._id)
