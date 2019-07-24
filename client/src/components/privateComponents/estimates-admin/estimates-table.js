@@ -190,10 +190,18 @@ export default class EstimatesTable extends React.Component {
   handleEstimateSave(obj) {
     let id = this.state.customerInfo._id;
     Axios.post("/admin/updateestimate", { id: id, obj: obj }).then(() => {
-      this.getCustomers();
-      this.setState(state => ({
-        customerItems: state.customers[this.state.index].estimates
-      }))
+      this.getCustomers()
+      .then(() => {
+        let idx = 0;
+        this.state.customers.forEach((customer, index) => {
+          if(customer._id === id) {
+            idx = index
+          }
+        })
+        this.setState({customerItems: this.state.customers[idx].estimates}, () =)
+        console.log(this.state)
+        console.log(idx)
+      })
     });
   }
 
@@ -204,7 +212,7 @@ export default class EstimatesTable extends React.Component {
     });
   }
   render() {
-    console.log(this.state);
+    // console.log(this.state);
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">
