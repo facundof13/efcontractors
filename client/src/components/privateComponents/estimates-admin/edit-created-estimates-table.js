@@ -18,7 +18,8 @@ import {
 } from "@material-ui/core";
 import Axios from "axios";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
-import { subtractDates, prettifyDate } from "../helperComponents/prettify-date";
+import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
+import { subtractDates, prettifyDate, addDates } from "../helperComponents/prettify-date";
 
 export default class EditCreatedEstimatesTable extends React.Component {
   constructor(props) {
@@ -27,11 +28,15 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.state = {
       selectItem: null,
       services: [],
+      date: this.props.estimateToEdit.date,
       contractAttached: this.props.estimateToEdit.contractAttached,
-      expiration: this.props.estimateToEdit.expiration,
+      expiration: subtractDates(
+        this.props.estimateToEdit.date,
+        this.props.estimateToEdit.expiration
+      ),
       invoice: this.props.estimateToEdit.invoice,
       title: this.props.estimateToEdit.title,
-      items: this.props.estimateToEdit.items
+      items: [...this.props.estimateToEdit.items]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -39,18 +44,20 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getServices = this.getServices.bind(this);
     this.getSelector = this.getSelector.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
   }
 
   componentDidMount() {
     this.getServices();
   }
 
-  getSelector(item) {
+  getSelector(item, index) {
     return (
       <FormControl className="item-select">
         <Select
           className="edit-estimate-item-selector"
-          onChange={this.handleChange}
+          onChange={event => this.handleChange(event, index)}
           value={item}
           displayEmpty={true}
           name="item"
@@ -83,25 +90,53 @@ export default class EditCreatedEstimatesTable extends React.Component {
     });
   }
 
-  handleChange(i, event) {
-    console.log(i)
-    if (
+  handleChange(event, index) {
+    let key = event.target.name;
+    let value = event.target.value;
+    let stateToChange = [...this.state.items];
+    if (event.target.name === "title" || event.target.name === "expiration") {
+      this.setState({ [key]: value });
+    } else if (
       event.target.name === "contractAttached" ||
       event.target.name === "invoice"
     ) {
-      this.setState({ [event.target.name]: event.target.checked });
+      this.setState({ [key]: event.target.checked });
     } else if (event.target.name === "tax" || event.target.name === "expense") {
-      this.setState({});
+      stateToChange[index][key] = event.target.checked;
+      this.setState({
+        items: stateToChange
+      });
+    } else {
+      stateToChange[index][key] = value;
+      this.setState({
+        items: stateToChange
+      });
     }
-    console.log(event.target.name, event.target.value);
+  }
+
+  cancelEdit() {
+    this.props.cancelEdit()
   }
 
   handleSave() {
-    console.log(this.state);
+    let total = 0
+    this.state.items.forEach(item => {
+      total += Number(item.amount.replace('$', ''))
+    })
+
+    let object = {
+      items: [...this.state.items],
+      invoice: this.state.invoice,
+      contractAttached: this.state.contractAttached,
+      total: total,
+      expiration: addDates(this.state.date, this.state.expiration),
+      title: this.state.title,
+      date: this.state.date
+    }
+    this.props.handleSave(object)
   }
 
   render() {
-    console.log(this.state);
     return (
       <Paper>
         <Table size="small">
@@ -118,36 +153,33 @@ export default class EditCreatedEstimatesTable extends React.Component {
               <TableCell>
                 <TextField
                   name="title"
-                  onChange={this.handleChange}
-                  value={this.props.estimateToEdit.title}
+                  onChange={event => this.handleChange(event)}
+                  value={this.state.title}
                 />
               </TableCell>
               <TableCell>
                 <TextField
                   name="expiration"
-                  onChange={this.handleChange}
-                  value={subtractDates(
-                    this.props.estimateToEdit.date,
-                    this.props.estimateToEdit.expiration
-                  )}
+                  onChange={event => this.handleChange(event)}
+                  value={this.state.expiration}
                 />
               </TableCell>
               <TableCell>
                 <FormControlLabel
-                  checked={this.props.estimateToEdit.contractAttached}
                   name="contractAttached"
                   className="estimate-checkbox"
                   control={<Checkbox />}
-                  onChange={this.handleChange}
+                  checked={this.state.contractAttached}
+                  onChange={event => this.handleChange(event)}
                 />
               </TableCell>
               <TableCell>
                 <FormControlLabel
-                  checked={this.props.estimateToEdit.invoice}
+                  checked={this.state.invoice}
                   name="invoice"
                   className="estimate-checkbox"
                   control={<Checkbox />}
-                  onChange={this.handleChange}
+                  onChange={event => this.handleChange(event)}
                 />
               </TableCell>
               <TableCell>
@@ -157,6 +189,13 @@ export default class EditCreatedEstimatesTable extends React.Component {
                   onClick={this.handleSave}
                 >
                   <SaveOutlinedIcon />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  title="Cancel edit"
+                  onClick={this.cancelEdit}
+                >
+                  <CancelOutlinedIcon />
                 </IconButton>
               </TableCell>
             </TableRow>
@@ -172,50 +211,52 @@ export default class EditCreatedEstimatesTable extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.items.map((item, i) => (
-              <TableRow key={item.num}>
-                <TableCell>{this.getSelector(item.item)}</TableCell>
-                <TableCell>
-                  <TextField
-                    name="description"
-                    onChange={this.handleChange}
-                    value={item.description}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    name="quantity"
-                    onChange={this.handleChange}
-                    value={item.quantity}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    name="amount"
-                    onChange={(e) => this.handleChange(e)}
-                    value={item.amount}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControlLabel
-                    checked={item.tax}
-                    name="tax"
-                    className="estimate-checkbox"
-                    control={<Checkbox />}
-                    onChange={(e) => this.handleChange(i, e)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControlLabel
-                    checked={item.expense}
-                    name="expense"
-                    className="estimate-checkbox"
-                    control={<Checkbox />}
-                    onChange={this.handleChange.bind(i)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
+            {this.state.items.map(function(item, index) {
+              return (
+                <TableRow key={item.num}>
+                  <TableCell>{this.getSelector(item.item, index)}</TableCell>
+                  <TableCell>
+                    <TextField
+                      name="description"
+                      onChange={event => this.handleChange(event, index)}
+                      value={item.description}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      name="quantity"
+                      onChange={event => this.handleChange(event, index)}
+                      value={item.quantity}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      name="amount"
+                      onChange={event => this.handleChange(event, index)}
+                      value={item.amount}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControlLabel
+                      checked={item.tax}
+                      name="tax"
+                      className="estimate-checkbox"
+                      control={<Checkbox />}
+                      onChange={event => this.handleChange(event, index)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControlLabel
+                      checked={item.expense}
+                      name="expense"
+                      className="estimate-checkbox"
+                      control={<Checkbox />}
+                      onChange={event => this.handleChange(event, index)}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            }, this)}
           </TableBody>
         </Table>
       </Paper>

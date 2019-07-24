@@ -3,6 +3,13 @@ var db = mongoUtil.getDb();
 const invoices = db.collection("invoices");
 var ObjectId = require("mongodb").ObjectID;
 
+function compareDates(date1, date2) {
+  let newDate1 = new Date(date1);
+  let newDate2 = new Date(date2);
+
+  return newDate1.getTime() === newDate2.getTime();
+}
+
 function getServices() {
   // return ["Haul Off", "Demolition", "Tile", "Fence" ]
   return new Promise((resolve, reject) => {
@@ -27,12 +34,12 @@ function addInvoiceCustomer(query) {
 }
 
 function addEstimateToCustomer(id, query) {
-  console.log(id)
-  console.log(query)
+  console.log(id);
+  console.log(query);
   invoices.updateOne(
     { _id: ObjectId(id) },
     {
-      $push: {estimates: query}
+      $push: { estimates: query }
     },
     (err, item) => {
       console.log(`Updated customer ${id}`);
@@ -45,8 +52,8 @@ function deleteCustomer(id) {
 }
 
 function updateCustomer(id, query) {
-  console.log(id)
-  console.log(query)
+  console.log(id);
+  console.log(query);
 
   invoices.updateOne(
     {
@@ -54,19 +61,37 @@ function updateCustomer(id, query) {
     },
     {
       $set: {
-      name: query.name,
-      address: query.address,
-      cityState: query.cityState,
-      zip: query.zip,
-      email: query.email,
-      date: query.date,
-      phone: query.phone
+        name: query.name,
+        address: query.address,
+        cityState: query.cityState,
+        zip: query.zip,
+        email: query.email,
+        date: query.date,
+        phone: query.phone
       }
     },
     (err, item) => {
       console.log(`Updated customer ${id}`);
     }
   );
+}
+
+function updateEstimate(query) {
+  return new Promise((resolve, reject) => {
+    invoices.updateOne(
+      {
+        "estimates.date": query.date
+      },
+      {
+        $set:
+        {
+          "estimates.$" : query
+        }
+      }
+    );
+    resolve()
+  })
+
 }
 
 module.exports = {
@@ -76,4 +101,5 @@ module.exports = {
   deleteCustomer,
   updateCustomer,
   addEstimateToCustomer,
+  updateEstimate
 };

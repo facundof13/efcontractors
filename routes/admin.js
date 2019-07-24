@@ -247,4 +247,13 @@ router.post("/updateCustomer", function(req, res, next) {
   invoices.updateCustomer(id, req.body.customer);
   res.end();
 });
+
+router.post('/updateestimate', function(req, res, next) {
+  let query = req.body.obj
+  
+  invoices.updateEstimate(query)
+  .then(
+    res.sendStatus(200)
+  )
+})
 module.exports = router;

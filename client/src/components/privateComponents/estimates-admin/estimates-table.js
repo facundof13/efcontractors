@@ -22,13 +22,13 @@ import KeyboardArrowUpOutlined from "@material-ui/icons/KeyboardArrowUpOutlined"
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import Axios from "axios";
-import CustomerItemTable from "./customer-item-table";
+import CustomerEstimateTable from "./customer-estimate-table";
 
 const invertDirection = {
   asc: "desc",
   desc: "asc"
 };
-const headerRow = ["Title", "Expiration", "Total", "Date Created"];
+const headerRow = ["Title", "Expiration", "Total", "Date Created", "Invoice"];
 
 export default class EstimatesTable extends React.Component {
   constructor() {
@@ -54,6 +54,7 @@ export default class EstimatesTable extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.handleEstimateSave = this.handleEstimateSave.bind(this);
   }
 
   componentDidMount() {
@@ -61,8 +62,10 @@ export default class EstimatesTable extends React.Component {
   }
 
   getCustomers() {
-    Axios.get("/admin/invoiceCustomers").then(res => {
-      this.setState({ customers: res.data });
+    return new Promise((resolve, reject) => {
+      Axios.get("/admin/invoiceCustomers").then(res => {
+        this.setState({ customers: res.data });
+      });
     });
   }
 
@@ -91,14 +94,15 @@ export default class EstimatesTable extends React.Component {
     }));
   }
 
-  handleClick(row) {
+  handleClick(row, index) {
     if (this.state.customerItems === row.estimates) {
       this.setState({ customerItems: [] });
     } else {
       this.setState(
         {
           customerItems: row.estimates,
-          customerInfo: row
+          customerInfo: row,
+          index: index
         },
         () => {
           if (this.state.customerItems.length > 0) {
@@ -183,6 +187,16 @@ export default class EstimatesTable extends React.Component {
     }
   }
 
+  handleEstimateSave(obj) {
+    let id = this.state.customerInfo._id;
+    Axios.post("/admin/updateestimate", { id: id, obj: obj }).then(() => {
+      this.getCustomers();
+      this.setState(state => ({
+        customerItems: state.customers[this.state.index].estimates
+      }))
+    });
+  }
+
   handleCancel() {
     this.setState({
       currentlyEditing: false,
@@ -190,6 +204,7 @@ export default class EstimatesTable extends React.Component {
     });
   }
   render() {
+    console.log(this.state);
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">
@@ -210,14 +225,6 @@ export default class EstimatesTable extends React.Component {
                       Client Name
                     </TableSortLabel>
                   </TableCell>
-                  {/* <TableCell align="right">
-                    <TableSortLabel
-                      direction={this.state.sortDirection}
-                      onClick={() => this.handleSort("title")}
-                    >
-                      Title
-                    </TableSortLabel> 
-                  </TableCell> */}
                   <TableCell align="right">
                     <TableSortLabel
                       direction={this.state.sortDirection}
@@ -280,13 +287,6 @@ export default class EstimatesTable extends React.Component {
                             value={customer.name}
                           />
                         </TableCell>
-                        {/* <TableCell align="right">
-                          <TextField
-                            name="title"
-                            onChange={this.handleChange}
-                            value={customer.title}
-                          />
-                        </TableCell> */}
                         <TableCell align="right">
                           <TextField
                             name="email"
@@ -352,7 +352,7 @@ export default class EstimatesTable extends React.Component {
                       this.state.customers,
                       this.state.columnToSort,
                       this.state.sortDirection
-                    ).map(row => (
+                    ).map((row, index) => (
                       <TableRow hover={true} key={row._id}>
                         <TableCell component="th" scope="row">
                           {row.name}
@@ -371,7 +371,7 @@ export default class EstimatesTable extends React.Component {
                               <IconButton
                                 size="small"
                                 title="Hide estimates"
-                                onClick={() => this.handleClick(row)}
+                                onClick={() => this.handleClick(row, index)}
                               >
                                 <KeyboardArrowUpOutlined />
                               </IconButton>
@@ -379,7 +379,7 @@ export default class EstimatesTable extends React.Component {
                               <IconButton
                                 size="small"
                                 title="Show estimates"
-                                onClick={() => this.handleClick(row)}
+                                onClick={() => this.handleClick(row, index)}
                               >
                                 <KeyboardArrowDownOutlined />
                               </IconButton>
@@ -409,11 +409,12 @@ export default class EstimatesTable extends React.Component {
         <Grid container justify="center">
           <div>
             {this.state.customerItems.length > 0 ? (
-              <CustomerItemTable
+              <CustomerEstimateTable
                 key="1"
                 items={this.state.customerItems}
                 headerRow={headerRow}
                 customerInfo={this.state.customerInfo}
+                handleSave={this.handleEstimateSave}
               />
             ) : (
               ""

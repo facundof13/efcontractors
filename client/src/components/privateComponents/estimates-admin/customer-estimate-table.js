@@ -17,6 +17,7 @@ import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
+import Axios from "axios";
 
 const invertDirection = {
   asc: "desc",
@@ -27,10 +28,11 @@ const getItemToSort = {
   Title: "title",
   Expiration: "expiration",
   Total: "total",
-  "Date Created": "date"
+  "Date Created": "date",
+  Invoice: "invoice"
 };
 
-export default class CustomerItemTable extends React.Component {
+export default class CustomerEstimateTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -43,6 +45,8 @@ export default class CustomerItemTable extends React.Component {
     this.handleSort = this.handleSort.bind(this);
     this.createPdf = this.createPdf.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.handleEstimateSave = this.handleEstimateSave.bind(this);
   }
 
   handleSort(item) {
@@ -67,12 +71,23 @@ export default class CustomerItemTable extends React.Component {
     });
   }
 
+  cancelEdit() {
+    this.setState({ currentlyEditing: false, estimateToEdit: [] });
+  }
+
+  handleEstimateSave(estimate) {
+    this.props.handleSave(estimate);
+    this.setState({ currentlyEditing: false, estimateToEdit: [] });
+  }
+
   render() {
     return (
       <div>
         {this.state.currentlyEditing ? (
           <EditCreatedEstimatesTable
             estimateToEdit={this.state.estimateToEdit}
+            cancelEdit={this.cancelEdit}
+            handleSave={this.handleEstimateSave}
           />
         ) : (
           <Paper>
@@ -113,6 +128,9 @@ export default class CustomerItemTable extends React.Component {
                     <TableCell align="right">${row.total}</TableCell>
                     <TableCell align="right">
                       {prettifyDate(row.date)}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.invoice ? "Yes" : "No"}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton

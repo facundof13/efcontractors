@@ -1,6 +1,8 @@
+import { create } from "jss";
+
 export default function prettifyDate(date) {
     let dateString = ''
-    var newDate = new Date(date)
+    let newDate = new Date(date)
 
     dateString = (1 + newDate.getMonth()).toString().padStart(2, "0") +
       "/" +
@@ -13,7 +15,7 @@ export default function prettifyDate(date) {
 
 
     // console.log(ret)
-    return dateString
+    return new Date(dateString).toLocaleDateString()
 }
 
 export function subtractDates(created, expiration) {
@@ -22,4 +24,14 @@ export function subtractDates(created, expiration) {
 
   expirationDate -= createdDate
   return (Math.round(expirationDate/86400000))
+}
+
+export function addDates(created, expiredNum) {
+  let createDate = new Date(created)
+  createDate.setDate(createDate.getDate() + Number(expiredNum))
+  return(createDate.toISOString())
+}
+
+export function compareDates(date1, date2) {
+  console.log(date1, date2)
 }
