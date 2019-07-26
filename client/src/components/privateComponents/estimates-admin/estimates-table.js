@@ -109,21 +109,24 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleClick(row, index) {
-    if (this.state.customerItems === row.estimates) {
-      this.setState({ customerItems: [] });
+    if (row.estimates.length < 1) {
     } else {
-      this.setState(
-        {
-          customerItems: row.estimates,
-          customerInfo: row,
-          index: index
-        },
-        () => {
-          if (this.state.customerItems.length > 0) {
-            window.scrollTo(0, window.innerHeight);
+      if (this.state.customerItems === row.estimates) {
+        this.setState({ customerItems: [] });
+      } else {
+        this.setState(
+          {
+            customerItems: row.estimates,
+            customerInfo: row,
+            index: index
+          },
+          () => {
+            if (this.state.customerItems.length > 0) {
+              window.scrollTo(0, window.innerHeight);
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
 

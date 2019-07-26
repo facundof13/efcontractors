@@ -19,7 +19,13 @@ import {
 import Axios from "axios";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import { subtractDates, prettifyDate, addDates } from "../helperComponents/prettify-date";
+import AddOutlined from "@material-ui/icons/AddOutlined";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import {
+  subtractDates,
+  prettifyDate,
+  addDates
+} from "../helperComponents/prettify-date";
 
 export default class EditCreatedEstimatesTable extends React.Component {
   constructor(props) {
@@ -29,7 +35,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       selectItem: null,
       services: [],
       date: this.props.estimateToEdit.date,
-      contractAttached: false,
+      contractAttached: this.props.estimateToEdit.contractAttached,
       expiration: subtractDates(
         this.props.estimateToEdit.date,
         this.props.estimateToEdit.expiration
@@ -46,6 +52,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.getSelector = this.getSelector.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
+    this.addItemField = this.addItemField.bind(this);
+    this.deleteRow = this.deleteRow.bind(this);
   }
 
   componentDidMount() {
@@ -115,14 +123,22 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   cancelEdit() {
-    this.props.cancelEdit()
+    this.props.cancelEdit();
   }
 
   handleSave() {
-    let total = 0
+    let itemsNotEmpty = true;
+
+    let total = 0;
     this.state.items.forEach(item => {
-      total += Number(item.amount.replace('$', ''))
-    })
+      total += Number(item.amount.replace("$", ""));
+      item.amount === "$" ||
+      item.item === "" ||
+      item.quantity === "" ||
+      item.description === ""
+        ? (itemsNotEmpty = false)
+        : (itemsNotEmpty = true);
+    });
 
     let object = {
       items: [...this.state.items],
@@ -132,12 +148,45 @@ export default class EditCreatedEstimatesTable extends React.Component {
       expiration: addDates(this.state.date, this.state.expiration),
       title: this.state.title,
       date: this.state.date
+    };
+    if (itemsNotEmpty) {
+      this.props.handleSave(object);
+    } else {
+      window.alert("Empty item");
     }
-    this.props.handleSave(object)
+  }
+
+  addItemField() {
+    this.setState(prevState => ({
+      items: [
+        ...this.state.items,
+        {
+          num: Date.now(), //add default values to new item
+          amount: "$",
+          description: "",
+          expense: false,
+          item: "",
+          quantity: "",
+          tax: false
+        }
+      ]
+    }));
+    setTimeout(() => {
+      
+    }, 200);
+  }
+
+  deleteRow(row) {
+    console.log("deleting row");
+    console.log(row);
+
+    let filter = this.state.items.filter(function(item) {
+      return item.num !== row.num;
+    });
+    this.setState({ items: filter });
   }
 
   render() {
-    console.log(this.state)
     return (
       <Paper>
         <Table size="small">
@@ -147,6 +196,10 @@ export default class EditCreatedEstimatesTable extends React.Component {
               <TableCell>Expiration</TableCell>
               <TableCell>Contract</TableCell>
               <TableCell>Invoice</TableCell>
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -186,6 +239,15 @@ export default class EditCreatedEstimatesTable extends React.Component {
               <TableCell>
                 <IconButton
                   size="small"
+                  title="Add Item"
+                  onClick={this.addItemField}
+                >
+                  <AddOutlined />
+                </IconButton>
+              </TableCell>
+              <TableCell align='right'>
+                <IconButton
+                  size="small"
                   title="Save estimate"
                   onClick={this.handleSave}
                 >
@@ -199,6 +261,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
                   <CancelOutlinedIcon />
                 </IconButton>
               </TableCell>
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableBody>
           <TableHead>
@@ -209,6 +273,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
               <TableCell>Amount</TableCell>
               <TableCell>Tax</TableCell>
               <TableCell>Expense</TableCell>
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -255,6 +321,16 @@ export default class EditCreatedEstimatesTable extends React.Component {
                       onChange={event => this.handleChange(event, index)}
                     />
                   </TableCell>
+                  <TableCell>
+                    <IconButton
+                      size="small"
+                      title="Cancel edit"
+                      onClick={() => this.deleteRow(item)}
+                    >
+                      <DeleteOutlinedIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell />
                 </TableRow>
               );
             }, this)}

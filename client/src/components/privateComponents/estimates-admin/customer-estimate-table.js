@@ -46,6 +46,7 @@ export default class CustomerEstimateTable extends React.Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
+    this.sendEstimate = this.sendEstimate.bind(this);
   }
 
   handleSort(item) {
@@ -68,6 +69,10 @@ export default class CustomerEstimateTable extends React.Component {
       currentlyEditing: true,
       estimateToEdit: JSON.parse(JSON.stringify(row))
     });
+  }
+
+  sendEstimate(row) {
+    console.log(row)
   }
 
   cancelEdit() {
