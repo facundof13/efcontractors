@@ -1,5 +1,4 @@
 import React from "react";
-import update from "immutability-helper";
 import {
   TableHead,
   Paper,
@@ -14,16 +13,16 @@ import {
   FormControl,
   IconButton,
   Select,
-  MenuItem
+  MenuItem,
+  Button
 } from "@material-ui/core";
 import Axios from "axios";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
-import AddOutlined from "@material-ui/icons/AddOutlined";
+import AddCircleOutlined from "@material-ui/icons/AddCircleOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import {
   subtractDates,
-  prettifyDate,
   addDates
 } from "../helperComponents/prettify-date";
 
@@ -194,8 +193,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
             <TableRow>
               <TableCell>Title</TableCell>
               <TableCell>Expiration</TableCell>
-              <TableCell>Contract</TableCell>
               <TableCell>Invoice</TableCell>
+              <TableCell>Contract</TableCell>
               <TableCell />
               <TableCell />
               <TableCell />
@@ -220,15 +219,6 @@ export default class EditCreatedEstimatesTable extends React.Component {
               </TableCell>
               <TableCell>
                 <FormControlLabel
-                  name="contractAttached"
-                  className="estimate-checkbox"
-                  control={<Checkbox />}
-                  checked={this.state.contractAttached}
-                  onChange={event => this.handleChange(event)}
-                />
-              </TableCell>
-              <TableCell>
-                <FormControlLabel
                   name="invoice"
                   className="estimate-checkbox"
                   control={<Checkbox />}
@@ -237,12 +227,23 @@ export default class EditCreatedEstimatesTable extends React.Component {
                 />
               </TableCell>
               <TableCell>
+                <FormControlLabel
+                  name="contractAttached"
+                  className="estimate-checkbox"
+                  control={<Checkbox />}
+                  disabled={!this.state.invoice}
+                  checked={this.state.contractAttached}
+                  onChange={event => this.handleChange(event)}
+                />
+              </TableCell>
+              <TableCell><Button disabled={!this.state.contractAttached}>Edit contract</Button></TableCell>
+              <TableCell>
                 <IconButton
                   size="small"
                   title="Add Item"
                   onClick={this.addItemField}
                 >
-                  <AddOutlined />
+                  <AddCircleOutlined />
                 </IconButton>
               </TableCell>
               <TableCell align='right'>
