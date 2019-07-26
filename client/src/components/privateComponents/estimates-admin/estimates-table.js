@@ -28,7 +28,7 @@ const invertDirection = {
   asc: "desc",
   desc: "asc"
 };
-const headerRow = ["Title", "Expiration", "Total", "Date Created", "Invoice"];
+const headerRow = ["Title", "Total", "Expiration", "Date Created", "Status", "Paid"];
 
 export default class EstimatesTable extends React.Component {
   constructor() {
@@ -109,6 +109,7 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleClick(row, index) {
+    //if customer has no estimates, dont do anything
     if (row.estimates.length < 1) {
     } else {
       if (this.state.customerItems === row.estimates) {

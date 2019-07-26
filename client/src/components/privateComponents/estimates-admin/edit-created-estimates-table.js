@@ -14,17 +14,20 @@ import {
   IconButton,
   Select,
   MenuItem,
-  Button
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from "@material-ui/core";
 import Axios from "axios";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import CancelOutlinedIcon from "@material-ui/icons/CancelOutlined";
 import AddCircleOutlined from "@material-ui/icons/AddCircleOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import {
-  subtractDates,
-  addDates
-} from "../helperComponents/prettify-date";
+import { subtractDates, addDates } from "../helperComponents/prettify-date";
+import PaymentSchedule from "./payment-schedule";
 
 export default class EditCreatedEstimatesTable extends React.Component {
   constructor(props) {
@@ -34,14 +37,19 @@ export default class EditCreatedEstimatesTable extends React.Component {
       selectItem: null,
       services: [],
       date: this.props.estimateToEdit.date,
-      contractAttached: this.props.estimateToEdit.contractAttached,
+      attachContract: this.props.estimateToEdit.attachContract,
+      contractSpecs: this.props.estimateToEdit.contractSpecs,
       expiration: subtractDates(
         this.props.estimateToEdit.date,
         this.props.estimateToEdit.expiration
       ),
       invoice: this.props.estimateToEdit.invoice,
       title: this.props.estimateToEdit.title,
-      items: [...this.props.estimateToEdit.items]
+      items: [...this.props.estimateToEdit.items],
+      open: false,
+      steps: [],
+      paymentSteps: [],
+      saved: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -53,6 +61,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.addItemField = this.addItemField.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.addStep = this.addStep.bind(this);
+    this.removeStep = this.removeStep.bind(this);
+    this.updateStep = this.updateStep.bind(this);
+    this.handleContractSave = this.handleContractSave.bind(this);
   }
 
   componentDidMount() {
@@ -100,13 +114,22 @@ export default class EditCreatedEstimatesTable extends React.Component {
   handleChange(event, index) {
     let key = event.target.name;
     let value = event.target.value;
+
+    console.log(key, value);
     let stateToChange = [...this.state.items];
-    if (event.target.name === "title" || event.target.name === "expiration") {
+    if (
+      event.target.name === "title" ||
+      event.target.name === "expiration" ||
+      event.target.name === "contractSpecs"
+    ) {
       this.setState({ [key]: value });
     } else if (
-      event.target.name === "contractAttached" ||
+      event.target.name === "attachContract" ||
       event.target.name === "invoice"
     ) {
+      if (event.target.name === "invoice" && !event.target.value) {
+        this.setState({ attachContract: false });
+      }
       this.setState({ [key]: event.target.checked });
     } else if (event.target.name === "tax" || event.target.name === "expense") {
       stateToChange[index][key] = event.target.checked;
@@ -142,11 +165,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
     let object = {
       items: [...this.state.items],
       invoice: this.state.invoice,
-      contractAttached: this.state.contractAttached,
+      attachContract: this.state.attachContract,
       total: total,
       expiration: addDates(this.state.date, this.state.expiration),
       title: this.state.title,
-      date: this.state.date
+      date: this.state.date,
+      contractSpecs: this.state.contractSpecs
     };
     if (itemsNotEmpty) {
       this.props.handleSave(object);
@@ -170,9 +194,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
         }
       ]
     }));
-    setTimeout(() => {
-      
-    }, 200);
+    setTimeout(() => {}, 200);
   }
 
   deleteRow(row) {
@@ -185,7 +207,62 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.setState({ items: filter });
   }
 
+  handleClickOpen() {
+    this.setState({ open: true });
+  }
+
+  handleClose() {
+    console.log(this.state);
+    this.setState({ open: false });
+  }
+
+  addStep() {
+    var stepIndex = this.state.steps.length - 1;
+    var id = Date.now();
+    var step = (
+      <PaymentSchedule
+        key={stepIndex++}
+        id={id}
+        removeStep={() => this.removeStep(id)}
+        updateStep={this.updateStep}
+        saved={this.state.saved}
+      />
+    );
+    this.setState({ steps: [...this.state.steps, step] });
+  }
+
+  removeStep(id) {
+    let arr = this.state.steps.filter(function(item) {
+      return item.props.id !== id;
+    });
+    this.setState({
+      steps: arr
+    });
+  }
+
+  updateStep(obj) {
+    let filter = this.state.paymentSteps.filter(item => {
+      return item.id !== obj.id;
+    });
+    this.setState({ paymentSteps: [...filter, obj] });
+    // console.log(obj)
+  }
+
+  handleContractSave() {
+    this.state.paymentSteps.forEach(item => {
+      if (item.stepName === '' || item.stepAmount === '' || item.stepDescription === '') {
+        window.alert('Incorrect step')
+      } else {
+        this.setState({ saved: true, open:false });
+      }
+    })
+  }
+
   render() {
+    // console.log(this.state);
+    console.log(this.state.paymentSteps);
+
+    // console.log(this.props)
     return (
       <Paper>
         <Table size="small">
@@ -228,15 +305,47 @@ export default class EditCreatedEstimatesTable extends React.Component {
               </TableCell>
               <TableCell>
                 <FormControlLabel
-                  name="contractAttached"
+                  name="attachContract"
                   className="estimate-checkbox"
                   control={<Checkbox />}
                   disabled={!this.state.invoice}
-                  checked={this.state.contractAttached}
+                  checked={this.state.attachContract}
                   onChange={event => this.handleChange(event)}
                 />
               </TableCell>
-              <TableCell><Button disabled={!this.state.contractAttached}>Edit contract</Button></TableCell>
+              <TableCell>
+                <Button
+                  onClick={this.handleClickOpen}
+                  disabled={!this.state.attachContract}
+                >
+                  Edit contract
+                </Button>
+                <div>
+                  <Dialog open={this.state.open} onClose={this.handleClose}>
+                    <DialogTitle>Edit contract</DialogTitle>
+                    <DialogContent>
+                      <div className="dialog-form">
+                        <TextField
+                          label="Contract Specifications"
+                          name="contractSpecs"
+                          onChange={event => this.handleChange(event)}
+                          value={this.state.contractSpecs}
+                          // multiline={true}
+                          fullWidth={true}
+                        />
+                        <Button onClick={this.addStep}>Add Step</Button>
+                        {this.state.steps}
+                      </div>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={this.handleClose}>Cancel</Button>
+                      <Button onClick={this.handleContractSave.bind(this)}>
+                        Save
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+              </TableCell>
               <TableCell>
                 <IconButton
                   size="small"
@@ -246,7 +355,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
                   <AddCircleOutlined />
                 </IconButton>
               </TableCell>
-              <TableCell align='right'>
+              <TableCell align="right">
                 <IconButton
                   size="small"
                   title="Save estimate"

@@ -27,7 +27,8 @@ export default class CreateEstimate extends React.Component {
       clientSelected: false,
       idToUpdate: "",
       invoice: false,
-      attachContract: false
+      attachContract: false,
+      contractSpecs: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -243,13 +244,15 @@ export default class CreateEstimate extends React.Component {
 
     if (this.state.clientSelected) {
       Axios.post("/admin/invoiceupdate", {
+        //post to db if selected client
         id: this.state.idToUpdate,
         expiration: expirationDate,
         items: this.state.items,
         title: this.state.title,
         date: new Date(),
         invoice: false,
-        attachContract: false
+        attachContract: false,
+        contractSpecs: this.state.contractSpecs,
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -268,8 +271,10 @@ export default class CreateEstimate extends React.Component {
               disabled: true,
               helperText: "",
               phone: "",
+              contractSpecs: '',
               invoice: false,
-              attachContract: false
+              attachContract: false,
+              paid: false
             },
             () => {
               this.addItem();
@@ -279,6 +284,7 @@ export default class CreateEstimate extends React.Component {
       });
     } else {
       Axios.post("/admin/invoice", {
+        //post to db new client and estimate
         name: this.state.name,
         address: this.state.address,
         cityState: this.state.cityState,
@@ -289,8 +295,10 @@ export default class CreateEstimate extends React.Component {
         items: this.state.items,
         phone: this.state.phone,
         dateSubmitted: new Date(),
+        contractSpecs: this.state.contractSpecs,
         invoice: false,
-        attachContract: false
+        attachContract: false,
+        paid: false,
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");

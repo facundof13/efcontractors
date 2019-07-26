@@ -77,6 +77,7 @@ function updateCustomer(id, query) {
 }
 
 function updateEstimate(query) {
+  console.log(query)
   return new Promise((resolve, reject) => {
     invoices.updateOne(
       {

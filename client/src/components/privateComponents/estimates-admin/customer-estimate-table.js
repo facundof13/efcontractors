@@ -13,6 +13,8 @@ import InsertDriveFileOutlined from "@material-ui/icons/InsertDriveFileOutlined"
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import SendOutlined from "@material-ui/icons/SendOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import ReceiptOutlined from "@material-ui/icons/ReceiptOutlined";
+import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
@@ -25,8 +27,8 @@ const invertDirection = {
 
 const getItemToSort = {
   Title: "title",
-  Expiration: "expiration",
   Total: "total",
+  Expiration: "expiration",
   "Date Created": "date",
   Invoice: "invoice"
 };
@@ -72,7 +74,7 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   sendEstimate(row) {
-    console.log(row)
+    console.log(row);
   }
 
   cancelEdit() {
@@ -85,7 +87,7 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   handleEstimateDelete(estimate) {
-    console.log(estimate)
+    console.log(estimate);
   }
 
   render() {
@@ -130,15 +132,22 @@ export default class CustomerEstimateTable extends React.Component {
                     key={row.title}
                   >
                     <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="right">${row.total}</TableCell>
                     <TableCell align="right">
                       {prettifyDate(row.expiration)}
                     </TableCell>
-                    <TableCell align="right">${row.total}</TableCell>
                     <TableCell align="right">
                       {prettifyDate(row.date)}
                     </TableCell>
                     <TableCell align="right">
-                      {row.invoice ? "Yes" : "No"}
+                      {row.invoice
+                        ? row.attachContract
+                          ? "Invoice w/ contract"
+                          : "Invoice w/o contract"
+                        : "Estimate"}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.invoice ? (row.paid ? "Yes" : "No") : "N/A"}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
@@ -162,6 +171,29 @@ export default class CustomerEstimateTable extends React.Component {
                       >
                         <InsertDriveFileOutlined />
                       </IconButton>
+                      {/* If its a paid invoice, show the receipt, if its an unpaid invoice show the payment button */}
+                      {/* Else, don't show anything */}
+                      {row.invoice ? (
+                        row.paid ? (
+                          <IconButton
+                            size="small"
+                            title="Print Receipt"
+                            onClick={() => this.createPdf(row)}
+                          >
+                            <ReceiptOutlined />
+                          </IconButton>
+                        ) : (
+                          <IconButton
+                            size="small"
+                            title="Mark paid"
+                            onClick={() => this.createPdf(row)}
+                          >
+                            <PaymentOutlined />
+                          </IconButton>
+                        )
+                      ) : (
+                        ""
+                      )}
                       <IconButton
                         size="small"
                         title="Delete estimate"

@@ -253,3 +253,13 @@ input[type="number"]::-webkit-outer-spin-button {
   color: black !important;
   font-size: 12px;
 }
+
+.dialog-form .MuiInputBase-input {
+  color: black !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.step {
+  display: flex;
+}
