@@ -261,8 +261,9 @@ router.post('/updateestimate', function(req, res, next) {
 
 router.delete('/deleteestimate', function(req, res, next) {
   let query = req.body.obj
-  
-  invoices.deleteEstimate(query)
+  let id = req.body.id
+
+  invoices.deleteEstimate(id, query)
   res.end()
 })
 module.exports = router;

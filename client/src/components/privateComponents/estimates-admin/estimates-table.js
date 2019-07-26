@@ -207,15 +207,15 @@ export default class EstimatesTable extends React.Component {
       this.getCustomers(true);
     });
   };
-  // todo here
 
   handleEstimateDelete(obj) {
-    console.log(this.state.customerInfo._id)
-    console.log(obj)
-    Axios.delete('/admin/deleteestimate', {data: {obj: obj}})
-    .then(() => {
-
-    })
+    let id = this.state.customerInfo._id
+    if (window.confirm(`Delete estimate "${obj.title}"`)) {
+      Axios.delete('/admin/deleteestimate', {data: {id: id, obj: obj}})
+      .then(() => {
+        this.getCustomers(true)
+      })
+    }
   }
 
   handleCancel() {

@@ -92,13 +92,11 @@ function updateEstimate(query) {
   });
 }
 
-function deleteEstimate(query) {
-  console.log(query);
+function deleteEstimate(id,query) {
+  console.log(id, query);
   invoices.updateOne(
-    {'_id': ObjectId("5d38e367158079e7a97592aa")}, 
+    {'_id': ObjectId(id)}, 
     { $pull: { "estimates" : { date: query.date } } },
-false,
-true 
 );
 }
 
