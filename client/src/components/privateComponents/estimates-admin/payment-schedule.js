@@ -5,7 +5,19 @@ export default class PaymentSchedule extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { stepName: "", stepDescription: "", stepAmount: "" };
+    if (this.props.existingStep) {
+      this.state = {
+        stepName: this.props.existingStep.stepName,
+        stepDescription: this.props.existingStep.stepDescription,
+        stepAmount: this.props.existingStep.stepAmount
+      };
+    } else {
+      this.state = {
+        stepName: "",
+        stepDescription: "",
+        stepAmount: ""
+      };
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.render = this.render.bind(this);

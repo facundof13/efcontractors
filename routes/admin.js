@@ -197,6 +197,7 @@ router.post("/invoiceupdate", function(req, res, next) {
     contractSpecs: req.body.contractSpecs,
     invoice: req.body.invoice,
     attachContract: req.body.attachContract,
+    paymentSteps: req.body.paymentSteps
   }
 
   invoices.addEstimateToCustomer(id, query)
@@ -229,6 +230,7 @@ router.post("/invoice", function(req, res, next) {
     invoice: req.body.invoice,
     attachContract: req.body.attachContract,
     contractSpecs: req.body.contractSpecs,
+    paymentSteps: req.body.paymentSteps
   };
 
   let query = {
@@ -239,7 +241,7 @@ router.post("/invoice", function(req, res, next) {
     email: email,
     date: date,
     phone: phone,
-    estimates: [invoice]
+    estimates: [invoice],
   };
 
   invoices.addInvoiceCustomer(query);

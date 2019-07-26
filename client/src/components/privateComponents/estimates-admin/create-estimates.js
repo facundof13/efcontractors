@@ -253,6 +253,7 @@ export default class CreateEstimate extends React.Component {
         invoice: false,
         attachContract: false,
         contractSpecs: this.state.contractSpecs,
+        paymentSteps: []
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -299,6 +300,7 @@ export default class CreateEstimate extends React.Component {
         invoice: false,
         attachContract: false,
         paid: false,
+        paymentSteps: [],
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");

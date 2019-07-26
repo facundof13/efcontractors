@@ -48,7 +48,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       items: [...this.props.estimateToEdit.items],
       open: false,
       steps: [],
-      paymentSteps: [],
+      paymentSteps: [...this.props.estimateToEdit.paymentSteps],
       saved: false
     };
 
@@ -71,6 +71,25 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   componentDidMount() {
     this.getServices();
+    let stepIndex = this.state.steps.length - 1
+    let id = Date.now()
+    let newStepsArr = []
+    for (let i = 0; i < this.state.paymentSteps.length; i++) {
+      let step = (
+        <PaymentSchedule
+          key={stepIndex++}
+          id={id}
+          removeStep={() => this.removeStep(id)}
+          updateStep={this.updateStep}
+          saved={this.state.saved}
+          existingStep={this.state.paymentSteps[i]}
+        />
+      )
+      newStepsArr.push(step)
+    }
+    if (this.state.paymentSteps.length > 0) {
+      this.setState({steps: newStepsArr})
+    }
   }
 
   getSelector(item, index) {
@@ -170,7 +189,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       expiration: addDates(this.state.date, this.state.expiration),
       title: this.state.title,
       date: this.state.date,
-      contractSpecs: this.state.contractSpecs
+      contractSpecs: this.state.contractSpecs,
+      paymentSteps: this.state.paymentSteps
     };
     if (itemsNotEmpty) {
       this.props.handleSave(object);
@@ -231,11 +251,15 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.setState({ steps: [...this.state.steps, step] });
   }
 
+
+  // TODO: Remove only the step, not all steps
   removeStep(id) {
+    console.log(id, this.state.steps)
     let arr = this.state.steps.filter(function(item) {
       return item.props.id !== id;
     });
     this.setState({
+      paymentSteps: arr,
       steps: arr
     });
   }
@@ -256,11 +280,14 @@ export default class EditCreatedEstimatesTable extends React.Component {
         this.setState({ saved: true, open:false });
       }
     })
+    if (this.state.paymentSteps.length === 0) {
+      this.setState({ saved: true, open:false });
+    }
   }
 
   render() {
-    // console.log(this.state);
-    console.log(this.state.paymentSteps);
+    console.log(this.state);
+    // console.log(this.state.paymentSteps);
 
     // console.log(this.props)
     return (
