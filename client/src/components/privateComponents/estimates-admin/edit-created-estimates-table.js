@@ -49,7 +49,6 @@ export default class EditCreatedEstimatesTable extends React.Component {
       open: false,
       steps: [],
       paymentSteps: [...this.props.estimateToEdit.paymentSteps],
-      saved: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -71,24 +70,23 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   componentDidMount() {
     this.getServices();
-    let stepIndex = this.state.steps.length - 1
-    let id = Date.now()
-    let newStepsArr = []
+    let stepIndex = this.state.steps.length - 1;
+    let newStepsArr = [];
     for (let i = 0; i < this.state.paymentSteps.length; i++) {
-      let step = (
+      let id = Date.now();
+      var step = (
         <PaymentSchedule
           key={stepIndex++}
-          id={id}
-          removeStep={() => this.removeStep(id)}
+          id={id+i}
+          removeStep={() => this.removeStep(id+i)}
           updateStep={this.updateStep}
-          saved={this.state.saved}
           existingStep={this.state.paymentSteps[i]}
         />
-      )
-      newStepsArr.push(step)
+      );
+      newStepsArr.push(step);
     }
     if (this.state.paymentSteps.length > 0) {
-      this.setState({steps: newStepsArr})
+      this.setState({ steps: newStepsArr });
     }
   }
 
@@ -237,30 +235,33 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   addStep() {
-    var stepIndex = this.state.steps.length - 1;
-    var id = Date.now();
-    var step = (
-      <PaymentSchedule
-        key={stepIndex++}
-        id={id}
-        removeStep={() => this.removeStep(id)}
-        updateStep={this.updateStep}
-        saved={this.state.saved}
-      />
-    );
-    this.setState({ steps: [...this.state.steps, step] });
+    setTimeout(() => {
+      var stepIndex = this.state.steps.length - 1;
+      var id = Date.now() + Math.random();
+      var step = (
+        <PaymentSchedule
+          key={stepIndex++}
+          id={id}
+          removeStep={() => this.removeStep(id)}
+          updateStep={this.updateStep}
+        />
+      );
+      this.setState({ steps: [...this.state.steps, step] });
+    }, 100);
   }
-
 
   // TODO: Remove only the step, not all steps
   removeStep(id) {
-    console.log(id, this.state.steps)
+    console.log(id, this.state.steps);
     let arr = this.state.steps.filter(function(item) {
       return item.props.id !== id;
     });
+    console.log(arr);
     this.setState({
-      paymentSteps: arr,
-      steps: arr
+      paymentSteps: [...arr].filter(item => {
+        return item.key !== null
+      }),
+      steps: [...arr]
     });
   }
 
@@ -273,15 +274,20 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   handleContractSave() {
+    console.log(this.state.paymentSteps)
     this.state.paymentSteps.forEach(item => {
-      if (item.stepName === '' || item.stepAmount === '' || item.stepDescription === '') {
-        window.alert('Incorrect step')
+      if (
+        item.stepName === "" ||
+        item.stepAmount === "" ||
+        item.stepDescription === ""
+      ) {
+        window.alert("Incorrect step");
       } else {
-        this.setState({ saved: true, open:false });
+        this.setState({ open: false });
       }
-    })
+    });
     if (this.state.paymentSteps.length === 0) {
-      this.setState({ saved: true, open:false });
+      this.setState({ open: false });
     }
   }
 
