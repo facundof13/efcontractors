@@ -48,7 +48,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       items: [...this.props.estimateToEdit.items],
       open: false,
       steps: [],
-      paymentSteps: [...this.props.estimateToEdit.paymentSteps],
+      paymentSteps: [...this.props.estimateToEdit.paymentSteps]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -77,8 +77,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       var step = (
         <PaymentSchedule
           key={stepIndex++}
-          id={id+i}
-          removeStep={() => this.removeStep(id+i)}
+          id={id + i}
+          removeStep={() => this.removeStep(id + i)}
           updateStep={this.updateStep}
           existingStep={this.state.paymentSteps[i]}
         />
@@ -252,29 +252,32 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   // TODO: Remove only the step, not all steps
   removeStep(id) {
-    console.log(id, this.state.steps);
-    let arr = this.state.steps.filter(function(item) {
-      return item.props.id !== id;
-    });
-    console.log(arr);
-    this.setState({
-      paymentSteps: [...arr].filter(item => {
-        return item.key !== null
-      }),
-      steps: [...arr]
-    });
+    console.log(id)
+    console.log(this.state.steps)
+    console.log(this.state.paymentSteps)
+    // console.log(this.state.steps);
+    // let arr = this.state.steps.filter(function(item) {
+    //   return item.props.id !== id;
+    // });
+    // console.log(this.state.steps[0].props.id);
+    // console.log(arr);
+    // this.setState({
+    //   paymentSteps: [...arr],
+    //   steps: [...arr]
+    // });
   }
 
   updateStep(obj) {
-    let filter = this.state.paymentSteps.filter(item => {
-      return item.id !== obj.id;
-    });
+    var filter = [];
+    if (this.state.paymentSteps.length > 0) {
+      filter = this.state.paymentSteps.filter(item => {
+        return item.id !== obj.id;
+      });
+    }
     this.setState({ paymentSteps: [...filter, obj] });
-    // console.log(obj)
   }
 
   handleContractSave() {
-    console.log(this.state.paymentSteps)
     this.state.paymentSteps.forEach(item => {
       if (
         item.stepName === "" ||
@@ -283,7 +286,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       ) {
         window.alert("Incorrect step");
       } else {
-        this.setState({ open: false });
+        this.setState({ open: false }, () => console.log(this.state));
       }
     });
     if (this.state.paymentSteps.length === 0) {
@@ -292,7 +295,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   render() {
-    console.log(this.state);
+    // console.log(this.state);
     // console.log(this.state.paymentSteps);
 
     // console.log(this.props)

@@ -7,12 +7,14 @@ export default class PaymentSchedule extends React.Component {
 
     if (this.props.existingStep) {
       this.state = {
+        id: this.props.id,
         stepName: this.props.existingStep.stepName,
         stepDescription: this.props.existingStep.stepDescription,
         stepAmount: this.props.existingStep.stepAmount
       };
     } else {
       this.state = {
+        id: this.props.id,
         stepName: "",
         stepDescription: "",
         stepAmount: ""
@@ -27,7 +29,7 @@ export default class PaymentSchedule extends React.Component {
     console.log(e.target.name, e.target.value);
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.props.updateStep({
-        id: this.props.id,
+        id: this.state.id,
         stepName: this.state.stepName,
         stepDescription: this.state.stepDescription,
         stepAmount: this.state.stepAmount
@@ -36,6 +38,7 @@ export default class PaymentSchedule extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div className="step">
         <TextField
