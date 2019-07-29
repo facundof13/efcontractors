@@ -70,15 +70,13 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   componentDidMount() {
     this.getServices();
-    let stepIndex = this.state.steps.length - 1;
     let newStepsArr = [];
     for (let i = 0; i < this.state.paymentSteps.length; i++) {
-      let id = Date.now();
       var step = (
         <PaymentSchedule
-          key={stepIndex++}
-          id={id + i}
-          removeStep={() => this.removeStep(id + i)}
+          key={this.state.paymentSteps[i].id}
+          id={this.state.paymentSteps[i].id}
+          removeStep={() => this.removeStep()}
           updateStep={this.updateStep}
           existingStep={this.state.paymentSteps[i]}
         />
@@ -235,35 +233,35 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   addStep() {
-    setTimeout(() => {
-      var stepIndex = this.state.steps.length - 1;
-      var id = Date.now() + Math.random();
-      var step = (
-        <PaymentSchedule
-          key={stepIndex++}
-          id={id}
-          removeStep={() => this.removeStep(id)}
-          updateStep={this.updateStep}
-        />
-      );
-      this.setState({ steps: [...this.state.steps, step] });
-    }, 100);
+    var stepIndex = this.state.steps.length - 1;
+    var id = Date.now();
+    //  + Math.random();
+    var step = (
+      <PaymentSchedule
+        key={stepIndex++}
+        id={id}
+        removeStep={() => this.removeStep(id)}
+        updateStep={this.updateStep}
+      />
+    );
+    this.setState({ steps: [...this.state.steps, step] });
   }
 
   // TODO: Remove only the step, not all steps
   removeStep(id) {
-    console.log(id)
-    console.log(this.state.steps)
-    console.log(this.state.paymentSteps)
-    // console.log(this.state.steps);
-    // let arr = this.state.steps.filter(function(item) {
-    //   return item.props.id !== id;
-    // });
-    // console.log(this.state.steps[0].props.id);
-    // console.log(arr);
+    console.log(id);
+    let stepsArr = this.state.steps.filter(function(item) {
+      console.log(item.props.id);
+      return item.props.id !== id;
+    });
+    let paymentStepsArr = this.state.paymentSteps.filter(function(item) {
+      console.log(item);
+      return item.id !== id;
+    });
+
     // this.setState({
-    //   paymentSteps: [...arr],
-    //   steps: [...arr]
+    //   paymentSteps: [...paymentStepsArr],
+    //   steps: [...stepsArr]
     // });
   }
 
