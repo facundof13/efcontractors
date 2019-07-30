@@ -276,4 +276,12 @@ router.post('/savepdf', function(req,res,next) {
 
   console.log(pdf)
 })
+
+router.get('/imgurl', function(req, res, next) {
+  invoices.getLogoURI()
+  .then(item => {
+    res.send(item)
+  })
+
+})
 module.exports = router;

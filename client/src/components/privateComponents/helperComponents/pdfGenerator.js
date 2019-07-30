@@ -1,17 +1,22 @@
 import jsPDF from "jspdf";
+import Axios from 'axios'
 
 export function generatePDF(client, estimate) {
   // console.log(client, estimate)
-  var doc = new jsPDF();
-  var img = getBase64Image("https://efcontractors.s3.us-east-2.amazonaws.com/logo.png")
-  doc.addImage(img, 'PNG', 15, 40, 100, 100)
-  doc.text("hello world", 10, 10);
+  Axios.get('/admin/imgurl')
+  .then(res => {
+    var doc = new jsPDF();  
+    var img = (res.data[0].img)
+    doc.addImage(img, 'PNG', 10, 10, 100, 100)
+    doc.setProperties({
+      title: client.name,
+      author: "EFContractors"
+    });
+    return doc.output("datauristring");
+  })
+  // doc.addImage(img, 'PNG', 15, 40, 100, 100)
+  // doc.text("hello world", 10, 10);
   
-  doc.setProperties({
-    title: client.name,
-    author: "EFContractors"
-  });
-  return doc.output("datauristring");
 }
 
 export function similarity(s1, s2) {

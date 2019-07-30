@@ -104,6 +104,14 @@ function deleteEstimate(id, query) {
   );
 }
 
+function getLogoURI() {
+  return new Promise((resolve, reject) => {
+    invoices.find({ _id: ObjectId('5d4084761c9d440000bbf98f')}).toArray((err, items) => {
+      resolve(items);
+    });
+  });
+}
+
 module.exports = {
   getServices,
   addInvoiceCustomer,
@@ -112,5 +120,6 @@ module.exports = {
   updateCustomer,
   addEstimateToCustomer,
   updateEstimate,
-  deleteEstimate
+  deleteEstimate,
+  getLogoURI
 };
