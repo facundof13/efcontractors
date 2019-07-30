@@ -13,10 +13,12 @@ function compareDates(date1, date2) {
 function getServices() {
   // return ["Haul Off", "Demolition", "Tile", "Fence" ]
   return new Promise((resolve, reject) => {
-    invoices.find({ Name: "Invoice Services" }).toArray((err, items) => {
-      // console.log(items)
-      resolve(items[0].Items);
-    });
+    invoices
+      .find({ _id: ObjectId("5d2e983f1c9d4400005a4e5a") })
+      .toArray((err, items) => {
+        // console.log(items)
+        resolve(items[0].Items);
+      });
   });
 }
 
@@ -28,6 +30,7 @@ function getInvoiceCustomers() {
   });
 }
 function addInvoiceCustomer(query) {
+  console.log(query);
   invoices.insertOne(query, (err, res) =>
     console.log(`Added doc id ${res.ops[0]._id} to db`)
   );
@@ -77,7 +80,7 @@ function updateCustomer(id, query) {
 }
 
 function updateEstimate(query) {
-  console.log(query)
+  console.log(query);
   return new Promise((resolve, reject) => {
     invoices.updateOne(
       {
@@ -93,12 +96,12 @@ function updateEstimate(query) {
   });
 }
 
-function deleteEstimate(id,query) {
+function deleteEstimate(id, query) {
   console.log(id, query);
   invoices.updateOne(
-    {'_id': ObjectId(id)}, 
-    { $pull: { "estimates" : { date: query.date } } },
-);
+    { _id: ObjectId(id) },
+    { $pull: { estimates: { date: query.date } } }
+  );
 }
 
 module.exports = {

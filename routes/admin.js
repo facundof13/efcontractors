@@ -199,7 +199,8 @@ router.post("/invoiceupdate", function(req, res, next) {
     contractSpecs: req.body.contractSpecs,
     invoice: req.body.invoice,
     attachContract: req.body.attachContract,
-    paymentSteps: req.body.paymentSteps
+    paymentSteps: req.body.paymentSteps,
+    paid: req.body.paid
   }
 
   invoices.addEstimateToCustomer(id, query)
@@ -207,43 +208,35 @@ router.post("/invoiceupdate", function(req, res, next) {
 });
 
 router.post("/invoice", function(req, res, next) {
-  let name = titleize(req.body.name);
-  let address = titleize(req.body.address);
-  let cityState = titleize(req.body.cityState);
-  let zip = req.body.zip;
-  let expiration = req.body.expiration;
-  let title = titleize(req.body.title);
-  let email = req.body.email;
   let items = req.body.items;
-  let phone = req.body.phone;
-  let date = req.body.dateSubmitted;
 
   let total = 0;
   items.forEach(item => {
     total += Number(item.amount.replace("$", ""));
   });
 
-  let invoice = {
-    items: items,
+  let estimate = {
+    items: req.body.items,
     total: total,
-    expiration: expiration,
-    title: title,
-    date: date,
+    expiration: req.body.expiration,
+    title: titleize(req.body.title),
+    date: req.body.dateSubmitted,
     invoice: req.body.invoice,
+    paid: req.body.paid,
     attachContract: req.body.attachContract,
     contractSpecs: req.body.contractSpecs,
-    paymentSteps: req.body.paymentSteps
+    paymentSteps: req.body.paymentSteps,
   };
 
   let query = {
-    name: name,
-    address: address,
-    cityState: cityState,
-    zip: zip,
-    email: email,
-    date: date,
-    phone: phone,
-    estimates: [invoice],
+    name: titleize(req.body.name),
+    address: titleize(req.body.address),
+    cityState: titleize(req.body.cityState),
+    zip: req.body.zip,
+    email: req.body.email,
+    date: req.body.dateSubmitted,
+    phone: req.body.phone,
+    estimates: [estimate],
   };
 
   invoices.addInvoiceCustomer(query);

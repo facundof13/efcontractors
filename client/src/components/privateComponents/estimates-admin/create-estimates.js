@@ -28,7 +28,9 @@ export default class CreateEstimate extends React.Component {
       idToUpdate: "",
       invoice: false,
       attachContract: false,
-      contractSpecs: ''
+      contractSpecs: '',
+      paid: false,
+      paymentSteps: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -253,7 +255,8 @@ export default class CreateEstimate extends React.Component {
         invoice: false,
         attachContract: false,
         contractSpecs: this.state.contractSpecs,
-        paymentSteps: []
+        paymentSteps: [],
+        paid: false
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -275,7 +278,7 @@ export default class CreateEstimate extends React.Component {
               contractSpecs: '',
               invoice: false,
               attachContract: false,
-              paid: false
+              paid: this.state.paid
             },
             () => {
               this.addItem();
@@ -297,10 +300,10 @@ export default class CreateEstimate extends React.Component {
         phone: this.state.phone,
         dateSubmitted: new Date(),
         contractSpecs: this.state.contractSpecs,
-        invoice: false,
-        attachContract: false,
-        paid: false,
-        paymentSteps: [],
+        invoice: this.state.invoice,
+        attachContract: this.state.attachContract,
+        paid: this.state.paid,
+        paymentSteps: this.state.paymentSteps,
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -318,7 +321,8 @@ export default class CreateEstimate extends React.Component {
               itemError: "",
               disabled: true,
               helperText: "",
-              phone: ""
+              phone: "",
+              paid: false,
             },
             () => {
               this.addItem();

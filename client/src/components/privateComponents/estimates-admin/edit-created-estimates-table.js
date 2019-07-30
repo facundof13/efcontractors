@@ -44,6 +44,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       invoice: this.props.estimateToEdit.invoice,
       title: this.props.estimateToEdit.title,
       items: [...this.props.estimateToEdit.items],
+      paid: this.props.estimateToEdit.paid,
       open: false,
       steps: [],
       paymentSteps: [...this.props.estimateToEdit.paymentSteps],
@@ -186,7 +187,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       title: this.state.title,
       date: this.state.date,
       contractSpecs: this.state.contractSpecs,
-      paymentSteps: this.state.paymentSteps
+      paymentSteps: this.state.paymentSteps,
+      paid: this.state.paid
     };
     if (itemsNotEmpty) {
       this.props.handleSave(object);

@@ -18,6 +18,7 @@ import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
+import Axios from "axios";
 
 const invertDirection = {
   asc: "desc",
@@ -91,7 +92,22 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   markPaid(row) {
-      this.props.markEstimatePaid(row)
+    // update each field in objects array
+    this.props.markEstimatePaid(row);
+    Axios.post("/admin/updateestimate", {
+      obj: {
+        date: row.date,
+        items: row.items,
+        attachContract: row.attachContract,
+        contractSpecs: row.contractSpecs,
+        expiration: row.expiration,
+        invoice: row.invoice,
+        paymentSteps: row.paymentSteps,
+        title: row.title,
+        total: row.total,
+        paid: true
+      }
+    });
   }
 
   render() {
@@ -168,13 +184,17 @@ export default class CustomerEstimateTable extends React.Component {
                       >
                         <SendOutlined />
                       </IconButton>
-                      <IconButton
-                        size="small"
-                        title="Show pdf"
-                        onClick={() => this.createPdf(row)}
-                      >
-                        <InsertDriveFileOutlined />
-                      </IconButton>
+                      {row.paid ? (
+                        ""
+                      ) : (
+                        <IconButton
+                          size="small"
+                          title="Show pdf"
+                          onClick={() => this.createPdf(row)}
+                        >
+                          <InsertDriveFileOutlined />
+                        </IconButton>
+                      )}
                       {/* If its a paid invoice, show the receipt, if its an unpaid invoice show the payment button */}
                       {/* Else, don't show anything */}
                       {row.invoice ? (
