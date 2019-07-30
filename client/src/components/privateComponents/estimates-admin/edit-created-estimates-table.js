@@ -48,7 +48,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       items: [...this.props.estimateToEdit.items],
       open: false,
       steps: [],
-      paymentSteps: [...this.props.estimateToEdit.paymentSteps]
+      paymentSteps: [...this.props.estimateToEdit.paymentSteps],
+      copyPayments: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -61,7 +62,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
     this.addItemField = this.addItemField.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.addStep = this.addStep.bind(this);
     this.removeStep = this.removeStep.bind(this);
     this.updateStep = this.updateStep.bind(this);
@@ -71,18 +72,18 @@ export default class EditCreatedEstimatesTable extends React.Component {
   componentDidMount() {
     this.getServices();
     let newStepsArr = [];
-    for (let i = 0; i < this.state.paymentSteps.length; i++) {
+    this.state.paymentSteps.map((item, i) => {
       var step = (
         <PaymentSchedule
-          key={this.state.paymentSteps[i].id}
-          id={this.state.paymentSteps[i].id}
-          removeStep={() => this.removeStep()}
+          key={item.id}
+          id={item.id}
+          removeStep={() => this.removeStep(item.id)}
           updateStep={this.updateStep}
-          existingStep={this.state.paymentSteps[i]}
+          existingStep={item}
         />
       );
       newStepsArr.push(step);
-    }
+    });
     if (this.state.paymentSteps.length > 0) {
       this.setState({ steps: newStepsArr });
     }
@@ -224,21 +225,20 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   handleClickOpen() {
-    this.setState({ open: true });
+    this.setState({ open: true, copyPayments: [...this.state.paymentSteps] });
   }
 
-  handleClose() {
+  handleCancel() {
     console.log(this.state);
-    this.setState({ open: false });
+    this.setState({ open: false, paymentSteps: [...this.state.copyPayments] });
   }
 
   addStep() {
-    var stepIndex = this.state.steps.length - 1;
     var id = Date.now();
     //  + Math.random();
     var step = (
       <PaymentSchedule
-        key={stepIndex++}
+        key={id}
         id={id}
         removeStep={() => this.removeStep(id)}
         updateStep={this.updateStep}
@@ -251,18 +251,16 @@ export default class EditCreatedEstimatesTable extends React.Component {
   removeStep(id) {
     console.log(id);
     let stepsArr = this.state.steps.filter(function(item) {
-      console.log(item.props.id);
       return item.props.id !== id;
     });
     let paymentStepsArr = this.state.paymentSteps.filter(function(item) {
-      console.log(item);
       return item.id !== id;
     });
 
-    // this.setState({
-    //   paymentSteps: [...paymentStepsArr],
-    //   steps: [...stepsArr]
-    // });
+    this.setState({
+      paymentSteps: [...paymentStepsArr],
+      steps: [...stepsArr]
+    });
   }
 
   updateStep(obj) {
@@ -355,7 +353,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
                   Edit contract
                 </Button>
                 <div>
-                  <Dialog open={this.state.open} onClose={this.handleClose}>
+                  <Dialog open={this.state.open} onClose={this.handleCancel}>
                     <DialogTitle>Edit contract</DialogTitle>
                     <DialogContent>
                       <div className="dialog-form">
@@ -372,7 +370,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
                       </div>
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={this.handleClose}>Cancel</Button>
+                      <Button onClick={this.handleCancel}>Cancel</Button>
                       <Button onClick={this.handleContractSave.bind(this)}>
                         Save
                       </Button>
