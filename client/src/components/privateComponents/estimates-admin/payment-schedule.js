@@ -4,7 +4,6 @@ import DeleteOutlined from "@material-ui/icons/DeleteOutlined";
 export default class PaymentSchedule extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props)
     if (this.props.existingStep) {
       this.state = {
         id: this.props.id,

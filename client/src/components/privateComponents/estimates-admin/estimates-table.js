@@ -1,6 +1,5 @@
 import React from "react";
 import orderBy from "lodash/orderBy";
-import _ from "lodash";
 import prettifyDate from "../helperComponents/prettify-date";
 import {
   Typography,
@@ -74,7 +73,6 @@ export default class EstimatesTable extends React.Component {
               idx = i;
             }
           }
-          // console.log(idx);
           this.setState({
             customerItems: this.state.customers[idx].estimates
           });
@@ -146,13 +144,9 @@ export default class EstimatesTable extends React.Component {
     this.setState(prevState => ({
       customerToEdit: changedArray
     }));
-    console.log(event.target.name);
-    // console.log(this.state.customerToEdit)
-    // console.log(changedArray)
   }
 
   handleSave() {
-    // console.log(this.state)
     // let updatedCustomer = this.state.customerToEdit[0];
     //check to make sure email, phone, cityState, zipcode, and date match
     let emailOk = false;
@@ -229,7 +223,6 @@ export default class EstimatesTable extends React.Component {
     });
   }
   render() {
-    // console.log(this.state);
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">

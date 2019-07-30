@@ -9,7 +9,6 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  InputLabel,
   FormControl,
   IconButton,
   Select,
@@ -18,7 +17,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle
 } from "@material-ui/core";
 import Axios from "axios";
@@ -84,6 +82,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
         />
       );
       newStepsArr.push(step);
+      return true
     });
     if (this.state.paymentSteps.length > 0) {
       this.setState({ steps: newStepsArr });
@@ -132,7 +131,6 @@ export default class EditCreatedEstimatesTable extends React.Component {
     let key = event.target.name;
     let value = event.target.value;
 
-    console.log(key, value);
     let stateToChange = [...this.state.items];
     if (
       event.target.name === "title" ||
@@ -241,14 +239,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
               existingStep={payment}
             />
           );
+          return true
         });
         this.setState({
           steps: [...newSteps]
         })
     }
-
-    this.state.paymentSteps.map(step => {
-    });
     this.setState({
       open: true,
       copyPayments: [...this.state.paymentSteps],

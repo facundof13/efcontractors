@@ -18,7 +18,6 @@ import PaymentOutlined from "@material-ui/icons/PaymentOutlined";
 import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
-import Axios from "axios";
 
 const invertDirection = {
   asc: "desc",
