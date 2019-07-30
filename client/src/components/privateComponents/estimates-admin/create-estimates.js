@@ -30,7 +30,8 @@ export default class CreateEstimate extends React.Component {
       attachContract: false,
       contractSpecs: '',
       paid: false,
-      paymentSteps: []
+      paymentSteps: [],
+      pdfLink: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -256,7 +257,8 @@ export default class CreateEstimate extends React.Component {
         attachContract: false,
         contractSpecs: this.state.contractSpecs,
         paymentSteps: [],
-        paid: false
+        paid: false,
+        pdfLink: this.state.pdfLink,
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -278,7 +280,8 @@ export default class CreateEstimate extends React.Component {
               contractSpecs: '',
               invoice: false,
               attachContract: false,
-              paid: this.state.paid
+              paid: this.state.paid,
+              pdfLink: '',
             },
             () => {
               this.addItem();
@@ -304,6 +307,7 @@ export default class CreateEstimate extends React.Component {
         attachContract: this.state.attachContract,
         paid: this.state.paid,
         paymentSteps: this.state.paymentSteps,
+        pdfLink: this.state.pdfLink,
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
@@ -323,6 +327,7 @@ export default class CreateEstimate extends React.Component {
               helperText: "",
               phone: "",
               paid: false,
+              pdfLink: '',
             },
             () => {
               this.addItem();

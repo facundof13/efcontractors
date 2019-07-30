@@ -48,6 +48,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       open: false,
       steps: [],
       paymentSteps: [...this.props.estimateToEdit.paymentSteps],
+      pdfLink: this.props.estimateToEdit.pdfLink,
       copyPayments: [],
       copySteps: []
     };
@@ -188,7 +189,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       date: this.state.date,
       contractSpecs: this.state.contractSpecs,
       paymentSteps: this.state.paymentSteps,
-      paid: this.state.paid
+      paid: this.state.paid,
+      pdfLink: this.state.pdfLink
     };
     if (itemsNotEmpty) {
       this.props.handleSave(object);
@@ -224,10 +226,9 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   handleClickOpen() {
-
     if (this.state.steps.length === this.state.paymentSteps.length) {
       var filter = this.state.steps.filter(item => {
-        return item.props.existingStep;
+        return !item.props.existingStep;
       });
       var newSteps = [];
       if (filter.length > 0) {

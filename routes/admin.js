@@ -200,7 +200,8 @@ router.post("/invoiceupdate", function(req, res, next) {
     invoice: req.body.invoice,
     attachContract: req.body.attachContract,
     paymentSteps: req.body.paymentSteps,
-    paid: req.body.paid
+    paid: req.body.paid,
+    pdfLink: req.body.pdfLink
   }
 
   invoices.addEstimateToCustomer(id, query)
@@ -226,6 +227,7 @@ router.post("/invoice", function(req, res, next) {
     attachContract: req.body.attachContract,
     contractSpecs: req.body.contractSpecs,
     paymentSteps: req.body.paymentSteps,
+    pdfLink: req.body.pdfLink
   };
 
   let query = {
@@ -267,5 +269,11 @@ router.delete('/deleteestimate', function(req, res, next) {
 
   invoices.deleteEstimate(id, query)
   res.end()
+})
+
+router.post('/savepdf', function(req,res,next) {
+  let pdf = req.body.pdf
+
+  console.log(pdf)
 })
 module.exports = router;
