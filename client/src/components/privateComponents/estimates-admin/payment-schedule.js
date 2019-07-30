@@ -25,7 +25,6 @@ export default class PaymentSchedule extends React.Component {
   }
 
   handleChange(e) {
-    console.log(e.target.name, e.target.value);
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.props.updateStep({
         id: this.state.id,
@@ -37,7 +36,6 @@ export default class PaymentSchedule extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div className="step">
         <TextField

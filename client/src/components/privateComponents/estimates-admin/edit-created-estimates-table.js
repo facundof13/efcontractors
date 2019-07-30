@@ -49,7 +49,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       open: false,
       steps: [],
       paymentSteps: [...this.props.estimateToEdit.paymentSteps],
-      copyPayments: []
+      copyPayments: [],
+      copySteps: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -225,7 +226,19 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   handleClickOpen() {
-    this.setState({ open: true, copyPayments: [...this.state.paymentSteps] });
+    if (this.state.copySteps.length <= 0 ) {
+      this.setState({
+        open: true,
+        copyPayments: [...this.state.paymentSteps],
+        copySteps: [...this.state.steps]
+      });
+    } else {
+      this.setState({ open: true, 
+        paymentSteps: [...this.state.copyPayments],
+         steps: [...this.state.copySteps]
+         });
+    }
+    console.log(this.state);
   }
 
   handleCancel() {
@@ -235,7 +248,6 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   addStep() {
     var id = Date.now();
-    //  + Math.random();
     var step = (
       <PaymentSchedule
         key={id}
@@ -274,6 +286,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
   }
 
   handleContractSave() {
+    console.log(this.state.paymentSteps)
     this.state.paymentSteps.forEach(item => {
       if (
         item.stepName === "" ||
@@ -282,7 +295,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       ) {
         window.alert("Incorrect step");
       } else {
-        this.setState({ open: false }, () => console.log(this.state));
+        this.setState({ open: false,  }, () => console.log(this.state));
       }
     });
     if (this.state.paymentSteps.length === 0) {
