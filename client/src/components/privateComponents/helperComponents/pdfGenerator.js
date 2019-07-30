@@ -3,14 +3,14 @@ import jsPDF from "jspdf";
 export function generatePDF(client, estimate) {
   // console.log(client, estimate)
   var doc = new jsPDF();
-
+  var img = getBase64Image("https://efcontractors.s3.us-east-2.amazonaws.com/logo.png")
+  doc.addImage(img, 'PNG', 15, 40, 100, 100)
   doc.text("hello world", 10, 10);
-
-
+  
   doc.setProperties({
     title: client.name,
-    author: 'EFContractors',
-  })
+    author: "EFContractors"
+  });
   return doc.output("datauristring");
 }
 
@@ -57,3 +57,13 @@ function editDistance(s1, s2) {
   }
   return costs[s2.length];
 }
+
+function getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+  }
