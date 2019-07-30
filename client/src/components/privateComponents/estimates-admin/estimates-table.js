@@ -56,6 +56,7 @@ export default class EstimatesTable extends React.Component {
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleEstimateDelete = this.handleEstimateDelete.bind(this);
+    this.markEstimatePaid = this.markEstimatePaid.bind(this);
   }
 
   componentDidMount() {
@@ -222,6 +223,13 @@ export default class EstimatesTable extends React.Component {
       customerToEdit: [...this.state.unChangedArray]
     });
   }
+
+  markEstimatePaid(estimate) {
+    if (window.confirm(`Mark invoice ${estimate.title} as paid?`)) {
+      console.log(estimate, this.state)
+    }
+  }
+
   render() {
     return (
       <div>
@@ -434,6 +442,7 @@ export default class EstimatesTable extends React.Component {
                 customerInfo={this.state.customerInfo}
                 handleSave={this.handleEstimateSave}
                 handleDelete={this.handleEstimateDelete}
+                markEstimatePaid={this.markEstimatePaid}
               />
             ) : (
               ""

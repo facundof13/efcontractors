@@ -48,6 +48,7 @@ export default class CustomerEstimateTable extends React.Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
     this.sendEstimate = this.sendEstimate.bind(this);
+    this.markPaid = this.markPaid.bind(this);
   }
 
   handleSort(item) {
@@ -87,6 +88,10 @@ export default class CustomerEstimateTable extends React.Component {
 
   handleEstimateDelete(estimate) {
     console.log(estimate);
+  }
+
+  markPaid(row) {
+      this.props.markEstimatePaid(row)
   }
 
   render() {
@@ -185,7 +190,7 @@ export default class CustomerEstimateTable extends React.Component {
                           <IconButton
                             size="small"
                             title="Mark paid"
-                            onClick={() => this.createPdf(row)}
+                            onClick={() => this.markPaid(row)}
                           >
                             <PaymentOutlined />
                           </IconButton>

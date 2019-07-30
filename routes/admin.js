@@ -176,6 +176,8 @@ router.delete("/invoiceCustomerId", function(req, res, next) {
   res.end();
 });
 
+// TODO: Add Paid:false option to new estimates
+
 router.post("/invoiceupdate", function(req, res, next) {
   let expiration = req.body.expiration;
   let title = titleize(req.body.title);
