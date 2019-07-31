@@ -14,6 +14,7 @@ import Footer from "./components/footer";
 import NotFound from "./components/not-found";
 import PrivateRoute from "./components/privateComponents/private-route";
 import Estimates from "./components/privateComponents/estimates-admin/estimates";
+import PdfPage from "./components/privateComponents/estimates-admin/pdf-page";
 
 class App extends Component {
   constructor() {
@@ -74,6 +75,15 @@ class App extends Component {
                 />
               )}
             />
+
+<Route
+              path="/pdf"
+              render={() => (
+                <PdfPage
+                />
+              )}
+            />
+
             <PrivateRoute
               exact
               path="/admin/estimates"

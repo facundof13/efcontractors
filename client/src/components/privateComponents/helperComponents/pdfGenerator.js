@@ -1,22 +1,24 @@
 import jsPDF from "jspdf";
-import Axios from 'axios'
+import Axios from "axios";
 
-export function generatePDF(client, estimate) {
-  // console.log(client, estimate)
-  Axios.get('/admin/imgurl')
-  .then(res => {
-    var doc = new jsPDF();  
-    var img = (res.data[0].img)
-    doc.addImage(img, 'PNG', 10, 10, 100, 100)
-    doc.setProperties({
-      title: client.name,
-      author: "EFContractors"
-    });
-    return doc.output("datauristring");
-  })
+export async function generatePDF(client, estimate) {
+  console.log(estimate)
+  var doc = new jsPDF();
+  doc.setProperties({
+    title: client.name,
+    author: "EFContractors"
+  });
+
+  //get image and add it to pdf
+  let res = await Axios.get("/admin/imgurl");
+  var img = res.data[0].img;
+
+  doc.text(estimate.invoice? "INVOICE" : "ESTIMATE", 80, 10);
+  doc.addImage(img, "JPEG", 10, 5);
+
+
+  return doc.output("datauristring");
   // doc.addImage(img, 'PNG', 15, 40, 100, 100)
-  // doc.text("hello world", 10, 10);
-  
 }
 
 export function similarity(s1, s2) {
@@ -62,13 +64,3 @@ function editDistance(s1, s2) {
   }
   return costs[s2.length];
 }
-
-function getBase64Image(img) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-  }

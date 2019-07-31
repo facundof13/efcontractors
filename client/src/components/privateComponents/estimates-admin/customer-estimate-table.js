@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOMServer from "react-dom/server";
 import {
   Paper,
   Table,
@@ -20,6 +21,7 @@ import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
 import Axios from "axios";
 import { generatePDF, similarity } from "../helperComponents/pdfGenerator";
+import PdfPage from "./pdf-page";
 
 const invertDirection = {
   asc: "desc",
@@ -87,33 +89,45 @@ export default class CustomerEstimateTable extends React.Component {
     console.log(estimate);
   }
 
-  createPdf(row) {
-    var doc = generatePDF(this.props.customerInfo, row);
-    // save new pdf to db
+  async createPdf(row) {
+    let res = await Axios.get("/admin/imgurl");
+    const htmlstring = ReactDOMServer.renderToStaticMarkup(
+      <PdfPage imgUrl={res.data[0].img} />
+    );
+    console.log(htmlstring);
 
-    if (similarity(doc, row.pdfLink) < 90) {
-      Axios.post("/admin/updateestimate", {
-        obj: {
-          date: row.date,
-          items: row.items,
-          attachContract: row.attachContract,
-          contractSpecs: row.contractSpecs,
-          expiration: row.expiration,
-          invoice: row.invoice,
-          paymentSteps: row.paymentSteps,
-          title: row.title,
-          total: row.total,
-          paid: row.paid,
-          pdfLink: doc
-        }
-      });
-    }
+    // var doc = await generatePDF(this.props.customerInfo, row);
+    // // save new pdf to db
+    // // console.log(doc)
+    // // console.log(row.pdfLink)
 
-    var iframe = `<iframe allowFullScreen style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" frameBorder='0' src=${doc}></iframe>`
-    var x = window.open();
-    x.document.open();
-    x.document.write(iframe);
-    x.document.close();
+    // // if (similarity(doc, row.pdfLink) < 90) {
+    // Axios.post("/admin/updateestimate", {
+    //   obj: {
+    //     date: row.date,
+    //     items: row.items,
+    //     attachContract: row.attachContract,
+    //     contractSpecs: row.contractSpecs,
+    //     expiration: row.expiration,
+    //     invoice: row.invoice,
+    //     paymentSteps: row.paymentSteps,
+    //     title: row.title,
+    //     total: row.total,
+    //     paid: row.paid,
+    //     pdfLink: doc
+    //   }
+    // });
+    // // }
+
+    // var x = window.open();
+    // x.document.getElementsByTagName('html')[0].style = 'overflow: hidden; margin-bottom:20px;'
+    // var iframe = x.document.createElement("iframe");
+    // iframe.width = "100%";
+    // iframe.height = "98%";
+    // iframe.style = "overflow: hidden";
+    // // iframe.style = "border: 0";
+    // iframe.src = doc; //data-uri content here
+    // x.document.body.appendChild(iframe);
   }
 
   markPaid(row) {
