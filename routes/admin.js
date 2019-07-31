@@ -201,10 +201,11 @@ router.post("/invoiceupdate", function(req, res, next) {
     attachContract: req.body.attachContract,
     paymentSteps: req.body.paymentSteps,
     paid: req.body.paid,
-    pdfLink: req.body.pdfLink
-  }
+    pdfLink: req.body.pdfLink,
+    estimateNum: req.body.estimateNum
+  };
 
-  invoices.addEstimateToCustomer(id, query)
+  invoices.addEstimateToCustomer(id, query);
   res.end();
 });
 
@@ -227,7 +228,8 @@ router.post("/invoice", function(req, res, next) {
     attachContract: req.body.attachContract,
     contractSpecs: req.body.contractSpecs,
     paymentSteps: req.body.paymentSteps,
-    pdfLink: req.body.pdfLink
+    pdfLink: req.body.pdfLink,
+    estimateNum: req.body.estimateNum
   };
 
   let query = {
@@ -238,7 +240,7 @@ router.post("/invoice", function(req, res, next) {
     email: req.body.email,
     date: req.body.dateSubmitted,
     phone: req.body.phone,
-    estimates: [estimate],
+    estimates: [estimate]
   };
 
   invoices.addInvoiceCustomer(query);
@@ -253,35 +255,47 @@ router.post("/updateCustomer", function(req, res, next) {
   res.end();
 });
 
-router.post('/updateestimate', function(req, res, next) {
-  let query = req.body.obj
-  console.log(query)
-  
-  invoices.updateEstimate(query)
-  .then(
-    res.sendStatus(200)
-  )
-})
+router.post("/updateestimate", function(req, res, next) {
+  let query = req.body.obj;
+  console.log(query);
 
-router.delete('/deleteestimate', function(req, res, next) {
-  let query = req.body.obj
-  let id = req.body.id
+  invoices.updateEstimate(query).then(res.sendStatus(200));
+});
 
-  invoices.deleteEstimate(id, query)
+router.delete("/deleteestimate", function(req, res, next) {
+  let query = req.body.obj;
+  let id = req.body.id;
+
+  invoices.deleteEstimate(id, query);
+  res.end();
+});
+
+router.post("/savepdf", function(req, res, next) {
+  let pdf = req.body.pdf;
+
+  console.log(pdf);
+});
+
+router.get("/imgurl", function(req, res, next) {
+  invoices.getLogoURI().then(item => {
+    res.send(item);
+  });
+});
+
+router.post("/generatePDF", function(req, res, next) {
+  invoices.generatePdf(req.body.client, req.body.estimate).then(base64 => {
+    res.json(base64);
+  });
+});
+
+router.get("/estimateNum", function(req, res, next) {
+  invoices.getCurrentEstimateNum().then(resp => {
+    res.json(resp);
+  });
+});
+
+router.post('/estimateNum', function(req,res,next) {
+  invoices.incrementEstimateNum()
   res.end()
-})
-
-router.post('/savepdf', function(req,res,next) {
-  let pdf = req.body.pdf
-
-  console.log(pdf)
-})
-
-router.get('/imgurl', function(req, res, next) {
-  invoices.getLogoURI()
-  .then(item => {
-    res.send(item)
-  })
-
 })
 module.exports = router;

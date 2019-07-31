@@ -1,5 +1,6 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
+import { PDFViewer } from "@react-pdf/renderer";
+
 import {
   Paper,
   Table,
@@ -22,7 +23,7 @@ import EditCreatedEstimatesTable from "./edit-created-estimates-table";
 import Axios from "axios";
 import { generatePDF, similarity } from "../helperComponents/pdfGenerator";
 import PdfPage from "./pdf-page";
-
+import { pdf } from "@react-pdf/renderer";
 const invertDirection = {
   asc: "desc",
   desc: "asc"
@@ -89,18 +90,41 @@ export default class CustomerEstimateTable extends React.Component {
     console.log(estimate);
   }
 
+  blobToDataURL(blob, callback) {
+    var a = new FileReader();
+    a.onload = function(e) {
+      callback(e.target.result);
+    };
+    a.readAsDataURL(blob);
+  }
+
   async createPdf(row) {
     let res = await Axios.get("/admin/imgurl");
-    const htmlstring = ReactDOMServer.renderToStaticMarkup(
-      <PdfPage imgUrl={res.data[0].img} />
-    );
-    console.log(htmlstring);
+    var img = res.data[0].img;
 
+    pdf(<PdfPage client={this.props.customerInfo} estimate={row} imgUrl={img} />)
+      .toBlob()
+      .then(res => {
+        this.blobToDataURL(res, data => {
+          var x = window.open();
+          x.document.getElementsByTagName("html")[0].style =
+            "overflow: hidden; margin-bottom:20px;";
+          var iframe = x.document.createElement("iframe");
+          iframe.width = "100%";
+          iframe.height = "98%";
+          iframe.style = "overflow: hidden";
+          iframe.src = data; //data-uri content here
+          x.document.body.appendChild(iframe);
+        });
+      });
+
+    // let res = await Axios.post("/admin/generatePdf", {client: this.props.customerInfo, estimate: row});
+    // var pdfData = (`data:application/pdf;base64,${res.data}`)
+    // console.log(htmlstring);
     // var doc = await generatePDF(this.props.customerInfo, row);
     // // save new pdf to db
     // // console.log(doc)
     // // console.log(row.pdfLink)
-
     // // if (similarity(doc, row.pdfLink) < 90) {
     // Axios.post("/admin/updateestimate", {
     //   obj: {
@@ -118,36 +142,28 @@ export default class CustomerEstimateTable extends React.Component {
     //   }
     // });
     // // }
-
-    // var x = window.open();
-    // x.document.getElementsByTagName('html')[0].style = 'overflow: hidden; margin-bottom:20px;'
-    // var iframe = x.document.createElement("iframe");
-    // iframe.width = "100%";
-    // iframe.height = "98%";
-    // iframe.style = "overflow: hidden";
-    // // iframe.style = "border: 0";
-    // iframe.src = doc; //data-uri content here
-    // x.document.body.appendChild(iframe);
   }
 
   markPaid(row) {
     // update each field in objects array
     this.props.markEstimatePaid(row);
-    Axios.post("/admin/updateestimate", {
-      obj: {
-        date: row.date,
-        items: row.items,
-        attachContract: row.attachContract,
-        contractSpecs: row.contractSpecs,
-        expiration: row.expiration,
-        invoice: row.invoice,
-        paymentSteps: row.paymentSteps,
-        title: row.title,
-        total: row.total,
-        pdfLink: row.pdfLink,
-        paid: true
-      }
-    });
+    if (window.confirm(`Mark ${row.title} paid?`)) {
+      Axios.post("/admin/updateestimate", {
+        obj: {
+          date: row.date,
+          items: row.items,
+          attachContract: row.attachContract,
+          contractSpecs: row.contractSpecs,
+          expiration: row.expiration,
+          invoice: row.invoice,
+          paymentSteps: row.paymentSteps,
+          title: row.title,
+          total: row.total,
+          pdfLink: row.pdfLink,
+          paid: true
+        }
+      });
+    }
   }
 
   render() {

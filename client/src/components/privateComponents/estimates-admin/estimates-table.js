@@ -225,9 +225,9 @@ export default class EstimatesTable extends React.Component {
   }
 
   markEstimatePaid(estimate) {
-    if (window.confirm(`Mark invoice ${estimate.title} as paid?`)) {
-      console.log(estimate, this.state)
-    }
+    // if (window.confirm(`Mark invoice ${estimate.title} as paid?`)) {
+    //   console.log(estimate, this.state)
+    // }
   }
 
   render() {

@@ -31,7 +31,8 @@ export default class CreateEstimate extends React.Component {
       contractSpecs: '',
       paid: false,
       paymentSteps: [],
-      pdfLink: ''
+      pdfLink: '',
+      estimateNum: 0,
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -44,14 +45,17 @@ export default class CreateEstimate extends React.Component {
     this.fillWithSelectedCustomer = this.fillWithSelectedCustomer.bind(this);
   }
 
-  // TODO: - change create page to have title and expiration at bottom
-
   componentDidMount() {
     this.getServices().then(() => {
       this.addItem();
     });
 
     this.getCustomers();
+
+    Axios.get('/admin/estimateNum')
+    .then(res => {
+      this.setState({estimateNum: res.data})
+    })
   }
 
   handleChange(event) {
@@ -259,9 +263,11 @@ export default class CreateEstimate extends React.Component {
         paymentSteps: [],
         paid: false,
         pdfLink: this.state.pdfLink,
+        estimateNum: this.state.estimateNum
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
+          Axios.post('/admin/estimateNum')
           this.setState(
             {
               name: "",
@@ -308,9 +314,11 @@ export default class CreateEstimate extends React.Component {
         paid: this.state.paid,
         paymentSteps: this.state.paymentSteps,
         pdfLink: this.state.pdfLink,
+        estimateNum: this.state.estimateNum
       }).then(res => {
         if (res.status === 200) {
           console.log("all ok");
+          Axios.post('/admin/estimateNum')
           this.setState(
             {
               name: "",
@@ -339,6 +347,7 @@ export default class CreateEstimate extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">

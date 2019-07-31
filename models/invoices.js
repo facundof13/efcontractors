@@ -24,7 +24,7 @@ function getServices() {
 
 function getInvoiceCustomers() {
   return new Promise((resolve, reject) => {
-    invoices.find({ Name: { $exists: false } }).toArray((err, items) => {
+    invoices.find({ Name: { $exists: false },  }).toArray((err, items) => {
       resolve(items);
     });
   });
@@ -106,9 +106,34 @@ function deleteEstimate(id, query) {
 
 function getLogoURI() {
   return new Promise((resolve, reject) => {
-    invoices.find({ _id: ObjectId('5d4084761c9d440000bbf98f')}).toArray((err, items) => {
-      resolve(items);
-    });
+    invoices
+      .find({ _id: ObjectId("5d4084761c9d440000bbf98f") })
+      .toArray((err, items) => {
+        resolve(items);
+      });
+  });
+}
+
+function getCurrentEstimateNum() {
+  return new Promise((resolve, reject) => {
+    invoices
+      .find({ _id: ObjectId("5d41ec9b1c9d44000046c695") })
+      .toArray((err, items) => {
+        resolve(items[0].estimateNum);
+      });
+  });
+}
+
+function incrementEstimateNum() {
+  getCurrentEstimateNum().then(res => {
+    invoices.updateOne(
+      { _id: ObjectId("5d41ec9b1c9d44000046c695") },
+      {
+        $inc: {
+          estimateNum: 1
+        }
+      }
+    );
   });
 }
 
@@ -121,5 +146,7 @@ module.exports = {
   addEstimateToCustomer,
   updateEstimate,
   deleteEstimate,
-  getLogoURI
+  getLogoURI,
+  getCurrentEstimateNum,
+  incrementEstimateNum
 };

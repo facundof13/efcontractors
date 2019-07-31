@@ -1,24 +1,9 @@
-import jsPDF from "jspdf";
 import Axios from "axios";
 
 export async function generatePDF(client, estimate) {
-  console.log(estimate)
-  var doc = new jsPDF();
-  doc.setProperties({
-    title: client.name,
-    author: "EFContractors"
-  });
-
-  //get image and add it to pdf
+  //get image as base64 add it to pdf
   let res = await Axios.get("/admin/imgurl");
   var img = res.data[0].img;
-
-  doc.text(estimate.invoice? "INVOICE" : "ESTIMATE", 80, 10);
-  doc.addImage(img, "JPEG", 10, 5);
-
-
-  return doc.output("datauristring");
-  // doc.addImage(img, 'PNG', 15, 40, 100, 100)
 }
 
 export function similarity(s1, s2) {
