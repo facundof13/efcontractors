@@ -273,15 +273,28 @@ export default class PdfPage extends React.Component {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               marginRight: 120,
-              marginTop: 10,
-              border: 1
+              marginTop: 10
             }}
           >
-            <View style={{ fontSize: 8 }}>
-              <Text>Subtotal:</Text>
-              <Text>Taxes:</Text>
+            {/* <View style={{ width: 500 }} /> */}
+            <View
+              style={{
+                fontSize: 8,
+                border: 1,
+                width: 150
+              }}
+            >
+              <View style={{ flexDirection: "row", justifyContent:'space-between' }}>
+                <Text>Subtotal:</Text>
+                <Text>1000</Text>
+              </View>
+              <Text >Taxes:</Text>
+              <View style={{flexDirection: 'row',justifyContent:'space-between', borderTop: 1}}>
+                <Text style={{fontSize:10}}>Total:</Text>
+                <Text style={{fontSize:10}}>{this.props.estimate.total}</Text>
+              </View>
             </View>
           </View>
         </Page>
