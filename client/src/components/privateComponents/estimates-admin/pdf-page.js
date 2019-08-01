@@ -52,14 +52,14 @@ export default class PdfPage extends React.Component {
     super(props);
 
     this.state = {
-      height: this.props.estimate.items.length * 25
-    }
+      height: this.props.estimate.items.length * 50 + 16
+    };
 
     this.render = this.render.bind(this);
   }
 
   render() {
-    console.log(this.state)
+    console.log(this.state);
     return (
       <Document>
         <Page size="A4" style={styles.page}>
@@ -207,11 +207,13 @@ export default class PdfPage extends React.Component {
               </View>
             </View>
 
-
             {/* Second Row in Main Box */}
-            <View style={{ flexDirection: "column" }}>
+            <View style={{ flexDirection: "column", height: 20 }}>
               {this.props.estimate.items.map(item => (
-                <View key={item.num} style={{ flexDirection: "row" }}>
+                <View
+                  key={item.num}
+                  style={{ flexDirection: "row", height: 50 }}
+                >
                   {/* {this.setState(prevState => ({height: prevState.height+20}))} */}
                   <View style={{ width: 136, textAlign: "left" }}>
                     <Text>{item.item}</Text>
@@ -227,7 +229,12 @@ export default class PdfPage extends React.Component {
                     <Text>{item.quantity}</Text>
                   </View>
                   <View
-                    style={{ width: 70, borderLeft: 1, textAlign: "right" }}
+                    style={{
+                      width: 70,
+                      borderLeft: 1,
+                      textAlign: "right",
+                      marginRight: 5
+                    }}
                   >
                     <Text>
                       {item.amount
@@ -238,7 +245,43 @@ export default class PdfPage extends React.Component {
                   </View>
                 </View>
               ))}
-              <View style={{width: 137, height: 550-this.state.height, borderRight: 1}} />
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    width: 137,
+                    height: 550 - this.state.height,
+                    borderRight: 1
+                  }}
+                />
+                <View
+                  style={{
+                    width: 277,
+                    height: 550 - this.state.height,
+                    borderRight: 1
+                  }}
+                />
+                <View
+                  style={{
+                    width: 70,
+                    height: 550 - this.state.height,
+                    borderRight: 1
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              marginRight: 120,
+              marginTop: 10,
+              border: 1
+            }}
+          >
+            <View style={{ fontSize: 8 }}>
+              <Text>Subtotal:</Text>
+              <Text>Taxes:</Text>
             </View>
           </View>
         </Page>
