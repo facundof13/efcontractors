@@ -102,21 +102,21 @@ export default class CustomerEstimateTable extends React.Component {
     let res = await Axios.get("/admin/imgurl");
     var img = res.data[0].img;
 
-    pdf(<PdfPage client={this.props.customerInfo} estimate={row} imgUrl={img} />)
-      .toBlob()
-      .then(res => {
-        this.blobToDataURL(res, data => {
-          console.log(data)
-          var x = window.open();
-          x.document.getElementsByTagName("html")[0].style = "overflow: hidden; margin-bottom:20px;";
-          var iframe = x.document.createElement("iframe");
-          iframe.width = "100%";
-          iframe.height = "98%";
-          iframe.style = "overflow: hidden";
-          iframe.src = data; //data-uri content here
-          x.document.body.appendChild(iframe);
-        });
-      });
+    Axios.post("/admin/generatePDF", {
+      client: this.props.customerInfo,
+      estimate: row,
+      imgUrl: img
+    }).then(pdf => {
+      var x = window.open();
+      x.document.getElementsByTagName("html")[0].style =
+        "overflow: hidden; margin-bottom:20px;";
+      var iframe = x.document.createElement("iframe");
+      iframe.width = "100%";
+      iframe.height = "98%";
+      iframe.style = "overflow: hidden";
+      iframe.src = pdf.data; //data-uri content here
+      x.document.body.appendChild(iframe);
+    });
 
     // let res = await Axios.post("/admin/generatePdf", {client: this.props.customerInfo, estimate: row});
     // var pdfData = (`data:application/pdf;base64,${res.data}`)

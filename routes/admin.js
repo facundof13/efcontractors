@@ -6,6 +6,7 @@ var projects = require("../models/projects");
 var invoices = require("../models/invoices");
 const titleize = require("titleize");
 const moment = require("moment");
+const pdfgenerator = require("../models/pdfgenerator");
 
 /* GET admins listing. */
 
@@ -283,8 +284,8 @@ router.get("/imgurl", function(req, res, next) {
 });
 
 router.post("/generatePDF", function(req, res, next) {
-  invoices.generatePdf(req.body.client, req.body.estimate).then(base64 => {
-    res.json(base64);
+  pdfgenerator.renderPdf(req.body, pdf => {
+    res.json(pdf);
   });
 });
 
@@ -294,8 +295,8 @@ router.get("/estimateNum", function(req, res, next) {
   });
 });
 
-router.post('/estimateNum', function(req,res,next) {
-  invoices.incrementEstimateNum()
-  res.end()
-})
+router.post("/estimateNum", function(req, res, next) {
+  invoices.incrementEstimateNum();
+  res.end();
+});
 module.exports = router;
