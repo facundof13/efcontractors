@@ -106,9 +106,9 @@ export default class CustomerEstimateTable extends React.Component {
       .toBlob()
       .then(res => {
         this.blobToDataURL(res, data => {
+          console.log(data)
           var x = window.open();
-          x.document.getElementsByTagName("html")[0].style =
-            "overflow: hidden; margin-bottom:20px;";
+          x.document.getElementsByTagName("html")[0].style = "overflow: hidden; margin-bottom:20px;";
           var iframe = x.document.createElement("iframe");
           iframe.width = "100%";
           iframe.height = "98%";

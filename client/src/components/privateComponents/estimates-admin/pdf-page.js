@@ -10,7 +10,6 @@ import {
   Image,
   Canvas
 } from "@react-pdf/renderer";
-import { callbackify } from "util";
 
 const styles = StyleSheet.create({
   page: {
