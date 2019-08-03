@@ -23,6 +23,13 @@ function renderPdf(data, cb) {
   var descriptions = [];
   var quantities = [];
   var amounts = [];
+  var taxes = 0
+
+  for (let i = 0; i < data.estimate.items.length; i++) {
+    if (data.estimate.items[i].tax) {
+      taxes += (Number(data.estimate.items[i].amount.replace('$', '')) / 6.5)
+    }
+  }
 
   //row height = 8
 
@@ -179,10 +186,8 @@ function renderPdf(data, cb) {
       {
         table: {
           body: [
-              {
-                  text: 'test',
-                  fontSize: 10
-              }
+            [{text: 'Subtotal', fontSize:8}, {text: data.estimate.total, fontSize:8}],
+            [{text: 'Taxes', fontSize:8}, {text: taxes.toLocaleString({maximumFractionDigits: 2}), fontSize:8}]
           ]
         }
       }

@@ -273,8 +273,6 @@ router.delete("/deleteestimate", function(req, res, next) {
 
 router.post("/savepdf", function(req, res, next) {
   let pdf = req.body.pdf;
-
-  console.log(pdf);
 });
 
 router.get("/imgurl", function(req, res, next) {
