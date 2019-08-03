@@ -217,10 +217,39 @@ function renderPdf(data, cb) {
   };
 
   if (data.estimate.attachContract) {
-    docDefinition.content.push({
-      text:'hello world',
+    docDefinition.content.push(
+      {
+      text:'EF Contractors LLC',
+      bold: true,
+      alignment:'center',
+      fontSize:'24',
       pageBreak: 'before'
-    })
+    },
+    {
+      text:'404-409-3715', //TODO: Make phone number dynamic, store in db!
+      alignment:'center',
+      fontSize: 10
+    },
+    {
+      text:'\n\nCONTRACT AGREEMENT',
+      fontSize: 14,
+      alignment: 'center',
+      bold: true
+    },
+    {
+      text: ['\nDate ', prettifyDate(data.estimate.date)]
+    },
+    {
+      text: [`\n${data.client.name}`, `\n${data.client.email}`, `\n${data.client.address}`, `\n${data.client.cityState}`, `\n${data.client.zip}`]
+    },
+    {
+      text: ['\nJOB TITLE: ', data.estimate.title]
+    },
+    {
+      text: '\nArticle One: Contract Document'
+    }
+
+    )
   }
 
   var options = {
