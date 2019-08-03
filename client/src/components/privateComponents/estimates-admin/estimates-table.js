@@ -224,10 +224,28 @@ export default class EstimatesTable extends React.Component {
     });
   }
 
-  markEstimatePaid(estimate) {
-    // if (window.confirm(`Mark invoice ${estimate.title} as paid?`)) {
-    //   console.log(estimate, this.state)
-    // }
+  markEstimatePaid(row) {
+    if (window.confirm(`Mark invoice ${row.title} as paid?`)) {
+      Axios.post("/admin/updateestimate", {
+        obj: {
+          date: row.date,
+          items: row.items,
+          attachContract: row.attachContract,
+          contractSpecs: row.contractSpecs,
+          expiration: row.expiration,
+          invoice: row.invoice,
+          paymentSteps: row.paymentSteps,
+          title: row.title,
+          total: row.total,
+          pdfLink: row.pdfLink,
+          estimateNum: row.estimateNum,
+          paid: true,
+        }
+      })
+      .then(() => {
+        this.getCustomers(true)
+      })
+    }
   }
 
   render() {

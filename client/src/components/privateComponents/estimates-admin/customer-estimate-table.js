@@ -145,25 +145,7 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   markPaid(row) {
-    // update each field in objects array
     this.props.markEstimatePaid(row);
-    if (window.confirm(`Mark ${row.title} paid?`)) {
-      Axios.post("/admin/updateestimate", {
-        obj: {
-          date: row.date,
-          items: row.items,
-          attachContract: row.attachContract,
-          contractSpecs: row.contractSpecs,
-          expiration: row.expiration,
-          invoice: row.invoice,
-          paymentSteps: row.paymentSteps,
-          title: row.title,
-          total: row.total,
-          pdfLink: row.pdfLink,
-          paid: true
-        }
-      });
-    }
   }
 
   render() {

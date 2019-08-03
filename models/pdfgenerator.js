@@ -1,5 +1,4 @@
 function renderPdf(data, cb) {
-  console.log(data);
   var fonts = {
     Roboto: {
       normal: "fonts/Roboto-Regular.ttf",
@@ -18,24 +17,31 @@ function renderPdf(data, cb) {
   var PdfPrinter = require("pdfmake");
   var printer = new PdfPrinter(fonts);
 
-  var estimateOrInvoice = data.estimate.invoice ? "Invoice" : "Estimate";
+  var estimateOrInvoice = data.estimate.paid ? "Receipt" : data.estimate.invoice ? "Invoice" : "Estimate";
   var items = [];
   var descriptions = [];
   var quantities = [];
   var amounts = [];
-  var taxes = 0
+  var taxes = 0;
+  var currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  })
 
   for (let i = 0; i < data.estimate.items.length; i++) {
+    let num = data.estimate.items[i].amount;
     if (data.estimate.items[i].tax) {
-      taxes += (Number(data.estimate.items[i].amount.replace('$', '')) / 6.5)
+      taxes += num.replace("$", "") / 6.5; //TODO: change to dynamic variable stored in db
     }
   }
-
+  let grandTotal = taxes + data.estimate.total;
   //row height = 8
 
   for (let i = 0; i < data.estimate.items.length; i++) {
     let numRows = Math.ceil(data.estimate.items[i].description.length / 49) - 1;
-    console.log(numRows);
+    console.log(typeof(data.estimate.items[i].amount))
+    console.log(data.estimate.items[i].amount.replace(/\$/g, '').replace(/\.00+/, ''))
+
     let margin = 0;
     if (numRows > 0) {
       margin = numRows * 13;
@@ -63,17 +69,13 @@ function renderPdf(data, cb) {
       font: "RobotoMono"
     });
     amounts.push({
-      text: data.estimate.items[i].amount,
-      alignment: "center",
+      text: currencyFormatter.format(data.estimate.items[i].amount.replace(/\$/g, '').replace(/\.00+/, '')),
+      alignment: "right",
       fontSize: 10,
       height: "auto",
       margin: [0, 0, 0, margin],
       font: "RobotoMono"
     });
-
-    // descriptions.push(data.estimate.items[i].description);
-    // quantities.push(data.estimate.items[i].quantity);
-    // amounts.push(data.estimate.items[i].amount);
   }
 
   var docDefinition = {
@@ -131,6 +133,10 @@ function renderPdf(data, cb) {
         ]
       },
       {
+        text: data.estimate.paid ? "PAID" : "",
+        alignment:'center'
+      },
+      {
         table: {
           widths: [100],
           body: [
@@ -175,24 +181,47 @@ function renderPdf(data, cb) {
               }
             ],
             [[items], [descriptions], [quantities], [amounts]]
-
-            // [items],
-            // [descriptions],
-            // [amounts],
-            // [quantities],
           ]
         }
       },
       {
         table: {
+          widths: [40, 40],
           body: [
-            [{text: 'Subtotal', fontSize:8}, {text: data.estimate.total, fontSize:8}],
-            [{text: 'Taxes', fontSize:8}, {text: taxes.toLocaleString({maximumFractionDigits: 2}), fontSize:8}]
+            [
+              { text: "Subtotal", fontSize: 8 },
+              {
+                text: currencyFormatter.format(data.estimate.total),
+                fontSize: 8
+              }
+            ],
+            [
+              { text: "Taxes", fontSize: 8 },
+              {
+                text: currencyFormatter.format(taxes),
+                fontSize: 8
+              }
+            ],
+            [
+              { text: "Total", fontSize: 8 },
+              {
+                text: currencyFormatter.format(grandTotal),
+                fontSize: 8
+              }
+            ]
           ]
-        }
+        },
+        margin: [416, 10]
       }
     ]
   };
+
+  if (data.estimate.attachContract) {
+    docDefinition.content.push({
+      text:'hello world',
+      pageBreak: 'before'
+    })
+  }
 
   var options = {
     // ...
@@ -227,7 +256,6 @@ function prettifyDate(date) {
     "/" +
     newDate.getFullYear();
 
-  // console.log(ret)
   return new Date(dateString).toLocaleDateString();
 }
 
