@@ -359,7 +359,7 @@ function renderPdf(data, cb) {
       },
       {
         text: "\n\nArticle Seven: Warranty",
-        alignment: 'left'
+        alignment: "left"
       },
       {
         text:
@@ -368,15 +368,26 @@ function renderPdf(data, cb) {
         margin: [40, 0]
       },
       {
+        pageBreak: "before",
         text: [
-          "\n\n\n\n\n\n\n" +
-            "________________________________________" +
-            "\nErnesto Figueroa" +
-            "                                Date",
-          "\n\n\n\n\n\n\n" +
-            "________________________________________" +
-            `\n${data.client.name}` +
-            "                               Date"
+          "\n\n\n",
+          "________________________________________",
+          " \n",
+          "Ernesto Figueroa",
+          "\n\n",
+          "________________________________________",
+          "\n",
+          "Date",
+          "\n\n",
+          "\n\n\n\n\n",
+          "________________________________________",
+          " \n",
+          data.client.name,
+          "\n\n",
+          "________________________________________",
+          "\n",
+          "Date",
+          "\n\n"
         ]
       }
     );
