@@ -250,7 +250,8 @@ export default class EstimatesTable extends React.Component {
           total: row.total,
           pdfLink: row.pdfLink,
           estimateNum: row.estimateNum,
-          paid: true
+          paid: true,
+          paidDate: new Date()
         }
       }).then(() => {
         this.getCustomers(true);

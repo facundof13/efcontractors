@@ -51,7 +51,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       pdfLink: this.props.estimateToEdit.pdfLink,
       copyPayments: [],
       copySteps: [],
-      estimateNum: this.props.estimateToEdit.estimateNum
+      estimateNum: this.props.estimateToEdit.estimateNum,
+      paidDate: this.props.estimateToEdit.paidDate
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -192,7 +193,8 @@ export default class EditCreatedEstimatesTable extends React.Component {
       paymentSteps: this.state.paymentSteps,
       paid: this.state.paid,
       pdfLink: this.state.pdfLink,
-      estimateNum: this.state.estimateNum
+      estimateNum: this.state.estimateNum,
+      paidDate: this.state.paidDate,
     };
     if (itemsNotEmpty) {
       this.props.handleSave(object);

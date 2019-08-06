@@ -5,7 +5,7 @@ var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
 const titleize = require("titleize");
-const moment = require('moment')
+const moment = require("moment");
 const pdfgenerator = require("../models/pdfgenerator");
 
 // TODO: Refactor/clean up admin.js
@@ -208,7 +208,8 @@ router.post("/invoiceupdate", function(req, res, next) {
     paymentSteps: req.body.paymentSteps,
     paid: req.body.paid,
     pdfLink: req.body.pdfLink,
-    estimateNum: req.body.estimateNum
+    estimateNum: req.body.estimateNum,
+    paidDate: req.body.paidDate,
   };
 
   invoices.addEstimateToCustomer(id, query);
@@ -235,7 +236,8 @@ router.post("/invoice", function(req, res, next) {
     contractSpecs: req.body.contractSpecs,
     paymentSteps: req.body.paymentSteps,
     pdfLink: req.body.pdfLink,
-    estimateNum: req.body.estimateNum
+    estimateNum: req.body.estimateNum,
+    paidDate: req.body.paidDate,
   };
 
   let query = {
@@ -307,27 +309,44 @@ router.get("/months", function(req, res, next) {
   // get all invoices
   // sort them by date,
   // res.json the first and last invoices
-  var datesArr = []
-  var formattedDatesArr = []
-  invoices.getAllInvoices()
-  .then((clients) => {
+  var datesArr = [];
+  var formattedDatesArr = [];
+  invoices.getAllInvoices().then(clients => {
     clients.map(client => {
       client.estimates.map(estimates => {
-        datesArr.push(estimates.date)
-      }) 
-    })
+        datesArr.push(estimates.date);
+      });
+    });
     datesArr.map(date => {
-      var newDate = moment(date).format('MMMM YYYY')
+      var newDate = moment(date).format("MMMM YYYY");
       if (!formattedDatesArr.includes(newDate)) {
-        formattedDatesArr.push(newDate)
+        formattedDatesArr.push(newDate);
       }
-    })
-    formattedDatesArr.sort((a,b) => {
-      return new Date(a) - new Date(b)
-    }) 
-    res.json(formattedDatesArr)
-  })
+    });
+    formattedDatesArr.sort((a, b) => {
+      return new Date(a) - new Date(b);
+    });
+    res.json(formattedDatesArr);
+  });
   // res.end();
+});
+
+router.post("/estimatesinmonth", function(req, res, next) {
+  var estimates = [];
+  invoices.getAllInvoices().then(invoices => {
+    invoices.map(invoice => {
+      invoice.estimates.map(estimate => {
+        if (
+          (new Date(estimate.date).getMonth() + 1 ===
+          new Date(req.body.month).getMonth() + 1) && (new Date(estimate.date).getFullYear() === new Date(req.body.month).getFullYear())
+        ) {
+          estimates.push(estimate);
+        }
+      });
+    });
+    res.json(estimates);
+    // console.log(new Date(invoice.date).getMonth + 1 === new Date(req.body.month).getMonth + 1)
+  });
 });
 
 module.exports = router;
