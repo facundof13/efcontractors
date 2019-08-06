@@ -45,7 +45,8 @@ export default class CustomerEstimateTable extends React.Component {
       columnToSort: "item",
       sortDirection: "desc",
       currentlyEditing: false,
-      estimateToEdit: []
+      estimateToEdit: [],
+      imgUrl: ""
     };
     this.handleSort = this.handleSort.bind(this);
     this.createPdf = this.createPdf.bind(this);
@@ -54,6 +55,15 @@ export default class CustomerEstimateTable extends React.Component {
     this.handleEstimateSave = this.handleEstimateSave.bind(this);
     this.sendEstimate = this.sendEstimate.bind(this);
     this.markPaid = this.markPaid.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+
+  componentDidMount() {
+    Axios.get("/admin/imgurl").then(res => {
+      this.setState({
+        imgUrl: res.data[0].img
+      });
+    });
   }
 
   handleSort(item) {
@@ -74,7 +84,21 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   sendEstimate(row) {
-    console.log(row);
+    if (window.confirm(`Send an email to ${this.props.customerInfo.email}?`)) {
+      Axios.post("/admin/generatePDF", {
+        client: this.props.customerInfo,
+        estimate: row,
+        imgUrl: this.state.imgUrl
+      }).then(pdf => {
+        Axios.post("/admin/sendemail", {
+          estimate: row,
+          client: this.props.customerInfo,
+          pdf: pdf.data
+        }).then(res => {
+          window.alert("Email sent!")
+        });
+      });
+    }
   }
 
   cancelEdit() {
@@ -90,22 +114,11 @@ export default class CustomerEstimateTable extends React.Component {
     console.log(estimate);
   }
 
-  blobToDataURL(blob, callback) {
-    var a = new FileReader();
-    a.onload = function(e) {
-      callback(e.target.result);
-    };
-    a.readAsDataURL(blob);
-  }
-
   async createPdf(row) {
-    let res = await Axios.get("/admin/imgurl");
-    var img = res.data[0].img;
-
     Axios.post("/admin/generatePDF", {
       client: this.props.customerInfo,
       estimate: row,
-      imgUrl: img
+      imgUrl: this.state.imgUrl
     }).then(pdf => {
       var x = window.open();
       x.document.getElementsByTagName("html")[0].style =
@@ -117,31 +130,6 @@ export default class CustomerEstimateTable extends React.Component {
       iframe.src = pdf.data; //data-uri content here
       x.document.body.appendChild(iframe);
     });
-
-    // let res = await Axios.post("/admin/generatePdf", {client: this.props.customerInfo, estimate: row});
-    // var pdfData = (`data:application/pdf;base64,${res.data}`)
-    // console.log(htmlstring);
-    // var doc = await generatePDF(this.props.customerInfo, row);
-    // // save new pdf to db
-    // // console.log(doc)
-    // // console.log(row.pdfLink)
-    // // if (similarity(doc, row.pdfLink) < 90) {
-    // Axios.post("/admin/updateestimate", {
-    //   obj: {
-    //     date: row.date,
-    //     items: row.items,
-    //     attachContract: row.attachContract,
-    //     contractSpecs: row.contractSpecs,
-    //     expiration: row.expiration,
-    //     invoice: row.invoice,
-    //     paymentSteps: row.paymentSteps,
-    //     title: row.title,
-    //     total: row.total,
-    //     paid: row.paid,
-    //     pdfLink: doc
-    //   }
-    // });
-    // // }
   }
 
   markPaid(row) {
@@ -198,7 +186,7 @@ export default class CustomerEstimateTable extends React.Component {
                       {prettifyDate(row.date)}
                     </TableCell>
                     <TableCell align="right">
-                      {row.invoice
+                      {row.paid ? "Receipt" : row.invoice
                         ? row.attachContract
                           ? "Invoice w/ contract"
                           : "Invoice w/o contract"
@@ -208,13 +196,17 @@ export default class CustomerEstimateTable extends React.Component {
                       {row.invoice ? (row.paid ? "Yes" : "No") : "N/A"}
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        title="Edit estimate"
-                        onClick={() => this.handleEdit(row)}
-                      >
-                        <CreateOutlinedIcon />
-                      </IconButton>
+                      {row.paid ? (
+                        ""
+                      ) : (
+                        <IconButton
+                          size="small"
+                          title="Edit estimate"
+                          onClick={() => this.handleEdit(row)}
+                        >
+                          <CreateOutlinedIcon />
+                        </IconButton>
+                      )}
                       <IconButton
                         size="small"
                         title="Send estimate"

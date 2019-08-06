@@ -18,6 +18,11 @@ const pdfgenerator = require("../models/pdfgenerator");
 //   return next();
 // })
 
+router.post('/sendemail', function(req,res,next) {
+  invoices.sendEmail(req.body)
+  res.end()
+})
+
 // delete testimonial
 router.delete("/testimonials/delete/:id", function(req, res, next) {
   const id = req.params.id;

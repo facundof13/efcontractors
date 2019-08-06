@@ -233,7 +233,7 @@ function renderPdf(data, cb) {
     ]
   };
 
-  if (data.estimate.attachContract) {
+  if (data.estimate.attachContract && !data.estimate.paid) {
     docDefinition.content.push(
       {
         text: "EF Contractors LLC",
