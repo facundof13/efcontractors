@@ -262,3 +262,16 @@ input[type="number"]::-webkit-outer-spin-button {
 .step {
   display: flex;
 }
+.estimates-search-box {
+  margin-bottom: 20px;
+}
+
+.income-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.income-column * .MuiInputBase-root {
+ width: 30vw; 
+}

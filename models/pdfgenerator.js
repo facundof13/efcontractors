@@ -1,4 +1,6 @@
 function renderPdf(data, cb) {
+  // TODO: Refactor this function, split into multiple functions
+  // TODO: Call imgUrl api from here, not from front end
   var fonts = {
     Roboto: {
       normal: "fonts/Roboto-Regular.ttf",

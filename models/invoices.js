@@ -10,6 +10,14 @@ function compareDates(date1, date2) {
   return newDate1.getTime() === newDate2.getTime();
 }
 
+function getAllInvoices() {
+  return new Promise((resolve, reject) => {
+    invoices.find({ Name: { $exists: false } }).toArray((err, items) => {
+      resolve(items)
+    });
+  });
+}
+
 function getServices() {
   return new Promise((resolve, reject) => {
     invoices
@@ -22,7 +30,7 @@ function getServices() {
 }
 
 function sendEmail(query) {
-  console.log(query.client, query.estimate)
+  console.log(query.client, query.estimate);
   var email = require("emailjs");
   var server = email.server.connect({
     user: "facundof13@gmail.com",
@@ -32,24 +40,35 @@ function sendEmail(query) {
   });
   // console.log(query);
   // console.log(Email)
-  let estimateOrInvoiceOrReceipt = query.estimate.paid ? "a receipt" : query.estimate.invoice ? "an invoice" : "an estimate"
-  server
-    .send({
-      text: `Estimate Number: ${query.estimate.estimateNum}\nTotal: $${query.estimate.total.toLocaleString('en-US', {type:'currency',currency:'USD'})}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
+  let estimateOrInvoiceOrReceipt = query.estimate.paid
+    ? "a receipt"
+    : query.estimate.invoice
+    ? "an invoice"
+    : "an estimate";
+  server.send(
+    {
+      text: `Estimate Number: ${
+        query.estimate.estimateNum
+      }\nTotal: $${query.estimate.total.toLocaleString("en-US", {
+        type: "currency",
+        currency: "USD"
+      })}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
       from: "info@efcontractorsllc.com",
       to: query.client.email,
       subject: "EF Contractors LLC",
       attachment: [
         {
           name: "Estimate.pdf",
-          type:'application/pdf',
-          data: query.pdf.replace('data:application/pdf;base64,', ''),
-          encoded: true,
+          type: "application/pdf",
+          data: query.pdf.replace("data:application/pdf;base64,", ""),
+          encoded: true
         }
       ]
-    }, (err, msg) => {
-      console.log(err || msg)
-    })
+    },
+    (err, msg) => {
+      console.log(err || msg);
+    }
+  );
 }
 
 function getInvoiceCustomers() {
@@ -179,5 +198,6 @@ module.exports = {
   getLogoURI,
   getCurrentEstimateNum,
   incrementEstimateNum,
-  sendEmail
+  sendEmail,
+  getAllInvoices
 };

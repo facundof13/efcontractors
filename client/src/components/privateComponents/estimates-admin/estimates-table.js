@@ -27,7 +27,14 @@ const invertDirection = {
   asc: "desc",
   desc: "asc"
 };
-const headerRow = ["Title", "Total", "Expiration", "Date Created", "Status", "Paid"];
+const headerRow = [
+  "Title",
+  "Total",
+  "Expiration",
+  "Date Created",
+  "Status",
+  "Paid"
+];
 
 export default class EstimatesTable extends React.Component {
   constructor() {
@@ -40,11 +47,10 @@ export default class EstimatesTable extends React.Component {
       currentlyEditing: false,
       customerToEdit: [],
       unChangedArray: [],
-      customerInfo: []
+      customerInfo: [],
+      searchValue: "Search",
+      filteredCustomers: []
     };
-
-    this.dummyRef = React.createRef();
-
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.deleteCustomer = this.deleteCustomer.bind(this);
@@ -57,6 +63,7 @@ export default class EstimatesTable extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleEstimateDelete = this.handleEstimateDelete.bind(this);
     this.markEstimatePaid = this.markEstimatePaid.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   componentDidMount() {
@@ -65,20 +72,23 @@ export default class EstimatesTable extends React.Component {
 
   getCustomers(changeItems) {
     Axios.get("/admin/invoiceCustomers").then(res => {
-      this.setState({ customers: res.data }, function() {
-        if (changeItems) {
-          let id = this.state.customerInfo._id;
-          let idx = 0;
-          for (let i = 0; i < this.state.customers.length; i++) {
-            if (this.state.customers[i]._id === id) {
-              idx = i;
+      this.setState(
+        { customers: res.data, filteredCustomers: [...res.data] },
+        function() {
+          if (changeItems) {
+            let id = this.state.customerInfo._id;
+            let idx = 0;
+            for (let i = 0; i < this.state.customers.length; i++) {
+              if (this.state.customers[i]._id === id) {
+                idx = i;
+              }
             }
+            this.setState({
+              customerItems: this.state.customers[idx].estimates
+            });
           }
-          this.setState({
-            customerItems: this.state.customers[idx].estimates
-          });
         }
-      });
+      );
     });
   }
 
@@ -208,12 +218,13 @@ export default class EstimatesTable extends React.Component {
   };
 
   handleEstimateDelete(obj) {
-    let id = this.state.customerInfo._id
+    let id = this.state.customerInfo._id;
     if (window.confirm(`Delete estimate "${obj.title}"`)) {
-      Axios.delete('/admin/deleteestimate', {data: {id: id, obj: obj}})
-      .then(() => {
-        this.getCustomers(true)
-      })
+      Axios.delete("/admin/deleteestimate", {
+        data: { id: id, obj: obj }
+      }).then(() => {
+        this.getCustomers(true);
+      });
     }
   }
 
@@ -239,13 +250,53 @@ export default class EstimatesTable extends React.Component {
           total: row.total,
           pdfLink: row.pdfLink,
           estimateNum: row.estimateNum,
-          paid: true,
+          paid: true
         }
-      })
-      .then(() => {
-        this.getCustomers(true)
-      })
+      }).then(() => {
+        this.getCustomers(true);
+      });
     }
+  }
+
+  handleSearchChange(e) {
+    console.log(e.target.value);
+    this.setState(
+      {
+        [e.target.name]: e.target.value
+      },
+      () => {
+        if (this.state.searchValue === "") {
+          this.setState({
+            filteredCustomers: [...this.state.customers]
+          });
+        } else {
+          this.setState(prevState => ({
+            filteredCustomers: prevState.customers.filter(item => {
+              return (
+                item.name
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase()) ||
+                item.email
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase()) ||
+                item.phone
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase()) ||
+                item.address
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase()) ||
+                item.cityState
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase()) ||
+                item.zip
+                  .toLowerCase()
+                  .includes(this.state.searchValue.toLowerCase())
+              );
+            })
+          }));
+        }
+      }
+    );
   }
 
   render() {
@@ -255,6 +306,17 @@ export default class EstimatesTable extends React.Component {
           <h5>Estimates</h5>
         </Typography>
 
+        <div className="estimates-search-box">
+          <TextField
+            onChange={this.handleSearchChange}
+            name="searchValue"
+            value={this.state.searchValue}
+            onClick={() => {
+              if (this.state.searchValue === "Search")
+                this.setState({ searchValue: "" });
+            }}
+          />
+        </div>
         <Grid container justify="center">
           <Paper className="customer-table">
             <Table size="small">
@@ -393,7 +455,7 @@ export default class EstimatesTable extends React.Component {
                       </TableRow>
                     ))
                   : orderBy(
-                      this.state.customers,
+                      this.state.filteredCustomers,
                       this.state.columnToSort,
                       this.state.sortDirection
                     ).map((row, index) => (

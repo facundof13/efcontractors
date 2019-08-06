@@ -5,8 +5,10 @@ var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
 const titleize = require("titleize");
-const moment = require("moment");
+const moment = require('moment')
 const pdfgenerator = require("../models/pdfgenerator");
+
+// TODO: Refactor/clean up admin.js
 
 /* GET admins listing. */
 
@@ -18,10 +20,10 @@ const pdfgenerator = require("../models/pdfgenerator");
 //   return next();
 // })
 
-router.post('/sendemail', function(req,res,next) {
-  invoices.sendEmail(req.body)
-  res.end()
-})
+router.post("/sendemail", function(req, res, next) {
+  invoices.sendEmail(req.body);
+  res.end();
+});
 
 // delete testimonial
 router.delete("/testimonials/delete/:id", function(req, res, next) {
@@ -182,7 +184,6 @@ router.delete("/invoiceCustomerId", function(req, res, next) {
   res.end();
 });
 
-
 router.post("/invoiceupdate", function(req, res, next) {
   let expiration = req.body.expiration;
   let title = titleize(req.body.title);
@@ -301,4 +302,32 @@ router.post("/estimateNum", function(req, res, next) {
   invoices.incrementEstimateNum();
   res.end();
 });
+
+router.get("/months", function(req, res, next) {
+  // get all invoices
+  // sort them by date,
+  // res.json the first and last invoices
+  var datesArr = []
+  var formattedDatesArr = []
+  invoices.getAllInvoices()
+  .then((clients) => {
+    clients.map(client => {
+      client.estimates.map(estimates => {
+        datesArr.push(estimates.date)
+      }) 
+    })
+    datesArr.map(date => {
+      var newDate = moment(date).format('MMMM YYYY')
+      if (!formattedDatesArr.includes(newDate)) {
+        formattedDatesArr.push(newDate)
+      }
+    })
+    formattedDatesArr.sort((a,b) => {
+      return new Date(a) - new Date(b)
+    }) 
+    res.json(formattedDatesArr)
+  })
+  // res.end();
+});
+
 module.exports = router;
