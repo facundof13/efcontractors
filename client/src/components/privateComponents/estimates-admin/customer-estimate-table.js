@@ -1,5 +1,4 @@
 import React from "react";
-import { PDFViewer } from "@react-pdf/renderer";
 
 import {
   Paper,
@@ -21,9 +20,6 @@ import orderBy from "lodash/orderBy";
 import prettifyDate from "../helperComponents/prettify-date";
 import EditCreatedEstimatesTable from "./edit-created-estimates-table";
 import Axios from "axios";
-import { generatePDF, similarity } from "../helperComponents/pdfGenerator";
-import PdfPage from "./pdf-page";
-import { pdf } from "@react-pdf/renderer";
 const invertDirection = {
   asc: "desc",
   desc: "asc"
@@ -34,7 +30,10 @@ const getItemToSort = {
   Total: "total",
   Expiration: "expiration",
   "Date Created": "date",
-  Invoice: "invoice"
+  Invoice: "invoice",
+  "Paid Date": "paidDate",
+  Paid: "paid",
+  Status: "paid"
 };
 
 export default class CustomerEstimateTable extends React.Component {
@@ -95,7 +94,7 @@ export default class CustomerEstimateTable extends React.Component {
           client: this.props.customerInfo,
           pdf: pdf.data
         }).then(res => {
-          window.alert("Email sent!")
+          window.alert("Email sent!");
         });
       });
     }
@@ -146,7 +145,7 @@ export default class CustomerEstimateTable extends React.Component {
             handleSave={this.handleEstimateSave}
           />
         ) : (
-          <Paper>
+          <Paper className="estimates-table">
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -172,11 +171,7 @@ export default class CustomerEstimateTable extends React.Component {
                   this.state.columnToSort,
                   this.state.sortDirection
                 ).map(row => (
-                  <TableRow
-                    // onClick={() => this.logItems(row)}
-                    hover={true}
-                    key={row.title}
-                  >
+                  <TableRow hover={true} key={row.date}>
                     <TableCell align="left">{row.title}</TableCell>
                     <TableCell align="right">${row.total}</TableCell>
                     <TableCell align="right">
@@ -186,7 +181,9 @@ export default class CustomerEstimateTable extends React.Component {
                       {prettifyDate(row.date)}
                     </TableCell>
                     <TableCell align="right">
-                      {row.paid ? "Receipt" : row.invoice
+                      {row.paid
+                        ? "Receipt"
+                        : row.invoice
                         ? row.attachContract
                           ? "Invoice w/ contract"
                           : "Invoice w/o contract"
@@ -194,6 +191,9 @@ export default class CustomerEstimateTable extends React.Component {
                     </TableCell>
                     <TableCell align="right">
                       {row.invoice ? (row.paid ? "Yes" : "No") : "N/A"}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.paid ? prettifyDate(row.paidDate) : "N/A"}
                     </TableCell>
                     <TableCell align="right">
                       {row.paid ? (

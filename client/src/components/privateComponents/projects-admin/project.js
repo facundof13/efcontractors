@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import ProjectsUpload from "./projects-upload";
-import Typography from "@material-ui/core/Typography"
+import Typography from "@material-ui/core/Typography";
 
 class Project extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class Project extends Component {
     this.toggleImages = this.toggleImages.bind(this);
     this.imgDelete = this.imgDelete.bind(this);
     this.render = this.render.bind(this);
-    this.finishedFunction = this.finishedFunction.bind(this)
+    this.finishedFunction = this.finishedFunction.bind(this);
   }
 
   imgDelete(event) {
@@ -18,8 +18,8 @@ class Project extends Component {
       Axios.delete("/admin/deleteimg", {
         data: { id: this.props.user[0]._id, image: event.target.src }
       }).then(res => {
-        this.props.finishedFunction(this.props.user[0]._id)
-        this.props.finishedFunction()
+        this.props.finishedFunction(this.props.user[0]._id);
+        this.props.finishedFunction();
       });
     }
   }
@@ -30,48 +30,47 @@ class Project extends Component {
     }));
   };
 
-
-finishedFunction(user) {
-  if(user) {
-    this.props.finishedFunction(user)
-  } else {
-    this.props.finishedFunction()
+  finishedFunction(user) {
+    if (user) {
+      this.props.finishedFunction(user);
+    } else {
+      this.props.finishedFunction();
+    }
   }
-}
 
   render() {
     // console.log(this.props.user[0].name)
     return (
-        <div className="user-container">
-          <Typography color="secondary" component="span" variant="h5">
+      <div className="user-container">
+        <Typography color="secondary" component="span" variant="h5">
           <h5>{this.props.user[0].name}</h5>
         </Typography>
         <ProjectsUpload
-              user={this.props.user[0]}
-              finishedFunction={this.props.finishedFunction}
+          user={this.props.user[0]}
+          finishedFunction={this.props.finishedFunction}
         />
         {this.props.user[0].images.map(image =>
-              image.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
-                <video
-                  controls
-                  width="200px"
-                  height="200px"
-                  src={image}
-                  key={image}
-                  onClick={this.imgDelete}
-                />
-              ) : (
-                <img
-                  key={image}
-                  src={image}
-                  onClick={this.imgDelete}
-                  alt=""
-                  height="200px"
-                  width="200px"
-                />
-              )
-            )}
-        </div>
+          image.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
+            <video
+              controls
+              width="200px"
+              height="200px"
+              src={image}
+              key={image}
+              onClick={this.imgDelete}
+            />
+          ) : (
+            <img
+              key={image}
+              src={image}
+              onClick={this.imgDelete}
+              alt=""
+              height="200px"
+              width="200px"
+            />
+          )
+        )}
+      </div>
       /*{ { <ul>
           <li>{this.props.data.name + " " + this.props.data.location}</li>
           <Button variant="contained" onClick={this.toggleImages}>Show options</Button>

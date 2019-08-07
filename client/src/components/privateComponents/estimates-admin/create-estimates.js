@@ -28,12 +28,12 @@ export default class CreateEstimate extends React.Component {
       idToUpdate: "",
       invoice: false,
       attachContract: false,
-      contractSpecs: '',
+      contractSpecs: "",
       paid: false,
       paymentSteps: [],
-      pdfLink: '',
+      pdfLink: "",
       estimateNum: 0,
-      paidDate: ''
+      paidDate: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -53,10 +53,9 @@ export default class CreateEstimate extends React.Component {
 
     this.getCustomers();
 
-    Axios.get('/admin/estimateNum')
-    .then(res => {
-      this.setState({estimateNum: res.data})
-    })
+    Axios.get("/admin/estimateNum").then(res => {
+      this.setState({ estimateNum: res.data });
+    });
   }
 
   handleChange(event) {
@@ -135,7 +134,7 @@ export default class CreateEstimate extends React.Component {
     } else {
       this.setState(prevState => ({
         itemsField: prevState.itemsField.filter(function(item) {
-          return date != item.key;
+          return date !== item.key;
         })
       }));
     }
@@ -145,7 +144,6 @@ export default class CreateEstimate extends React.Component {
     this.setState(prevState => ({
       items: [...prevState.items, itemArr]
     }));
-    // console.log(itemArr)
   }
 
   filterItemsArr() {
@@ -198,7 +196,7 @@ export default class CreateEstimate extends React.Component {
         this.state.phone !== ""
       ) {
         titleOk = true;
-        if (this.state.zip.match(/\d{5}/)) {
+        if (this.state.zip.match(/^\d{5}$/)) {
           zipOk = true;
         }
         if (
@@ -238,9 +236,6 @@ export default class CreateEstimate extends React.Component {
       if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk && titleOk) {
         this.setState({ disabled: false });
       }
-      console.log(
-        `items: ${itemsOk} zip: ${zipOk} cityState: ${cityStateOk} email:${emailOk}`
-      );
     });
   }
 
@@ -268,8 +263,7 @@ export default class CreateEstimate extends React.Component {
         paidDate: this.state.paidDate
       }).then(res => {
         if (res.status === 200) {
-          console.log("all ok");
-          Axios.post('/admin/estimateNum')
+          Axios.post("/admin/estimateNum");
           this.setState(
             {
               name: "",
@@ -285,11 +279,11 @@ export default class CreateEstimate extends React.Component {
               disabled: true,
               helperText: "",
               phone: "",
-              contractSpecs: '',
+              contractSpecs: "",
               invoice: false,
               attachContract: false,
               paid: this.state.paid,
-              pdfLink: '',
+              pdfLink: "",
               paidDate: this.state.paidDate
             },
             () => {
@@ -321,8 +315,7 @@ export default class CreateEstimate extends React.Component {
         paidDate: this.state.paidDate
       }).then(res => {
         if (res.status === 200) {
-          console.log("all ok");
-          Axios.post('/admin/estimateNum')
+          Axios.post("/admin/estimateNum");
           this.setState(
             {
               name: "",
@@ -339,8 +332,8 @@ export default class CreateEstimate extends React.Component {
               helperText: "",
               phone: "",
               paid: false,
-              pdfLink: '',
-              paidDate: this.state.paidDate,
+              pdfLink: "",
+              paidDate: this.state.paidDate
             },
             () => {
               this.addItem();
@@ -352,7 +345,6 @@ export default class CreateEstimate extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Typography variant="h5" component="span" color="secondary">
@@ -456,7 +448,7 @@ export default class CreateEstimate extends React.Component {
               <TextField
                 value={this.state.zip}
                 helperText={
-                  this.state.zip === "" || !this.state.zip.match(/\d{5}/)
+                  this.state.zip === "" || !this.state.zip.match(/^\d{5}$/)
                     ? this.state.helperText
                     : ""
                 }

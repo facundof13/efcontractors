@@ -242,6 +242,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .customer-table {
   margin-bottom: 30px;
   max-width: 90%;
+  overflow-x: auto;
+  max-height: 400px;
+}
+
+.estimates-table {
+  margin-bottom: 30px;
+  /* max-width: 90%; */
+  width: 70vw;
+  overflow-x: auto;
 }
 
 .item-table {
@@ -275,3 +284,4 @@ input[type="number"]::-webkit-outer-spin-button {
 .income-column * .MuiInputBase-root {
  width: 30vw; 
 }
+

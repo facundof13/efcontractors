@@ -193,7 +193,7 @@ router.post("/invoiceupdate", function(req, res, next) {
 
   let total = 0;
   items.forEach(item => {
-    total += Number(item.amount.replace("$", ""));
+    total += Number(item.amount.replace("$", "")) * Number(item.quantity);
   });
 
   let query = {
@@ -209,7 +209,7 @@ router.post("/invoiceupdate", function(req, res, next) {
     paid: req.body.paid,
     pdfLink: req.body.pdfLink,
     estimateNum: req.body.estimateNum,
-    paidDate: req.body.paidDate,
+    paidDate: req.body.paidDate
   };
 
   invoices.addEstimateToCustomer(id, query);
@@ -221,7 +221,7 @@ router.post("/invoice", function(req, res, next) {
 
   let total = 0;
   items.forEach(item => {
-    total += Number(item.amount.replace("$", ""));
+    total += Number(item.amount.replace("$", "")) * Number(item.quantity);
   });
 
   let estimate = {
@@ -237,7 +237,7 @@ router.post("/invoice", function(req, res, next) {
     paymentSteps: req.body.paymentSteps,
     pdfLink: req.body.pdfLink,
     estimateNum: req.body.estimateNum,
-    paidDate: req.body.paidDate,
+    paidDate: req.body.paidDate
   };
 
   let query = {
@@ -265,7 +265,12 @@ router.post("/updateCustomer", function(req, res, next) {
 
 router.post("/updateestimate", function(req, res, next) {
   let query = req.body.obj;
-  console.log(query);
+
+  let total = 0;
+  query.items.forEach(item => {
+    total += Number(item.amount.replace("$", "")) * Number(item.quantity);
+  });
+  query.total = total;
 
   invoices.updateEstimate(query).then(res.sendStatus(200));
 });
@@ -314,7 +319,7 @@ router.get("/months", function(req, res, next) {
   invoices.getAllInvoices().then(clients => {
     clients.map(client => {
       client.estimates.map(estimates => {
-        datesArr.push(estimates.date);
+        datesArr.push(estimates.paidDate);
       });
     });
     datesArr.map(date => {
@@ -336,10 +341,16 @@ router.post("/estimatesinmonth", function(req, res, next) {
   invoices.getAllInvoices().then(invoices => {
     invoices.map(invoice => {
       invoice.estimates.map(estimate => {
-        if (
-          (new Date(estimate.date).getMonth() + 1 ===
-          new Date(req.body.month).getMonth() + 1) && (new Date(estimate.date).getFullYear() === new Date(req.body.month).getFullYear())
-        ) {
+        if(req.body.month) {
+          if (
+            new Date(estimate.paidDate).getMonth() + 1 ===
+              new Date(req.body.month).getMonth() + 1 &&
+            new Date(estimate.paidDate).getFullYear() ===
+              new Date(req.body.month).getFullYear()
+          ) {
+            estimates.push(estimate);
+          }
+        } else if (!req.body.month) {
           estimates.push(estimate);
         }
       });

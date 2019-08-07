@@ -325,7 +325,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   render() {
     return (
-      <Paper>
+      <Paper className='estimates-table'>
         <Table size="small">
           <TableHead>
             <TableRow>

@@ -33,7 +33,8 @@ const headerRow = [
   "Expiration",
   "Date Created",
   "Status",
-  "Paid"
+  "Paid",
+  "Paid Date"
 ];
 
 export default class EstimatesTable extends React.Component {
@@ -260,7 +261,6 @@ export default class EstimatesTable extends React.Component {
   }
 
   handleSearchChange(e) {
-    console.log(e.target.value);
     this.setState(
       {
         [e.target.name]: e.target.value
@@ -293,7 +293,8 @@ export default class EstimatesTable extends React.Component {
                   .toLowerCase()
                   .includes(this.state.searchValue.toLowerCase())
               );
-            })
+            }),
+            customerItems: []
           }));
         }
       }
