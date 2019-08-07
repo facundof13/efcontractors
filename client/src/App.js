@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import axios from "axios";
+import axios from "axios";
 import { Route, Switch } from "react-router-dom";
 
 // components
@@ -18,8 +18,10 @@ import Estimates from "./components/privateComponents/estimates-admin/estimates"
 class App extends Component {
   constructor() {
     super();
+    this.getUser();
     this.state = {
-      loggedIn: true
+      loggedIn: false,
+      finished: false
     };
 
     this.getUser = this.getUser.bind(this);
@@ -37,22 +39,20 @@ class App extends Component {
   }
 
   getUser() {
-    // axios.get("/user").then(response => {
-    //   if (response.data) {
-    //     this.setState({
-    //       loggedIn: true
-    //     });
-    //     // return true;
-    //   } else {
-    //     this.setState({ loggedIn: false });
-    //     // return false;
-    //   }
-    // });
-    this.setState({ loggedIn: true });
+    axios.get("/user").then(response => {
+      if (response.data) {
+        this.setState({
+          loggedIn: true,
+          finished: true
+        });
+      } else {
+        this.setState({ loggedIn: false, finished: true });
+      }
+    });
   }
 
   render() {
-    return (
+    return this.state.finished ? (
       <div className="App">
         <div>
           <Navbar updateUser={this.updateUser} loggedIn={this.state.loggedIn} />
@@ -96,6 +96,8 @@ class App extends Component {
         </div>
         <Footer />
       </div>
+    ) : (
+      ""
     );
   }
 }
