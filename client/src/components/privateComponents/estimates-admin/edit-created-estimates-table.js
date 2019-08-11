@@ -471,7 +471,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
                     <TextField
                       name="amount"
                       onChange={event => this.handleChange(event, index)}
-                      value={item.amount}
+                      value={`$${item.amount.replace('$', '')}`}
                     />
                   </TableCell>
                   <TableCell>

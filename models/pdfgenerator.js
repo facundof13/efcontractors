@@ -58,7 +58,7 @@ function renderPdf(data, cb) {
   //row height = 8
 
   for (let i = 0; i < data.estimate.items.length; i++) {
-    let numRows = Math.ceil(data.estimate.items[i].description.length / 49) - 1;
+    let numRows = Math.ceil(data.estimate.items[i].description.length / 41) - 1;
     let margin = 0;
     if (numRows > 0) {
       margin = numRows * 13;
@@ -169,7 +169,7 @@ function renderPdf(data, cb) {
       },
       {
         table: {
-          widths: [100, 300, "*", "auto"],
+          widths: [100, 250, "*", "auto"],
           fontSize: 10,
           headerRows: 1,
           body: [
@@ -205,7 +205,7 @@ function renderPdf(data, cb) {
       },
       {
         table: {
-          widths: [40, 40],
+          widths: [60, 60],
           body: [
             [
               { text: "Subtotal", fontSize: 8 },
@@ -230,7 +230,7 @@ function renderPdf(data, cb) {
             ]
           ]
         },
-        margin: [416, 10]
+        margin: [374, 10]
       }
     ]
   };
