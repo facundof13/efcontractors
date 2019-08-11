@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import Axios from "axios";
 import ProjectsUpload from "./projects-upload";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class Project extends Component {
   constructor(props) {
     super(props);
-    this.state = { areImagesVisible: false };
+    this.state = { areImagesVisible: false, deleting: false, };
     this.toggleImages = this.toggleImages.bind(this);
     this.imgDelete = this.imgDelete.bind(this);
     this.render = this.render.bind(this);
@@ -15,11 +16,13 @@ class Project extends Component {
 
   imgDelete(event) {
     if (window.confirm("Delete this image?")) {
+      this.setState({deleting: true})
       Axios.delete("/admin/deleteimg", {
         data: { id: this.props.user[0]._id, image: event.target.src }
       }).then(res => {
         this.props.finishedFunction(this.props.user[0]._id);
         this.props.finishedFunction();
+        this.setState({deleting: false})
       });
     }
   }
@@ -49,6 +52,9 @@ class Project extends Component {
           user={this.props.user[0]}
           finishedFunction={this.props.finishedFunction}
         />
+        <div>
+          {this.state.uploading ? <CircularProgress color="secondary" /> : ""}
+        </div>
         {this.props.user[0].images.map(image =>
           image.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
             <video

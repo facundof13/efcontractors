@@ -93,9 +93,14 @@ export default class CustomerEstimateTable extends React.Component {
           estimate: row,
           client: this.props.customerInfo,
           pdf: pdf.data
-        }).then(res => {
-          window.alert("Email sent!");
-        });
+        }).then(
+          res => {
+            window.alert("Email sent!");
+          },
+          error => {
+            window.alert(error);
+          }
+        );
       });
     }
   }

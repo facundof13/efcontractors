@@ -51,7 +51,7 @@ function renderPdf(data, cb) {
   for (let i = 0; i < data.estimate.items.length; i++) {
     let num = data.estimate.items[i].amount;
     if (data.estimate.items[i].tax) {
-      taxes += num.replace("$", "") / 6.5; //TODO: change to dynamic variable stored in db
+      taxes += num.replace("$", "") / 6.5; //TODO: change to dynamic variable stored in db (tax amt)
     }
   }
   let grandTotal = taxes + data.estimate.total;

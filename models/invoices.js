@@ -13,7 +13,7 @@ function compareDates(date1, date2) {
 function getAllInvoices() {
   return new Promise((resolve, reject) => {
     invoices.find({ Name: { $exists: false } }).toArray((err, items) => {
-      resolve(items)
+      resolve(items);
     });
   });
 }
@@ -30,16 +30,16 @@ function getServices() {
 }
 
 function sendEmail(query) {
-  console.log(query.client, query.estimate);
-  var email = require("emailjs");
+  const email = require('../node_modules/');
+  // TODO: Add real server information here
   var server = email.server.connect({
-    user: "facundof13@gmail.com",
-    password: "orxatnfsxtdrwnsl",
+    user: "FacundoF13@gmail.com",
+    password: 'umckzffqgahddbox',
     host: "smtp.gmail.com",
-    ssl: true
+    ssl: true,
+  }, (err, msg) => {
+    console.log(err || msg)
   });
-  // console.log(query);
-  // console.log(Email)
   let estimateOrInvoiceOrReceipt = query.estimate.paid
     ? "a receipt"
     : query.estimate.invoice
@@ -53,7 +53,7 @@ function sendEmail(query) {
         type: "currency",
         currency: "USD"
       })}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
-      from: "info@efcontractorsllc.com",
+      from: "facundof13@gmail.com",
       to: query.client.email,
       subject: "EF Contractors LLC",
       attachment: [
