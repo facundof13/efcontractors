@@ -153,6 +153,13 @@ function deleteEstimate(id, query) {
   );
 }
 
+function getFullLogoURI() {
+  return new Promise((resolve, reject) => {
+    resolve('https://efcontractors.s3.us-east-2.amazonaws.com/logo.png')
+
+  })
+}
+
 function getLogoURI() {
   return new Promise((resolve, reject) => {
     invoices
