@@ -43,18 +43,18 @@ router.get("/testimonials", async function(req, res, next) {
 });
 
 //add testimonial
-router.post("/testimonials/add/:text/:name/:citystate", async function(
+router.post("/testimonials", function(
   req,
   res,
   next
 ) {
-  const params = req.params;
+
   const query = {
-    Text: params.text,
-    Name: params.name,
-    CityState: params.citystate,
+    Text: req.body.text,
+    Name: req.body.name,
+    CityState: req.body.cityState,
     InsertedDate: new Date().toISOString().split("T")[0],
-    Verified: true
+    Verified: false
   };
 
   testimonials.addTestimonial(query);

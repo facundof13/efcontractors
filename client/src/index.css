@@ -331,3 +331,15 @@ blockquote span{
   font-weight: bold;
   margin-top:1em;
 }
+
+.MuiTypography-colorPrimary {
+  color: black !important;
+}
+
+.black-text {
+  margin-bottom: 20px !important;
+}
+
+.black-text .MuiInputBase-input {
+  color: black !important;
+}

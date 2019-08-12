@@ -14,9 +14,10 @@ import Footer from "./components/footer";
 import NotFound from "./components/not-found";
 import PrivateRoute from "./components/privateComponents/private-route";
 import Estimates from "./components/privateComponents/estimates-admin/estimates";
-import Testimonials from './components/testimonials'
-import AboutUs from './components/about-us'
-import Services from './components/services'
+import Testimonials from "./components/testimonials";
+import AboutUs from "./components/about-us";
+import Services from "./components/services";
+import ManageTestimonials from "./components/privateComponents/manage-testimonials";
 class App extends Component {
   constructor() {
     super();
@@ -90,6 +91,11 @@ class App extends Component {
               path="/admin/projects"
               isAuthenticated={this.state.loggedIn}
               component={ProjectsPage}
+            />
+            <PrivateRoute
+              path="/admin/testimonials"
+              component={ManageTestimonials}
+              isAuthenticated={this.state.loggedIn}
             />
             <PrivateRoute
               path="/admin"

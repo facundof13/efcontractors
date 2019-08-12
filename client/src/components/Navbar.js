@@ -48,9 +48,6 @@ export default function Navbar(props) {
                 <Link className="navbar-link" to="/">
                   <MenuItem color="secondary" onClick={handleClose}>Home</MenuItem>
                 </Link>
-                <Link className="navbar-link" to="/projects">
-                  <MenuItem color="secondary" onClick={handleClose}>Projects</MenuItem>
-                </Link>
                 <Link className="navbar-link" to="/admin">
                   <MenuItem color="secondary" onClick={handleClose}>Admin Home</MenuItem>
                 </Link>
@@ -59,6 +56,9 @@ export default function Navbar(props) {
                 </Link>
                 <Link className="navbar-link" to="/admin/estimates">
                   <MenuItem color="secondary" onClick={handleClose}>Manage Estimates</MenuItem>
+                </Link>
+                <Link className="navbar-link" to="/admin/testimonials">
+                  <MenuItem color="secondary" onClick={handleClose}>Manage Testimonials</MenuItem>
                 </Link>
               </div>
             ) : (

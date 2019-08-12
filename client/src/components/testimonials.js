@@ -5,7 +5,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Dialog
+  Dialog,
+  Button,
+  TextField
 } from "@material-ui/core";
 import Axios from "axios";
 export default class Testimonials extends React.Component {
@@ -13,8 +15,17 @@ export default class Testimonials extends React.Component {
     super(props);
 
     this.state = {
-      testimonials: []
+      testimonials: [],
+      open: false,
+      text: "",
+      name: "",
+      cityState: ""
     };
+
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   //get all testimonials
   componentDidMount() {
@@ -28,7 +39,7 @@ export default class Testimonials extends React.Component {
               {" "}
               {testimonial.Text}{" "}
               <span>
-                {testimonial.Name}, {testimonial.CityState}
+                {testimonial.Name} | {testimonial.CityState}
               </span>
             </blockquote>
           </Typography>
@@ -37,10 +48,42 @@ export default class Testimonials extends React.Component {
       this.setState({ testimonials: [...arr] });
     });
   }
-  //render them
+
+  handleClose() {
+    this.setState({
+      open: false
+    });
+  }
+
+  handleClickOpen() {
+    this.setState({
+      open: true
+    });
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  handleSubmit(e) {
+    if (this.state.text === '' || 
+    this.state.name === ''||
+    this.state.cityState === '') {
+      window.alert("Empty field!")
+    } else {
+      Axios.post('/testimonials', {text: this.state.text, name: this.state.name, cityState: this.state.cityState})
+      .then(res => {
+        this.setState({
+          open: false
+        })
+      })
+    }
+  }
 
   render() {
-    console.log(this.state);
+    console.log(this.state)
     return (
       <div>
         <div>
@@ -53,37 +96,65 @@ export default class Testimonials extends React.Component {
           <div>
             <Button
               variant="outlined"
-              color="primary"
-              onClick={handleClickOpen}
+              color="secondary"
+              onClick={this.handleClickOpen}
             >
-              Open form dialog
+              Submit a testimonial
             </Button>
             <Dialog
-              open={open}
-              onClose={handleClose}
+              open={this.state.open}
+              onClose={this.handleClose}
               aria-labelledby="form-dialog-title"
             >
-              <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+              <DialogTitle id="form-dialog-title">
+                We appreciate your feedback!
+              </DialogTitle>
               <DialogContent>
-                <DialogContentText>
-                  To subscribe to this website, please enter your email address
-                  here. We will send updates occasionally.
-                </DialogContentText>
+                
                 <TextField
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  label="Email Address"
-                  type="email"
-                  fullWidth
-                />
+                className='black-text'
+                value={this.state.text}
+                name="text"
+                type="text"
+                label="Tell us what you think"
+                color="primary"
+                onChange={this.handleChange}
+                multiline
+                fullWidth
+              />
+               <TextField
+                className='black-text'
+                value={this.state.name}
+                name="name"
+                type="text"
+                label="Name"
+                color="primary"
+                onChange={this.handleChange}
+                fullWidth
+              />
+               <TextField
+                className='black-text'
+                value={this.state.cityState}
+                name="cityState"
+                type="text"
+                label="City, State"
+                color="primary"
+                onChange={this.handleChange}
+                multiline
+                fullWidth
+              />
+              <DialogContentText color="primary">
+                  Please note: your submission may not be immediately available
+                  on our testimonials page. The submission will be available
+                  once it is reviewed by a moderator.
+                </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={this.handleClose} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={handleClose} color="primary">
-                  Subscribe
+                <Button onClick={this.handleSubmit} color="primary">
+                  Submit
                 </Button>
               </DialogActions>
             </Dialog>
