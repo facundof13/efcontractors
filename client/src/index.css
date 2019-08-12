@@ -292,7 +292,42 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .testimonials-grid{
   display: flex;
-  flex-flow: column wrap;
-  max-width: 75vw;
-  justify-content: center;
+  flex-direction: column;
+  /* margin-right: 20vw;
+  margin-left: 20vw; */
+}
+
+blockquote{
+  font-size: 1.1em;
+  width:60%;
+  margin:50px auto;
+  font-style:italic;
+  color: #ffff00;
+  padding:1.2em 30px 1.2em 75px;
+  border-left:8px solid #212121 ;
+  line-height:1.6;
+  position: relative;
+}
+
+blockquote::before{
+  /* font-family:Arial; */
+  content: "\201C";
+  color:#212121;
+  font-size:4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+blockquote::after{
+  content: '';
+}
+
+blockquote span{
+  display:block;
+  font-family: 'Roboto';
+  color:#ffff00;
+  font-style: normal;
+  font-weight: bold;
+  margin-top:1em;
 }
