@@ -25,6 +25,13 @@ router.post("/sendemail", function(req, res, next) {
   res.end();
 });
 
+router.get('/testimonials', function(req,res,next) {
+  testimonials.getAllTestimonials()
+  .then(testimonials => {
+    res.json(testimonials)
+  })
+})
+
 // delete testimonial
 router.delete("/testimonials/delete/:id", function(req, res, next) {
   const id = req.params.id;

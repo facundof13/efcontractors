@@ -23,8 +23,11 @@ class App extends Component {
     super();
     this.getUser();
     this.state = {
-      loggedIn: false,
-      finished: false
+      // DISABLED FOR TESTING
+      // loggedIn: false, 
+      // finished: false
+      loggedIn: true,
+      finished: true,
     };
 
     this.getUser = this.getUser.bind(this);
@@ -42,16 +45,17 @@ class App extends Component {
   }
 
   getUser() {
-    axios.get("/user").then(response => {
-      if (response.data) {
-        this.setState({
-          loggedIn: true,
-          finished: true
-        });
-      } else {
-        this.setState({ loggedIn: false, finished: true });
-      }
-    });
+    // DISABLED FOR TESTING
+    // axios.get("/user").then(response => {
+    //   if (response.data) {
+    //     this.setState({
+    //       loggedIn: true,
+    //       finished: true
+    //     });
+    //   } else {
+    //     this.setState({ loggedIn: false, finished: true });
+    //   }
+    // });
   }
 
   render() {

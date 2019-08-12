@@ -343,3 +343,7 @@ blockquote span{
 .black-text .MuiInputBase-input {
   color: black !important;
 }
+
+.testimonials-field .MuiInputBase-input {
+  color: yellow !important;
+}

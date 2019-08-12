@@ -23,6 +23,14 @@ function getAllVerifiedTestimonials() {
   });
 }
 
+function getAllTestimonials() {
+  return new Promise((r, rej) => {
+    testimonials.find().toArray((err, items) => {
+      r(items)
+    })
+  })
+}
+
 // U
 function updateTestimonial(id, query) {
   testimonials.updateOne(
@@ -54,5 +62,6 @@ module.exports = {
   getAllVerifiedTestimonials,
   removeTestimonial,
   addTestimonial,
-  updateTestimonial
+  updateTestimonial,
+  getAllTestimonials
 };
