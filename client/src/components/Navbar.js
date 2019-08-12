@@ -42,6 +42,7 @@ export default function Navbar(props) {
             color="primary"
           >
             {/* Show different links depending on logged in status */}
+            {/* Logged in currently: */}
             {props.loggedIn ? (
               <div>
                 <Link className="navbar-link" to="/">
@@ -62,12 +63,23 @@ export default function Navbar(props) {
               </div>
             ) : (
               <div>
+              {/* Not Logged in currently: */}
                 <Link className="navbar-link" to="/">
                   <MenuItem color="secondary" onClick={handleClose}>Home</MenuItem>
+                </Link>
+                <Link className="navbar-link" to="/about">
+                  <MenuItem color="secondary" onClick={handleClose}>About Us</MenuItem>
+                </Link>
+                <Link className="navbar-link" to="/testimonials">
+                  <MenuItem color="secondary" onClick={handleClose}>Testimonials</MenuItem>
                 </Link>
                 <Link className="navbar-link" to="/projects">
                   <MenuItem color="secondary" onClick={handleClose}>Projects</MenuItem>
                 </Link>
+                <Link className="navbar-link" to="/services">
+                  <MenuItem color="secondary" onClick={handleClose}>Services</MenuItem>
+                </Link>
+                
               </div>
             )}
           </Menu>

@@ -14,7 +14,9 @@ import Footer from "./components/footer";
 import NotFound from "./components/not-found";
 import PrivateRoute from "./components/privateComponents/private-route";
 import Estimates from "./components/privateComponents/estimates-admin/estimates";
-
+import Testimonials from './components/testimonials'
+import AboutUs from './components/about-us'
+import Services from './components/services'
 class App extends Component {
   constructor() {
     super();
@@ -61,6 +63,9 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/projects" render={() => <ViewProjects />} />
+            <Route path="/testimonials" render={() => <Testimonials />} />
+            <Route path="/about" render={() => <AboutUs />} />
+            <Route path="/services" render={() => <Services />} />
             <Route
               path="/login"
               render={() => <LoginForm updateUser={this.updateUser} />}
