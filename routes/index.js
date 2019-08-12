@@ -50,11 +50,11 @@ router.post("/testimonials", function(
 ) {
 
   const query = {
-    Text: req.body.text,
-    Name: req.body.name,
-    CityState: req.body.cityState,
-    InsertedDate: new Date().toISOString().split("T")[0],
-    Verified: false
+    text: req.body.text,
+    name: req.body.name,
+    cityState: req.body.cityState,
+    insertedDate: new Date().toISOString().split("T")[0],
+    verified: false
   };
 
   testimonials.addTestimonial(query);

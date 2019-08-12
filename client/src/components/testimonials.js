@@ -37,9 +37,9 @@ export default class Testimonials extends React.Component {
           <Typography key={testimonial._id} component="span">
             <blockquote key={testimonial._id}>
               {" "}
-              {testimonial.Text}{" "}
+              {testimonial.text}{" "}
               <span>
-                {testimonial.Name} | {testimonial.CityState}
+                {testimonial.name} | {testimonial.cityState}
               </span>
             </blockquote>
           </Typography>

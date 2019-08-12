@@ -15,7 +15,7 @@ function getAllVerifiedTestimonials() {
   return new Promise((resolve, reject) => {
     testimonials
       .find({
-        Verified: true
+        verified: true
       })
       .toArray((err, items) => {
         resolve(items);

@@ -40,32 +40,20 @@ router.delete("/testimonials/delete/:id", function(req, res, next) {
 });
 
 // update testimonials
-router.put(
-  "/testimonials/update/:idToUpdate/:text?/:name?/:citystate?/:verified?",
-  function(req, res, next) {
-    // pass in old id, new doc containing what to update
-    // ex {Text: "Hello thank you" }
-
-    const idToUpdate = req.params.idToUpdate;
-    const Text = req.query.text;
-    const Name = req.query.name;
-    const CityState = req.query.citystate;
-    const Verified = req.query.verified;
-
-    const query = {};
-    if (Text) query.Text = Text;
-    if (Name) query.Name = Name;
-    if (CityState) query.CityState = CityState;
-
-    if (Verified) {
-      if (Verified === "true") query.Verified = true;
-      else query.Verified = false;
+router.post('/updatetestimonials', function(req,res,next) {
+  console.log(req.body)
+  req.body.testimonials.map(testimonial => {
+    let query = {
+      text: testimonial.text,
+      name: testimonial.name,
+      cityState: testimonial.cityState,
+      verified: testimonial.verified,
+      insertedDate: testimonial.insertedDate,
     }
-
-    testimonials.updateTestimonial(idToUpdate, query);
-    res.end();
-  }
-);
+    testimonials.updateTestimonial(testimonial._id, query)
+  })
+  res.end()
+})
 
 //add service
 router.post("/services/add/:service/:residential/:commercial", function(
