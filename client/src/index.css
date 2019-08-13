@@ -10,7 +10,7 @@ body {
   font-family: sans-serif;
   padding-bottom: 30px;
   background-color: #424242;
-  margin-bottom: 55px;
+  margin-bottom: 70px;
 }
 .hidden {
   display: none;
@@ -31,7 +31,7 @@ body {
 }
 
 .btn-login {
-  margin-top: 20px;
+  margin-top: 20px !important;
 }
 
 .footer-bar {
@@ -39,7 +39,7 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 55px;
+  height: 70px;
   background-color: #212121;
   -webkit-box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.75);
@@ -228,7 +228,9 @@ input[type="number"]::-webkit-outer-spin-button {
 .footer-items {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
+  margin: 0px;
 }
 
 /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
@@ -282,7 +284,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .income-column * .MuiInputBase-root {
- width: 30vw; 
+  width: 30vw;
 }
 
 .logo-img {
@@ -290,46 +292,46 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 200px;
 }
 
-.testimonials-grid{
+.testimonials-grid {
   display: flex;
   flex-direction: column;
   /* margin-right: 20vw;
   margin-left: 20vw; */
 }
 
-blockquote{
+blockquote {
   font-size: 1em;
-  width:60%;
-  margin:25px auto;
-  font-style:italic;
+  width: 60%;
+  margin: 25px auto;
+  font-style: italic;
   color: #ffff00;
-  padding:1.2em 30px 1.2em 40px;
-  border-left:8px solid #212121 ;
-  line-height:1.6;
+  padding: 1.2em 30px 1.2em 40px;
+  border-left: 8px solid #212121;
+  line-height: 1.6;
   position: relative;
 }
 
-blockquote::before{
+blockquote::before {
   /* font-family:Arial; */
   content: "\201C";
-  color:#212121;
-  font-size:4em;
+  color: #212121;
+  font-size: 4em;
   position: absolute;
   left: 10px;
-  top:-10px;
+  top: -10px;
 }
 
-blockquote::after{
-  content: '';
+blockquote::after {
+  content: "";
 }
 
-blockquote span{
-  display:block;
-  font-family: 'Roboto';
-  color:#ffff00;
+blockquote span {
+  display: block;
+  font-family: "Roboto";
+  color: #ffff00;
   font-style: normal;
   font-weight: bold;
-  margin-top:1em;
+  margin-top: 1em;
 }
 
 .MuiTypography-colorPrimary {
@@ -352,6 +354,27 @@ blockquote span{
   margin-top: 20px;
 }
 
-.small-text p{
-  font-size: .8em;
+.small-text p {
+  font-size: 0.8em;
+}
+
+.services-table-root {
+  width: 90vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+
+.services-table-root .MuiPaper-root {
+  overflow: auto;
+}
+
+h4 {
+  text-shadow: 2px 2px 8px #212121;
+}
+h5 {
+  text-shadow: 2px 2px 8px #212121;
+}
+
+.company-information {
+  margin: 10px;
 }

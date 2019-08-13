@@ -4,6 +4,7 @@ var services = require("../models/services.js");
 var testimonials = require("../models/testimonials.js");
 var projects = require("../models/projects");
 var invoices = require("../models/invoices");
+var settings = require("../models/settings");
 const titleize = require("titleize");
 const moment = require("moment");
 const pdfgenerator = require("../models/pdfgenerator");
@@ -25,12 +26,11 @@ router.post("/sendemail", function(req, res, next) {
   res.end();
 });
 
-router.get('/testimonials', function(req,res,next) {
-  testimonials.getAllTestimonials()
-  .then(testimonials => {
-    res.json(testimonials)
-  })
-})
+router.get("/testimonials", function(req, res, next) {
+  testimonials.getAllTestimonials().then(testimonials => {
+    res.json(testimonials);
+  });
+});
 
 // delete testimonial
 router.delete("/testimonials", function(req, res, next) {
@@ -39,18 +39,30 @@ router.delete("/testimonials", function(req, res, next) {
 });
 
 // update testimonials
-router.post('/updatetestimonials', function(req,res,next) {
-  console.log(req.body)
+router.post("/updatetestimonials", function(req, res, next) {
+  console.log(req.body);
   req.body.testimonials.map(testimonial => {
     let query = {
       text: testimonial.text,
       name: testimonial.name,
       cityState: testimonial.cityState,
       verified: testimonial.verified,
-      insertedDate: testimonial.insertedDate,
-    }
-    testimonials.updateTestimonial(testimonial._id, query)
-  })
+      insertedDate: testimonial.insertedDate
+    };
+    testimonials.updateTestimonial(testimonial._id, query);
+  });
+  res.end();
+});
+
+router.get("/settings", function(req, res, next) {
+  settings.getSettings().then(settings => {
+    res.json(settings[0]);
+  });
+});
+
+router.post('/settings', function(req, res, next) {
+  settings.updateSettings(req.body.settings)
+  // console.log(req.body.settings)
   res.end()
 })
 
@@ -335,7 +347,7 @@ router.post("/estimatesinmonth", function(req, res, next) {
   invoices.getAllInvoices().then(invoices => {
     invoices.map(invoice => {
       invoice.estimates.map(estimate => {
-        if(req.body.month) {
+        if (req.body.month) {
           if (
             new Date(estimate.paidDate).getMonth() + 1 ===
               new Date(req.body.month).getMonth() + 1 &&

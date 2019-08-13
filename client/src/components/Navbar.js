@@ -45,9 +45,6 @@ export default function Navbar(props) {
             {/* Logged in currently: */}
             {props.loggedIn ? (
               <div>
-                <Link className="navbar-link" to="/">
-                  <MenuItem color="secondary" onClick={handleClose}>Home</MenuItem>
-                </Link>
                 <Link className="navbar-link" to="/admin">
                   <MenuItem color="secondary" onClick={handleClose}>Admin Home</MenuItem>
                 </Link>
@@ -59,6 +56,9 @@ export default function Navbar(props) {
                 </Link>
                 <Link className="navbar-link" to="/admin/testimonials">
                   <MenuItem color="secondary" onClick={handleClose}>Manage Testimonials</MenuItem>
+                </Link>
+                <Link className="navbar-link" to="/admin/settings">
+                  <MenuItem color="secondary" onClick={handleClose}>Settings</MenuItem>
                 </Link>
               </div>
             ) : (

@@ -18,14 +18,19 @@ import Testimonials from "./components/testimonials";
 import AboutUs from "./components/about-us";
 import Services from "./components/services";
 import ManageTestimonials from "./components/privateComponents/manage-testimonials";
+import Settings from './components/privateComponents/settings/settings'
+
+
 class App extends Component {
   constructor() {
     super();
     this.getUser();
     this.state = {
-      // DISABLED FOR TESTING
-      // loggedIn: false, 
+      // Disable these for testing
+      // loggedIn: false,
       // finished: false
+
+      //Enable these when testing
       loggedIn: true,
       finished: true,
     };
@@ -45,7 +50,7 @@ class App extends Component {
   }
 
   getUser() {
-    // DISABLED FOR TESTING
+    // Disable here for testing
     // axios.get("/user").then(response => {
     //   if (response.data) {
     //     this.setState({
@@ -99,6 +104,11 @@ class App extends Component {
             <PrivateRoute
               path="/admin/testimonials"
               component={ManageTestimonials}
+              isAuthenticated={this.state.loggedIn}
+            />
+            <PrivateRoute
+              path="/admin/settings"
+              component={Settings}
               isAuthenticated={this.state.loggedIn}
             />
             <PrivateRoute
