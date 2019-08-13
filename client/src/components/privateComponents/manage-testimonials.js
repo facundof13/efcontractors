@@ -5,7 +5,8 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
-  Button
+  Button,
+  CircularProgress
 } from "@material-ui/core";
 
 export default class ManageTestimonials extends React.Component {
@@ -13,39 +14,63 @@ export default class ManageTestimonials extends React.Component {
     super(props);
     this.state = {
       testimonials: [],
+      loading: false,
+      updatedTestimonials: []
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getTestimonials = this.getTestimonials.bind(this);
   }
 
   componentDidMount() {
-    Axios.get("/admin/testimonials")
-      .then(res => {
-        this.setState({ testimonials: res.data });
-      })
+    this.getTestimonials();
+  }
+
+  getTestimonials() {
+    Axios.get("/admin/testimonials").then(res => {
+      this.setState({ testimonials: res.data });
+    });
   }
 
   handleChange(e, key) {
+    // TODO: push the changed arrays into a new array and only update those values...
+    // Right now, everything is updated even if it didnt change
     let index = this.state.testimonials.findIndex(x => x._id === key);
     let copyObj = JSON.parse(JSON.stringify(this.state.testimonials[index]));
-    if(e.target.name === 'verified') {
-      copyObj.verified = e.target.checked
+    if (e.target.name === "verified") {
+      copyObj.verified = e.target.checked;
     } else {
       copyObj[e.target.name] = e.target.value;
     }
     let newArr = [...this.state.testimonials].filter(item => {
       return item._id !== key;
     });
-    newArr.splice(index, 0, copyObj);
-
-    this.setState({
-      testimonials: [...newArr]
-    });
+    newArr.splice(index, 0, copyObj); //add to new arr
+    this.setState(prevState => ({
+      testimonials: [...newArr],
+      updatedTestimonials: [...prevState.updatedTestimonials, copyObj]
+    }));
   }
 
   handleSubmit() {
-    Axios.post('/admin/updatetestimonials', {testimonials: this.state.testimonials})
+    this.setState({ loading: true });
+    Axios.post("/admin/updatetestimonials", {
+      testimonials: this.state.updatedTestimonials
+    }).then(() => {
+      setTimeout(() => {
+        this.setState({ loading: false, updatedTestimonials: [] });
+      }, 400);
+    });
+  }
+
+  deleteTestimonial(id) {
+    console.log(id);
+    if (window.confirm(`Delete testimonial?`)) {
+      Axios.delete(`/admin/testimonials`, { data: { id: id } }).then(() => {
+        this.getTestimonials();
+      });
+    }
   }
 
   render() {
@@ -93,16 +118,30 @@ export default class ManageTestimonials extends React.Component {
                     checked={i.verified}
                     onChange={(event, key) => this.handleChange(event, i._id)}
                   />
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => this.deleteTestimonial(i._id)}
+                  >
+                    Delete
+                  </Button>
                 </div>
               ))
             : ""}
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={this.handleSubmit}
-            >
-              Submit changes
-            </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={this.handleSubmit}
+          >
+            Submit changes
+          </Button>
+        </div>
+        <div className="loading">
+          {this.state.loading ? (
+            <CircularProgress size={30} color="secondary" />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );

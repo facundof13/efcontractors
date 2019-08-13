@@ -298,12 +298,12 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 blockquote{
-  font-size: 1.1em;
+  font-size: 1em;
   width:60%;
-  margin:50px auto;
+  margin:25px auto;
   font-style:italic;
   color: #ffff00;
-  padding:1.2em 30px 1.2em 75px;
+  padding:1.2em 30px 1.2em 40px;
   border-left:8px solid #212121 ;
   line-height:1.6;
   position: relative;
@@ -346,4 +346,12 @@ blockquote span{
 
 .testimonials-field .MuiInputBase-input {
   color: yellow !important;
+}
+
+.loading {
+  margin-top: 20px;
+}
+
+.small-text p{
+  font-size: .8em;
 }

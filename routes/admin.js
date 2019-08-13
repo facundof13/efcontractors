@@ -33,9 +33,8 @@ router.get('/testimonials', function(req,res,next) {
 })
 
 // delete testimonial
-router.delete("/testimonials/delete/:id", function(req, res, next) {
-  const id = req.params.id;
-  testimonials.removeTestimonial(id);
+router.delete("/testimonials", function(req, res, next) {
+  testimonials.removeTestimonial(req.body.id);
   res.end();
 });
 

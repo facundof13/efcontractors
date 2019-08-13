@@ -7,7 +7,8 @@ import {
   DialogTitle,
   Dialog,
   Button,
-  TextField
+  TextField,
+  Divider
 } from "@material-ui/core";
 import Axios from "axios";
 export default class Testimonials extends React.Component {
@@ -31,18 +32,21 @@ export default class Testimonials extends React.Component {
   componentDidMount() {
     Axios.get("/testimonials").then(res => {
       var arr = [];
-      res.data.map(testimonial => {
+      res.data.map((testimonial, i) => {
         console.log(testimonial);
         arr.push(
-          <Typography key={testimonial._id} component="span">
-            <blockquote key={testimonial._id}>
-              {" "}
-              {testimonial.text}{" "}
-              <span>
-                {testimonial.name} | {testimonial.cityState}
-              </span>
-            </blockquote>
-          </Typography>
+          <div>
+            <Typography key={testimonial._id} component="span">
+              <blockquote key={testimonial._id}>
+                {" "}
+                {testimonial.text}{" "}
+                <span>
+                  {testimonial.name} | {testimonial.cityState}
+                </span>
+              </blockquote>
+            </Typography>
+            {i === res.data.length - 1 ? "" : <Divider />}
+          </div>
         );
       });
       this.setState({ testimonials: [...arr] });
@@ -64,26 +68,34 @@ export default class Testimonials extends React.Component {
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
-    })
+    });
   }
 
   handleSubmit(e) {
-    if (this.state.text === '' || 
-    this.state.name === ''||
-    this.state.cityState === '') {
-      window.alert("Empty field!")
+    if (
+      this.state.text === "" ||
+      this.state.name === "" ||
+      this.state.cityState === ""
+    ) {
+      window.alert("Empty field!");
     } else {
-      Axios.post('/testimonials', {text: this.state.text, name: this.state.name, cityState: this.state.cityState})
-      .then(res => {
+      Axios.post("/testimonials", {
+        text: this.state.text,
+        name: this.state.name,
+        cityState: this.state.cityState
+      }).then(res => {
         this.setState({
-          open: false
-        })
-      })
+          open: false,
+          text: "",
+          name: "",
+          cityState: ""
+        });
+      });
     }
   }
 
   render() {
-    console.log(this.state)
+    console.log(this.state);
     return (
       <div>
         <div>
@@ -110,40 +122,39 @@ export default class Testimonials extends React.Component {
                 We appreciate your feedback!
               </DialogTitle>
               <DialogContent>
-                
                 <TextField
-                className='black-text'
-                value={this.state.text}
-                name="text"
-                type="text"
-                label="Tell us what you think"
-                color="primary"
-                onChange={this.handleChange}
-                multiline
-                fullWidth
-              />
-               <TextField
-                className='black-text'
-                value={this.state.name}
-                name="name"
-                type="text"
-                label="Name"
-                color="primary"
-                onChange={this.handleChange}
-                fullWidth
-              />
-               <TextField
-                className='black-text'
-                value={this.state.cityState}
-                name="cityState"
-                type="text"
-                label="City, State"
-                color="primary"
-                onChange={this.handleChange}
-                multiline
-                fullWidth
-              />
-              <DialogContentText color="primary">
+                  className="black-text"
+                  value={this.state.text}
+                  name="text"
+                  type="text"
+                  label="Tell us what you think"
+                  color="primary"
+                  onChange={this.handleChange}
+                  multiline
+                  fullWidth
+                />
+                <TextField
+                  className="black-text"
+                  value={this.state.name}
+                  name="name"
+                  type="text"
+                  label="Name"
+                  color="primary"
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  className="black-text"
+                  value={this.state.cityState}
+                  name="cityState"
+                  type="text"
+                  label="City, State"
+                  color="primary"
+                  onChange={this.handleChange}
+                  multiline
+                  fullWidth
+                />
+                <DialogContentText color="primary">
                   Please note: your submission may not be immediately available
                   on our testimonials page. The submission will be available
                   once it is reviewed by a moderator.
@@ -159,6 +170,13 @@ export default class Testimonials extends React.Component {
               </DialogActions>
             </Dialog>
           </div>
+        </div>
+        <div>
+          <Typography className='small-text'>
+            <p>
+              For further references please do not hesitate to contact us.
+              </p>
+          </Typography>
         </div>
       </div>
     );
