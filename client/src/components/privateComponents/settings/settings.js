@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography, Divider } from "@material-ui/core";
 import CompanyInformation from './company-information'
+import ManageServices from "./manage-services";
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -9,13 +10,15 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='settings-root'>
         <Typography color="secondary" component="span" variant="h4">
           <h4>Services</h4>
         </Typography>
-        <Divider />
+        <Divider className='divider' />
         <CompanyInformation />
-        <Divider />
+        <Divider className='divider' />
+        <ManageServices />
+        <Divider className='divider' />
       </div>
     );
   }

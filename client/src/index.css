@@ -443,3 +443,18 @@ h5 {
     text-shadow: 2px 2px 8px #212121;
   }
 }
+
+
+.divider {
+  width: 60vw;
+  margin-left: 20vw !important;
+  margin-right: 20vw !important;
+}
+
+.manage-services-table-root {
+  max-width: 90%;
+  overflow-x: auto;
+  max-height: 400px; 
+  margin-left: 5%;
+  margin-right: 5%;
+}
