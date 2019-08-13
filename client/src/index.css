@@ -359,9 +359,9 @@ blockquote span {
 }
 
 .services-table-root {
-  width: 90vw;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  width: 40vw;
+  margin-left: 30vw;
+  margin-right: 30vw;
 }
 
 .services-table-root .MuiPaper-root {
@@ -377,4 +377,24 @@ h5 {
 
 .company-information {
   margin: 10px;
+}
+
+.services-table-root .MuiButtonBase-root {
+  color: yellow !important;
+  font-weight: bolder !important;
+  font-style: italic !important;
+  font-size: 1.5em !important;
+}
+
+.services-table-root .MuiTableSortLabel {
+  color: yellow !important;
+}
+
+.services-table-root .MuiTableSortLabel-root:hover .MuiTableSortLabel-icon {
+  color: yellow !important;
+}
+
+.services-table-root * {
+  border-bottom: none !important;
+  color: yellow !important;
 }

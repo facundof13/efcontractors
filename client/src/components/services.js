@@ -59,7 +59,7 @@ export default class Services extends React.Component {
           <h4>Services</h4>
         </Typography>
         <div className="services-table-root">
-          <Paper>
+          {/* <Paper> */}
             <Table>
               <TableHead>
                 <TableRow>
@@ -109,7 +109,7 @@ export default class Services extends React.Component {
                 ))}
               </TableBody>
             </Table>
-          </Paper>
+          {/* </Paper> */}
         </div>
       </div>
     );
