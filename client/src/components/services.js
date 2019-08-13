@@ -58,11 +58,14 @@ export default class Services extends React.Component {
         <Typography color="secondary" component="span" variant="h4">
           <h4>Services</h4>
         </Typography>
+        <div>
+          <p className='services-text'>All the services you need, and a lot more.</p>
+        </div>
         <div className="services-table-root">
           {/* <Paper> */}
-            <Table>
+            <Table >
               <TableHead>
-                <TableRow>
+                <TableRow >
                   <TableCell>
                     <TableSortLabel
                       direction={this.state.sortDirection}
@@ -89,13 +92,13 @@ export default class Services extends React.Component {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody >
                 {orderBy(
                   this.state.services,
                   this.state.columnToSort,
                   this.state.sortDirection
                 ).map(row => (
-                  <TableRow key={row._id}>
+                  <TableRow className='services-text-body' key={row._id}>
                     <TableCell component="th" scope="row">
                       {row.Service}
                     </TableCell>

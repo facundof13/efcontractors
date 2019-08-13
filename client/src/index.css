@@ -358,12 +358,6 @@ blockquote span {
   font-size: 0.8em;
 }
 
-.services-table-root {
-  width: 40vw;
-  margin-left: 30vw;
-  margin-right: 30vw;
-}
-
 .services-table-root .MuiPaper-root {
   overflow: auto;
 }
@@ -379,22 +373,73 @@ h5 {
   margin: 10px;
 }
 
-.services-table-root .MuiButtonBase-root {
-  color: yellow !important;
-  font-weight: bolder !important;
-  font-style: italic !important;
-  font-size: 1.5em !important;
+
+.services-text-body:nth-child(odd) {
+  background-color: #616161;
 }
 
-.services-table-root .MuiTableSortLabel {
-  color: yellow !important;
+@media screen and (min-width: 600px) {
+  .services-table-root {
+    max-width: 75vw;
+    margin-left: 12.5vw;
+    margin-right: 12.5vw;
+    overflow-x: auto;
+  }
+
+  .services-table-root .MuiButtonBase-root {
+    color: yellow !important;
+    font-weight: bolder !important;
+    font-style: italic !important;
+    font-size: 2em !important;
+    text-shadow: 2px 2px 8px #212121;
+  }
+
+  .services-table-root .MuiTableSortLabel {
+    color: yellow !important;
+  }
+
+  .services-table-root .MuiTableSortLabel-root:hover .MuiTableSortLabel-icon {
+    color: yellow !important;
+  }
+
+  .services-table-root * {
+    border-bottom: none !important;
+    color: yellow !important;
+  }
+
+  .services-text {
+    margin-bottom: 20px;
+    font-style: italic;
+    color: yellow;
+    text-shadow: 2px 2px 8px #212121;
+  }
+
+
+  .services-text-body * {
+    text-shadow: 2px 2px 8px #212121;
+    font-size: 1em !important;
+  }
 }
 
-.services-table-root .MuiTableSortLabel-root:hover .MuiTableSortLabel-icon {
-  color: yellow !important;
-}
+@media screen and (max-width: 600px) {
+  .services-table-root {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .services-table-root * {
+    color: yellow !important;
+    text-shadow: 2px 2px 8px #212121;
+    border-bottom: none !important;
 
-.services-table-root * {
-  border-bottom: none !important;
-  color: yellow !important;
+  }
+
+  .services-table-root .MuiButtonBase-root {
+    font-style: italic !important;
+  }
+
+  .services-text {
+    color: yellow;
+    font-style: italic;
+    text-shadow: 2px 2px 8px #212121;
+  }
 }
