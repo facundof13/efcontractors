@@ -12,7 +12,7 @@ export default class Settings extends React.Component {
     return (
       <div className='settings-root'>
         <Typography color="secondary" component="span" variant="h4">
-          <h4>Services</h4>
+          <h4>Settings</h4>
         </Typography>
         <Divider className='divider' />
         <CompanyInformation />

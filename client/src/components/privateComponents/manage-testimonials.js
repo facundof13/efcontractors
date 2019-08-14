@@ -34,8 +34,6 @@ export default class ManageTestimonials extends React.Component {
   }
 
   handleChange(e, key) {
-    // TODO: push the changed arrays into a new array and only update those values...
-    // Right now, everything is updated even if it didnt change
     let index = this.state.testimonials.findIndex(x => x._id === key);
     let copyObj = JSON.parse(JSON.stringify(this.state.testimonials[index]));
     if (e.target.name === "verified") {
@@ -49,7 +47,8 @@ export default class ManageTestimonials extends React.Component {
     newArr.splice(index, 0, copyObj); //add to new arr
     this.setState(prevState => ({
       testimonials: [...newArr],
-      updatedTestimonials: [...prevState.updatedTestimonials, copyObj]
+      updatedTestimonials: [...prevState.updatedTestimonials.filter(item => {
+        return item._id !== key}), copyObj]
     }));
   }
 

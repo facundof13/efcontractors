@@ -103,10 +103,10 @@ export default class Services extends React.Component {
                       {row.Service}
                     </TableCell>
                     <TableCell align="right">
-                      {row.Residential === 1 ? <CheckOutlined /> : ""}
+                      {row.Residential ? <CheckOutlined /> : ""}
                     </TableCell>
                     <TableCell align="right">
-                      {row.Commercial === 1 ? <CheckOutlined /> : ""}
+                      {row.Commercial ? <CheckOutlined /> : ""}
                     </TableCell>
                   </TableRow>
                 ))}

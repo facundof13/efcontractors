@@ -351,7 +351,7 @@ blockquote span {
 }
 
 .loading {
-  margin-top: 20px;
+  margin: 20px;
 }
 
 .small-text p {
@@ -372,7 +372,6 @@ h5 {
 .company-information {
   margin: 10px;
 }
-
 
 .services-text-body:nth-child(odd) {
   background-color: #616161;
@@ -414,7 +413,6 @@ h5 {
     text-shadow: 2px 2px 8px #212121;
   }
 
-
   .services-text-body * {
     text-shadow: 2px 2px 8px #212121;
     font-size: 1em !important;
@@ -430,7 +428,6 @@ h5 {
     color: yellow !important;
     text-shadow: 2px 2px 8px #212121;
     border-bottom: none !important;
-
   }
 
   .services-table-root .MuiButtonBase-root {
@@ -444,7 +441,6 @@ h5 {
   }
 }
 
-
 .divider {
   width: 60vw;
   margin-left: 20vw !important;
@@ -454,7 +450,19 @@ h5 {
 .manage-services-table-root {
   max-width: 90%;
   overflow-x: auto;
-  max-height: 400px; 
+  max-height: 400px;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.save-services-btns {
+  margin: 20px;
+}
+
+@media screen and (min-width: 1025px) {
+  .manage-services-table-root {
+    max-width: 50vw;
+    margin-left: 25vw;
+    margin-right: 25vw;
+  }
 }

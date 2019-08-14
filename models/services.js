@@ -33,6 +33,7 @@ function updateService(id, query) {
 
 // D
 function removeService(id) {
+    console.log(id)
     services.deleteOne({
         "_id": ObjectId(id)
     }, (err, item) => {

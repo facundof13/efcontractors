@@ -67,7 +67,7 @@ router.post('/settings', function(req, res, next) {
 })
 
 //add service
-router.post("/services/add/:service/:residential/:commercial", function(
+router.post("/addservices", function(
   req,
   res,
   next
@@ -79,37 +79,28 @@ router.post("/services/add/:service/:residential/:commercial", function(
   // }
 
   query = {
-    Service: req.params.service,
-    Residential: Number(req.params.residential),
-    Commercial: Number(req.params.commercial)
+    Service: req.body.Service,
+    Residential: req.body.Residential,
+    Commercial: req.body.Commercial
   };
+  console.log(query)
   services.addService(query);
   res.end();
 });
 
 //delete service
-router.delete("/services/delete/:id", function(req, res, next) {
-  const id = req.params.id;
-  services.removeService(id);
+router.delete("/services", function(req, res, next) {
+  services.removeService(req.body._id);
   res.end();
 });
 
 //update service
-router.put(
-  "/services/update/:idToUpdate/:service?/:residential?/:commercial?",
+router.post(
+  "/services",
   function(req, res, next) {
-    const id = req.params.idToUpdate;
-
-    const service = req.query.service;
-    const residential = req.query.residential;
-    const commercial = req.query.commercial;
-
-    const query = {};
-    if (service) query.Service = service;
-    if (residential) query.Residential = Number(residential);
-    if (commercial) query.Commercial = Number(commercial);
-
-    services.updateService(id, query);
+    let query = {Service: req.body.Service, Residential: req.body.Residential, Commercial: req.body.Commercial }
+    console.log(query)
+    services.updateService(req.body._id, query);
     res.end();
   }
 );

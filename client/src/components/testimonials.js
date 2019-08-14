@@ -33,11 +33,10 @@ export default class Testimonials extends React.Component {
     Axios.get("/testimonials").then(res => {
       var arr = [];
       res.data.map((testimonial, i) => {
-        console.log(testimonial);
         arr.push(
-          <div>
-            <Typography key={testimonial._id} component="span">
-              <blockquote key={testimonial._id}>
+          <div key={testimonial._id}>
+            <Typography component="span">
+              <blockquote>
                 {" "}
                 {testimonial.text}{" "}
                 <span>
@@ -95,7 +94,6 @@ export default class Testimonials extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <div>
@@ -172,7 +170,7 @@ export default class Testimonials extends React.Component {
           </div>
         </div>
         <div>
-          <Typography className='small-text'>
+          <Typography className='small-text' component='span'>
             <p>
               For further references please do not hesitate to contact us.
               </p>
