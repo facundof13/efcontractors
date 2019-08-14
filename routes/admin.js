@@ -60,8 +60,20 @@ router.get("/settings", function(req, res, next) {
   });
 });
 
+router.get('/invoicesettings', function (req, res, next) {
+  settings.getInvoiceSettings().then(settings => {
+    res.json(settings[0])
+  })
+})
+
 router.post('/settings', function(req, res, next) {
   settings.updateSettings(req.body.settings)
+  // console.log(req.body.settings)
+  res.end()
+})
+
+router.post('/invoicesettings', function(req, res, next) {
+  settings.updateInvoiceSettings(req.body.settings)
   // console.log(req.body.settings)
   res.end()
 })

@@ -1,3 +1,10 @@
+var settings = require("../models/settings");
+var taxAmt = 0;
+
+settings.getInvoiceSettings().then(res => {
+  taxAmt = Number(res[0].taxAmt)
+})
+
 function renderPdf(data, cb) {
   // TODO: Refactor this function, split into multiple functions
   // TODO: Call imgUrl api from here, not from front end
@@ -51,7 +58,7 @@ function renderPdf(data, cb) {
   for (let i = 0; i < data.estimate.items.length; i++) {
     let num = data.estimate.items[i].amount;
     if (data.estimate.items[i].tax) {
-      taxes += num.replace("$", "") / 6.5; //TODO: change to dynamic variable stored in db (tax amt)
+      taxes += num.replace("$", "") / (taxAmt); //TODO: change to dynamic variable stored in db (tax amt)
     }
   }
   let grandTotal = taxes + data.estimate.total;

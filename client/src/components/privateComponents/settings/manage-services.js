@@ -40,8 +40,6 @@ export default class ManageServices extends React.Component {
   }
 
   handleChange(e, key) {
-    // TODO: push the changed arrays into a new array and only update those values...
-    // Right now, everything is updated even if it didnt change
     let index = this.state.services.findIndex(x => x._id === key);
     let copyObj = JSON.parse(JSON.stringify(this.state.services[index]));
     if (e.target.name === "Residential" || e.target.name === "Commercial") {
@@ -117,7 +115,6 @@ export default class ManageServices extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="manage-services">
         <div>
