@@ -25,7 +25,6 @@ export default class ManageServices extends React.Component {
       services: [],
       servicesToChange: [],
       loading: false,
-      show: false
     };
   }
 
@@ -109,7 +108,7 @@ export default class ManageServices extends React.Component {
       }
     });
     setTimeout(() => {
-      this.setState({ loading: false, servicesToChange: [], show: false });
+      this.setState({ loading: false, servicesToChange: [], });
       this.getServices();
     }, 1000);
   }
@@ -131,20 +130,7 @@ export default class ManageServices extends React.Component {
         </div>
 
         <div className="save-services-btns">
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() =>
-              this.setState(prevState => ({
-                show: !prevState.show
-              }))
-            }
-          >
-            {this.state.show ? "Hide" : "Show"}
-          </Button>
         </div>
-
-        {this.state.show ? (
           <div>
             <div className="save-services-btns">
               <Button
@@ -215,9 +201,6 @@ export default class ManageServices extends React.Component {
               </Button>
             </div>
           </div>
-        ) : (
-          ""
-        )}
       </div>
     );
   }
