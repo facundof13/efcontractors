@@ -31,7 +31,6 @@ export default class InvoiceSettings extends React.Component {
   }
 
   handleChange(e) {
-    console.log(e.target.name);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -50,7 +49,6 @@ export default class InvoiceSettings extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <Typography color="secondary" component="span" variant="h5">

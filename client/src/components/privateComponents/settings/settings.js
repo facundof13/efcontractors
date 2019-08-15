@@ -36,7 +36,7 @@ export default class Settings extends React.Component {
         <Typography color="secondary" component="span" variant="h4">
           <h4>Settings</h4>
         </Typography>
-        <AppBar position="static">
+        <AppBar position="static" className='tabs-bar'>
           <Tabs value={this.state.value} onChange={this.handleChange} centered={true}>
             <Tab value="one" label="Company Settings" />
             <Tab value="two" label="Invoice Settings" />
