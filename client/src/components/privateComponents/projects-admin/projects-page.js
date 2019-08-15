@@ -73,7 +73,6 @@ class ProjectsPage extends Component {
         });
       }
     } else {
-      console.log(project)
     }
   }
 

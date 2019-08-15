@@ -40,13 +40,15 @@ export default class CreateEstimate extends React.Component {
     this.removeItem = this.removeItem.bind(this);
     this.checkForm = this.checkForm.bind(this);
     this.updateItems = this.updateItems.bind(this);
-    this.filterItemsArr = this.filterItemsArr.bind(this);
+    this.resetFields = this.resetFields.bind(this);
+    // this.filterItemsArr = this.filterItemsArr.bind(this);
     this.submitInvoice = this.submitInvoice.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.fillWithSelectedCustomer = this.fillWithSelectedCustomer.bind(this);
   }
 
   componentDidMount() {
+    //load the services from db, then populate the service selectors
     this.getServices().then(() => {
       this.addItem();
     });
@@ -64,12 +66,17 @@ export default class CreateEstimate extends React.Component {
     });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    // document.getElementById("create-form").reset();
+  getServices() {
+    return new Promise((resolve, reject) => {
+      Axios.get("/admin/invoiceServices").then(res => {
+        this.setState({ services: res.data });
+        resolve();
+      });
+    });
   }
 
   getCustomers() {
+    // get available customers
     Axios.get("/admin/invoiceCustomers").then(res => {
       this.setState({ customers: res.data });
     });
@@ -88,25 +95,8 @@ export default class CreateEstimate extends React.Component {
         idToUpdate: client._id
       });
     } else {
-      this.setState({
-        clientSelected: false,
-        name: "",
-        email: "",
-        address: "",
-        cityState: "",
-        zip: "",
-        phone: ""
-      });
+      this.resetFields();
     }
-  }
-
-  getServices() {
-    return new Promise((resolve, reject) => {
-      Axios.get("/admin/invoiceServices").then(res => {
-        this.setState({ services: res.data });
-        resolve();
-      });
-    });
   }
 
   addItem() {
@@ -129,12 +119,10 @@ export default class CreateEstimate extends React.Component {
   }
 
   removeItem(date) {
-    if (this.state.itemsField.length === 1) {
-      // window.alert("Cannot remove first item");
-    } else {
+    if (this.state.itemsField.length !== 1) {
       this.setState(prevState => ({
         itemsField: prevState.itemsField.filter(function(item) {
-          return date !== item.key;
+          return String(date) !== String(item.key);
         })
       }));
     }
@@ -142,101 +130,102 @@ export default class CreateEstimate extends React.Component {
 
   updateItems(itemArr) {
     this.setState(prevState => ({
-      items: [...prevState.items, itemArr]
+      items: [
+        ...prevState.items.filter(item => {
+          return item.num !== itemArr.num;
+        }),
+        itemArr
+      ]
     }));
   }
 
-  filterItemsArr() {
-    return new Promise((resolve, reject) => {
-      var arrCopy = [...this.state.items];
-      var arrDatesunFiltered = [];
-      var arrDates = [];
-      var cleanArr = [];
-      for (let i = 0; i < arrCopy.length; i++) {
-        arrDatesunFiltered.push(arrCopy[i].num);
+  resetFields() {
+    this.setState(
+      {
+        clientSelected: false,
+        name: "",
+        address: "",
+        cityState: "",
+        zip: "",
+        expiration: "",
+        title: "",
+        email: "",
+        items: [],
+        itemsField: [],
+        itemError: "",
+        disabled: true,
+        helperText: "",
+        phone: "",
+        contractSpecs: "",
+        invoice: false,
+        attachContract: false,
+        paid: this.state.paid,
+        pdfLink: "",
+        paidDate: this.state.paidDate
+      },
+      () => {
+        this.addItem();
       }
-
-      arrDates = [...new Set(arrDatesunFiltered)];
-      for (let x = 0; x < arrDates.length; x++) {
-        for (let y = arrCopy.length - 1; y >= 0; y--) {
-          if (arrDates[x] === arrCopy[y].num) {
-            cleanArr.push(arrCopy[y]);
-            break;
-          }
-        }
-      }
-      this.setState({
-        items: cleanArr
-      });
-      resolve();
-    });
+    );
   }
 
   checkForm() {
-    this.filterItemsArr().then(() => {
-      this.setState({
-        helperText: "Required"
-      });
+    let zipOk = false;
+    let itemsOk = false;
+    let cityStateOk = false;
+    let emailOk = false;
+    let phoneOk = false;
+    let titleOk = false;
 
-      let zipOk = false;
-      let itemsOk = false;
-      let cityStateOk = false;
-      let emailOk = false;
-      let phoneOk = false;
-      let titleOk = false;
+    if (
+      this.state.name !== "" &&
+      this.state.address !== "" &&
+      this.state.cityState !== "" &&
+      this.state.zip !== "" &&
+      this.state.expiration !== "" &&
+      this.state.title !== "" &&
+      this.state.email !== "" &&
+      this.state.phone !== ""
+    ) {
+      titleOk = true;
+      if (this.state.zip.match(/^\d{5}$/)) {
+        zipOk = true;
+      }
+      if (
+        this.state.cityState.match(/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/)
+      ) {
+        cityStateOk = true;
+      }
+
+      if (this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/)) {
+        emailOk = true;
+      }
 
       if (
-        this.state.name !== "" &&
-        this.state.address !== "" &&
-        this.state.cityState !== "" &&
-        this.state.zip !== "" &&
-        this.state.expiration !== "" &&
-        this.state.title !== "" &&
-        this.state.email !== "" &&
-        this.state.phone !== ""
+        this.state.phone.match(
+          /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
+        )
       ) {
-        titleOk = true;
-        if (this.state.zip.match(/^\d{5}$/)) {
-          zipOk = true;
-        }
-        if (
-          this.state.cityState.match(
-            /([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
-          )
-        ) {
-          cityStateOk = true;
-        }
-
-        if (this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/)) {
-          emailOk = true;
-        }
-
-        if (
-          this.state.phone.match(
-            /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
-          )
-        ) {
-          phoneOk = true;
-        }
-
-        this.state.items.forEach(item => {
-          if (
-            item.itemDescription === "" ||
-            item.serviceItem === "" ||
-            item.quantity === "" ||
-            item.dollarAmount === ""
-          ) {
-            // window.alert("An item is empty/incorrect.");
-          } else {
-            itemsOk = true;
-          }
-        });
+        phoneOk = true;
       }
 
-      if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk && titleOk) {
-        this.setState({ disabled: false });
-      }
-    });
+      this.state.items.forEach(item => {
+        if (
+          item.itemDescription === "" ||
+          item.serviceItem === "" ||
+          item.quantity === "" ||
+          item.dollarAmount === ""
+        ) {
+          // window.alert("An item is empty/incorrect.");
+        } else {
+          itemsOk = true;
+        }
+      });
+    }
+
+    if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk && titleOk) {
+      this.setState({ disabled: false });
+    }
   }
 
   submitInvoice() {
@@ -245,100 +234,43 @@ export default class CreateEstimate extends React.Component {
       expirationDate.getDate() + Number(this.state.expiration)
     );
 
+    let query = {
+      expiration: expirationDate,
+      title: this.state.title,
+      items: this.state.items,
+      invoice: this.state.invoice,
+      paidDate: this.state.paidDate,
+      estimateNum: this.state.estimateNum,
+      pdfLink: this.state.pdfLink,
+      paymentSteps: this.state.paymentSteps,
+      paid: this.state.paid,
+      attachContract: this.state.attachContract,
+      contractSpecs: this.state.contractSpecs
+    };
+
     if (this.state.clientSelected) {
-      Axios.post("/admin/invoiceupdate", {
-        //post to db if selected client
-        id: this.state.idToUpdate,
-        expiration: expirationDate,
-        items: this.state.items,
-        title: this.state.title,
-        date: new Date(),
-        invoice: false,
-        attachContract: false,
-        contractSpecs: this.state.contractSpecs,
-        paymentSteps: [],
-        paid: false,
-        pdfLink: this.state.pdfLink,
-        estimateNum: this.state.estimateNum,
-        paidDate: this.state.paidDate
-      }).then(res => {
+      query.id = this.state.idToUpdate;
+      query.date = new Date();
+      Axios.post("/admin/invoiceupdate", query).then(res => {
         if (res.status === 200) {
-          Axios.post("/admin/estimateNum");
-          this.setState(
-            {
-              name: "",
-              address: "",
-              cityState: "",
-              zip: "",
-              expiration: "",
-              title: "",
-              email: "",
-              items: [],
-              itemsField: [],
-              itemError: "",
-              disabled: true,
-              helperText: "",
-              phone: "",
-              contractSpecs: "",
-              invoice: false,
-              attachContract: false,
-              paid: this.state.paid,
-              pdfLink: "",
-              paidDate: this.state.paidDate
-            },
-            () => {
-              this.addItem();
-            }
-          );
+          Axios.post("/admin/estimateNum").then(() => {
+            this.resetFields();
+          });
         }
       });
     } else {
-      Axios.post("/admin/invoice", {
-        //post to db new client and estimate
-        name: this.state.name,
-        address: this.state.address,
-        cityState: this.state.cityState,
-        zip: this.state.zip,
-        expiration: expirationDate,
-        title: this.state.title,
-        email: this.state.email,
-        items: this.state.items,
-        phone: this.state.phone,
-        dateSubmitted: new Date(),
-        contractSpecs: this.state.contractSpecs,
-        invoice: this.state.invoice,
-        attachContract: this.state.attachContract,
-        paid: this.state.paid,
-        paymentSteps: this.state.paymentSteps,
-        pdfLink: this.state.pdfLink,
-        estimateNum: this.state.estimateNum,
-        paidDate: this.state.paidDate
-      }).then(res => {
+      query.name = this.state.name;
+      query.address = this.state.address;
+      query.cityState = this.state.cityState;
+      query.zip = this.state.zip;
+      query.phone = this.state.phone;
+      query.email = this.state.email;
+      query.dateSubmitted = new Date();
+      Axios.post("/admin/invoice", query).then(res => {
         if (res.status === 200) {
-          Axios.post("/admin/estimateNum");
-          this.setState(
-            {
-              name: "",
-              address: "",
-              cityState: "",
-              zip: "",
-              expiration: "",
-              title: "",
-              email: "",
-              items: [],
-              itemsField: [],
-              itemError: "",
-              disabled: true,
-              helperText: "",
-              phone: "",
-              paid: false,
-              pdfLink: "",
-              paidDate: this.state.paidDate
-            },
-            () => {
-              this.addItem();
-            }
-          );
+          Axios.post("/admin/estimateNum").then(() => {
+            this.resetFields();
+          });
         }
       });
     }

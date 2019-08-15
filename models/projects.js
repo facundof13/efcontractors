@@ -28,7 +28,6 @@ function getProjectById(id) {
 function returnProject(query) {
   return new Promise((resolve, reject) => {
     projects.find(query).toArray((err, items) => {
-      console.log(items);
       resolve(items);
     });
   });
@@ -47,7 +46,6 @@ function findObjectsInFolder(name) {
       Prefix: `${name}/`
     };
     s3.listObjectsV2(s3params, (err, data) => {
-      console.log(data);
       resolve(false);
     });
   });
@@ -61,9 +59,6 @@ function findMatchingFolder(name) {
       Delimiter: "/"
     };
     s3.listObjectsV2(s3params, (err, data) => {
-      // console.log(data.CommonPrefixes);
-      // resolve(data.CommonPrefixes)
-      console.log(name);
       data.CommonPrefixes.forEach(item => {
         if (item.Prefix == name) resolve(true);
       });

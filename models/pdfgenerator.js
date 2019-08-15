@@ -44,11 +44,12 @@ function renderPdf(data, cb) {
   });
 
   for (let j = 0; j < data.estimate.paymentSteps.length; j++) {
+    console.log(data.estimate.paymentSteps[j].stepAmount)
     paymentSchedule.push(
       `${data.estimate.paymentSteps[j].stepName} ${
         data.estimate.paymentSteps[j].stepDescription
       } ${currencyFormatter.format(
-        Number(data.estimate.paymentSteps[j].stepAmount)
+        Number(data.estimate.paymentSteps[j].stepAmount.replace('$', ''))
       )}\n`
     );
   }
@@ -363,7 +364,7 @@ function renderPdf(data, cb) {
         alignment: "center"
       },
       {
-        text: paymentSchedule,
+        text: paymentSchedule.reverse(),
         alignment: "center"
       },
       {

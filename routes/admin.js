@@ -194,22 +194,16 @@ router.delete("/invoiceCustomerId", function(req, res, next) {
 });
 
 router.post("/invoiceupdate", function(req, res, next) {
-  let expiration = req.body.expiration;
-  let title = titleize(req.body.title);
-  let items = req.body.items;
-  let date = req.body.date;
-  let id = req.body.id;
-
   let total = 0;
-  items.forEach(item => {
+  req.body.items.forEach(item => {
     total += Number(item.amount.replace("$", "")) * Number(item.quantity);
   });
 
   let query = {
-    expiration: expiration,
-    title: title,
-    items: items,
-    date: date,
+    expiration: req.body.expiration,
+    title:  titleize(req.body.title),
+    items: req.body.items,
+    date: req.body.date,
     total: total,
     contractSpecs: req.body.contractSpecs,
     invoice: req.body.invoice,
@@ -221,7 +215,7 @@ router.post("/invoiceupdate", function(req, res, next) {
     paidDate: req.body.paidDate
   };
 
-  invoices.addEstimateToCustomer(id, query);
+  invoices.addEstimateToCustomer(req.body.id, query);
   res.end();
 });
 

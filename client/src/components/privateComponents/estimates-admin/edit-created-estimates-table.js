@@ -315,7 +315,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
       ) {
         window.alert("Incorrect step");
       } else {
-        this.setState({ open: false }, () => console.log(this.state));
+        this.setState({ open: false });
       }
     });
     if (this.state.paymentSteps.length === 0) {

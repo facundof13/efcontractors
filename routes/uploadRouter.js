@@ -78,7 +78,6 @@ router.post("/multiple-file-upload", (req, res) => {
         // If Success
         //add each file to project user's db
         for (let i = 0; i < fileUrls.length; i++) {
-          console.log(fileUrls[i]);
           projects.updateImagesSrc(name, fileUrls[i])
         }
         fileUrls = []
