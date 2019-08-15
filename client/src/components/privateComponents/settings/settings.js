@@ -1,21 +1,15 @@
 import React from "react";
 import {
   Typography,
-  Divider,
   Tabs,
   Tab,
   AppBar,
-  TabPanel
 } from "@material-ui/core";
 import CompanyInformation from "./company-information";
 import ManageServices from "./manage-services";
 import InvoiceSettings from "./invoice-settings";
 
-const values = {
-  "COMPANY SETTINGS": "one",
-  "INVOICE SETTINGS": "two",
-  "MANAGE SERVICES": "three"
-};
+
 export default class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -47,19 +41,6 @@ export default class Settings extends React.Component {
         {this.state.value === "one" ? <CompanyInformation /> : ""}
         {this.state.value === "two" ? <InvoiceSettings /> : ""}
         {this.state.value === "three" ? <ManageServices /> : ""}
-
-        {/* 
-        <TabPanel value={this.state.value} index='one'>Company Settings</TabPanel>
-        <TabPanel value={this.state.value} index='one'>Invoice Settings</TabPanel>
-        <TabPanel value={this.state.value} index='one'>Manage Services</TabPanel> */}
-
-        {/* <Divider className='divider' />
-        <CompanyInformation />
-        <Divider className='divider' />
-        <InvoiceSettings />
-        <Divider className='divider' />
-        <ManageServices />
-        <Divider className='divider' /> */}
       </div>
     );
   }
