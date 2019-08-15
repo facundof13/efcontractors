@@ -46,10 +46,6 @@ body {
   box-shadow: 0px -2px 3px 0px rgba(0, 0, 0, 0.75);
 }
 
-.yellow {
-  color: #ffff00;
-}
-
 .login input {
   color: #ffff00 !important;
 }
@@ -267,17 +263,18 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .income-column {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .income-column * .MuiInputBase-root {
-  width: 30vw;
+  width: 10vw;
 }
 
 .logo-img {
   width: 300px;
   height: 200px;
+  margin: 10px;
 }
 
 .testimonials-grid {
@@ -290,7 +287,7 @@ blockquote {
   width: 60%;
   margin: 25px auto;
   font-style: italic;
-  color: #ffff00;
+  color: #e0e0e0;
   padding: 1.2em 30px 1.2em 40px;
   border-left: 8px solid #212121;
   line-height: 1.6;
@@ -493,4 +490,18 @@ h5 {
     color: #e0e0e0;
     margin-left: 5vw;
   }
+}
+
+.MuiCard-root {
+  width: 345px;
+  margin: 10px;
+}
+.project-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.project-card * {
+  color: black !important;
 }

@@ -117,11 +117,11 @@ export default class MonthlyIncome extends React.Component {
           </p>
         </Typography>
 
-        <Typography component="span" variant="subtitle1">
-          <p className="yellow">Income for month:</p>
-        </Typography>
 
         <div className="income-column">
+        <Typography component="span" variant="subtitle1" color='secondary'>
+          <p>Income for month:</p>
+        </Typography>
           <FormControl>
             <InputLabel htmlFor="income-month">Month</InputLabel>
             <Select
