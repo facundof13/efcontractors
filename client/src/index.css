@@ -506,9 +506,21 @@ h5 {
   color: black !important;
 }
 
-.big-image {
+/* .big-image {
   width: 640px;
   height: 480px;
+} */
+@media screen and (min-width: 641px) {
+  .big-image {
+    width: 640px;
+    height: 480px;
+  }
+}
+@media screen and (max-width: 640px) {
+  .big-image {
+    width: 75%;
+    height: 57%;
+  }
 }
 
 .small-images-container {
@@ -516,6 +528,9 @@ h5 {
   flex-direction: row;
   justify-content: center;
   margin: 10px;
+  overflow-x: auto;
+  width: 80%;
+  margin-left: 10%;
 }
 
 .small-images {
@@ -536,4 +551,8 @@ h5 {
 
 .expanded-project .MuiIconButton-root {
   background-color: transparent !important;
+}
+
+.arrow-right {
+  margin-right: -20px;
 }

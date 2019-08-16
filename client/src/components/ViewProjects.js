@@ -31,10 +31,6 @@ export default class Viewprojects extends React.Component {
     this.getAllProjects();
   }
 
-  handleArrows(k) {
-    console.log(k);
-  }
-
   getAllProjects() {
     axios.get("/projects").then(res => this.setState({ projects: res.data }));
   }
@@ -57,7 +53,6 @@ export default class Viewprojects extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">
