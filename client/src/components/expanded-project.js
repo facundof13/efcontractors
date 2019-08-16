@@ -74,6 +74,7 @@ export default class ExpandedProject extends React.Component {
 
         <Divider className=".top" />
 
+        {/* TODO: sort videos to beginning of array */}
         <div>
         <Button
             variant="outlined"
