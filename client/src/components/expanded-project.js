@@ -1,5 +1,7 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, IconButton, Divider } from "@material-ui/core";
+import ArrowForward from "@material-ui/icons/ArrowForward";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
@@ -10,6 +12,7 @@ export default class ExpandedProject extends React.Component {
     this.handleArrows = this.handleArrows.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
     this.gotoPrev = this.gotoPrev.bind(this);
+    this.gotoThumb = this.gotoThumb.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +53,21 @@ export default class ExpandedProject extends React.Component {
       this.props.closeProject();
     }
   }
+
+  gotoThumb(img) {
+    let index = 0;
+    for(let i = 0; i < this.props.project.images.length; i++ ){
+      if(this.props.project.images[i] === img) {
+        index = i;
+      }
+    }
+    // console.log(this.props.project.images.find((img, i) => {
+    //   return img === img ? i : 'none'
+    // }))
+    this.setState({
+      photoIndex: index})
+  }
+
   render() {
     console.log(this.props);
     return (
@@ -58,7 +76,16 @@ export default class ExpandedProject extends React.Component {
           <h5>{this.props.project.name + " " + this.props.project.location}</h5>
         </Typography>
 
+        <Divider className='.top' />
+
         <div className="expanded-project">
+          <IconButton
+          color='secondary'
+            onClick={this.gotoPrev}
+              disableRipple={true}
+            >
+            <ArrowBack />
+          </IconButton>
           {this.props.project.images[this.state.photoIndex]
             .slice(-4)
             .match(/(.mp4)|(.mov)|(.m4v)/) ? (
@@ -76,15 +103,31 @@ export default class ExpandedProject extends React.Component {
               className="big-image"
             />
           )}
-          <Typography component="p" variant="caption" color="secondary">
-            {this.state.photoIndex + 1}/{this.props.project.images.length}
-          </Typography>
+          <IconButton
+            onClick={this.gotoNext}
+            color='secondary'
+              disableRipple={true}
+            >
+            <ArrowForward />
+          </IconButton>
+        </div>
+        <Typography component="p" variant="caption" color="secondary">
+          {this.state.photoIndex + 1}/{this.props.project.images.length}
+        </Typography>
+        <div className="small-images-container">
           {this.props.project.images.map(img => {
-              {console.log(img)}
-              return (
-                  <div key={img}>
-                      </div>
-              )
+            {
+              console.log(img);
+            }
+            return (
+              <div className="small-images" key={img}>
+                {img.slice(-4) === ".mp4" ? (
+                  <video src={img} onClick={() => {this.gotoThumb(img)}} width="100px" height="100px" />
+                ) : (
+                  <img src={img} onClick={() => {this.gotoThumb(img)}} width="100px" height="100px" />
+                )}
+              </div>
+            );
           })}
         </div>
       </div>

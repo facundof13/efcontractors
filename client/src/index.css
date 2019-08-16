@@ -171,7 +171,7 @@ ul {
   margin: 20px;
 }
 .top {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 
 .quantity-amount-width {
@@ -509,4 +509,31 @@ h5 {
 .big-image {
   width: 640px;
   height: 480px;
+}
+
+.small-images-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 10px;
+}
+
+.small-images {
+  margin: 5px;
+}
+
+.expanded-project {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.expanded-project .MuiIconButton-root {
+  /* flex-grow: 2;
+  margin-right: 90%; */
+}
+
+.expanded-project .MuiIconButton-root {
+  background-color: transparent !important;
 }
