@@ -505,3 +505,8 @@ h5 {
 .project-card * {
   color: black !important;
 }
+
+.big-image {
+  width: 640px;
+  height: 480px;
+}
