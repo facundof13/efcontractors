@@ -3,17 +3,20 @@ import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import { Card, CardHeader, CardMedia, CardActionArea } from "@material-ui/core";
 
+
 export default class Viewprojects extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { projects: [], selected: {} };
+    this.state = {
+      projects: [],
+      selected: {},
+      photoIndex: 0,
+      open: false,
+      data: ""
+    };
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAllProjects = this.getAllProjects.bind(this);
-  }
-
-  componentDidMount() {
-    this.getAllProjects();
   }
 
   getAllProjects() {
@@ -21,11 +24,11 @@ export default class Viewprojects extends React.Component {
   }
 
   showProject(project) {
-    this.setState({ selected: project });
+    this.setState({ selected: project, open: true }, this.createObject);
   }
 
   render() {
-    console.log(this.state);
+    console.log(this.state)
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">
@@ -59,7 +62,7 @@ export default class Viewprojects extends React.Component {
             ))}
           </div>
         )}
-      </div>
+    </div>
     );
   }
 }
