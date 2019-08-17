@@ -8,8 +8,8 @@ import {
 } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
-import { useSwipeable, Swipeable } from "react-swipeable";
-import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
+import { Swipeable } from "react-swipeable";
+
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
@@ -125,12 +125,13 @@ export default class ExpandedProject extends React.Component {
             {this.props.project.images[this.state.photoIndex]
               .slice(-4)
               .match(/(.mp4)|(.mov)|(.m4v)/) ? (
-              <video
-                controls
+                <video
+                src={this.props.project.images[this.state.photoIndex]}
                 className="big-image"
+                // playsInline
+                controls
                 type="video/mp4"
                 id="myVid"
-                src={this.props.project.images[this.state.photoIndex]}
                 key={this.props.project.images[this.state.photoIndex]}
               />
             ) : (

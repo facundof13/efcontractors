@@ -510,6 +510,7 @@ h5 {
   width: 640px;
   height: 480px;
 } */
+
 @media screen and (min-width: 641px) {
   .big-image {
     width: 640px;

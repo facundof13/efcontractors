@@ -11,20 +11,21 @@ import {
 import ExpandedProject from "./expanded-project";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+
 export default class Viewprojects extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       projects: [],
       selected: {},
-      elemArr: '',
+      elemArr: "",
       open: false
     };
     this.render = this.render.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getAllProjects = this.getAllProjects.bind(this);
     this.closeProject = this.closeProject.bind(this);
-    this.showProject = this.showProject.bind(this)
+    this.showProject = this.showProject.bind(this);
   }
 
   componentDidMount() {
@@ -36,15 +37,21 @@ export default class Viewprojects extends React.Component {
   }
 
   showProject(project) {
-    let arr = []
+    let arr = [];
     this.setState({ selected: project, open: true }, () => {
       this.state.selected.images.map(img => {
-        let item = (<div>
-          {img.slice(-4) === '.mp4' ? (<iframe width="560" height="315" src={img} />) : (<img src={img} />)}
-        </div>)
-        arr = [...arr, item]
+        let item = (
+          <div>
+            {img.slice(-4) === ".mp4" ? (
+              <iframe width="560" height="315" src={img} />
+            ) : (
+              <img src={img} />
+            )}
+          </div>
+        );
+        arr = [...arr, item];
       });
-      this.setState({elemArr: arr})
+      this.setState({ elemArr: arr });
     });
   }
 
@@ -53,6 +60,9 @@ export default class Viewprojects extends React.Component {
   }
 
   render() {
+    if (this.state.selected.images) {
+      console.log(this.state.selected.images[0]);
+    }
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">
@@ -92,18 +102,19 @@ export default class Viewprojects extends React.Component {
             )}
           </div>
         )}
-        {/* {this.state.open && (
+        {this.state.open && (
           <div className="carousel">
-            <Carousel
-              dynamicHeight={true}
-              width="90vw"
-              useKeyboardArrows={true}
-            >
-              {this.state.elemArr}
+            <Carousel showThumbs={false}>
+              <div>
+                <video
+                  controls
+                  src="https://efcontractors.s3.us-east-2.amazonaws.com/5d5873135f5c87cd54f4708c/test-1566077722306.mp4"
+                />
+              </div>
             </Carousel>
           </div>
-        )} */}
-        {this.state.open && this.state.selected.images.length > 0 && <ExpandedProject project={this.state.selected} closeProject={this.closeProject} />}
+        )}
+        {/* {this.state.open && this.state.selected.images.length > 0 && <ExpandedProject project={this.state.selected} closeProject={this.closeProject} />} */}
       </div>
     );
   }
