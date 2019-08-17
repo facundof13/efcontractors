@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch } from "react-router-dom";
+import Favicon from 'react-favicon';
 
 // components
 import LoginForm from "./components/login-form";
@@ -66,6 +67,7 @@ class App extends Component {
   render() {
     return this.state.finished ? (
       <div className="App">
+        <Favicon url="https://efcontractors.s3.us-east-2.amazonaws.com/favicon.ico" />
         <div>
           <Navbar updateUser={this.updateUser} loggedIn={this.state.loggedIn} />
           {/* Routes to different components */}

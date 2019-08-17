@@ -528,13 +528,11 @@ h5 {
   flex-direction: row;
   justify-content: center;
   margin: 10px;
-  overflow-x: auto;
-  width: 80%;
-  margin-left: 10%;
+  overflow: auto;
 }
 
 .small-images {
-  margin: 5px;
+margin: 5px;
 }
 
 .expanded-project {
@@ -557,8 +555,28 @@ h5 {
   margin-right: -20px;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 735px) {
   .arrow {
     display: none;
+  }
+}
+
+@media screen and (min-width: 735px) {
+  .arrow {
+    width: 100%;
+  }
+  .arrow .MuiButtonBase-root{
+    align-self: center;
+    flex-grow: 2;
+    height: 100%;
+    width: 100%;
+  }
+
+  .arrow-right {
+    justify-content: flex-start !important;
+  }
+
+  .arrow-left {
+    justify-content: flex-end !important;
   }
 }
