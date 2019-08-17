@@ -518,8 +518,8 @@ h5 {
 }
 @media screen and (max-width: 640px) {
   .big-image {
-    width: 75%;
-    height: 57%;
+    width: 98vw;
+    height: auto;
   }
 }
 
@@ -555,4 +555,10 @@ h5 {
 
 .arrow-right {
   margin-right: -20px;
+}
+
+@media screen and (max-width: 640px) {
+  .arrow {
+    display: none;
+  }
 }

@@ -127,6 +127,7 @@ export default class CustomerEstimateTable extends React.Component {
       var x = window.open();
       x.document.getElementsByTagName("html")[0].style =
         "overflow: hidden; margin-bottom:20px;";
+        // TODO: Fix popups causing crash on safari
       var iframe = x.document.createElement("iframe");
       iframe.width = "100%";
       iframe.height = "98%";

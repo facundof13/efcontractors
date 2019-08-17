@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, IconButton, Divider, Button } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
+import { useSwipeable, Swipeable } from 'react-swipeable'
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
@@ -86,6 +87,8 @@ export default class ExpandedProject extends React.Component {
           </Button>
         </div>
         <div className="expanded-project">
+          <div
+          className='arrow'>
           <IconButton
             color="secondary"
             onClick={this.gotoPrev}
@@ -94,12 +97,18 @@ export default class ExpandedProject extends React.Component {
           >
             <ArrowBack />
           </IconButton>
+          </div>
+          {/* TODO: fix video icon not showing on ios */}
+          <Swipeable
+          onSwipedRight={this.gotoPrev}
+          onSwipedLeft={this.gotoNext}>
           {this.props.project.images[this.state.photoIndex]
             .slice(-4)
             .match(/(.mp4)|(.mov)|(.m4v)/) ? (
             <video
               controls
               className="big-image"
+              type="video/mp4"
               src={this.props.project.images[this.state.photoIndex]}
               key={this.props.project.images[this.state.photoIndex]}
             />
@@ -111,6 +120,8 @@ export default class ExpandedProject extends React.Component {
               className="big-image"
             />
           )}
+          </Swipeable>
+          <div className='arrow'>
           <IconButton
             onClick={this.gotoNext}
             color="secondary"
@@ -119,6 +130,7 @@ export default class ExpandedProject extends React.Component {
           >
             <ArrowForward />
           </IconButton>
+          </div>
         </div>
         <Typography component="p" variant="caption" color="secondary">
           {this.state.photoIndex + 1}/{this.props.project.images.length}
