@@ -25,6 +25,7 @@ class ProjectsUpload extends Component {
     // If file selected
     if (selectedFiles) {
       for (let i = 0; i < selectedFiles.length; i++) {
+        console.log(selectedFiles[i].type)
         data.append(
           "galleryImage",
           selectedFiles[i],
