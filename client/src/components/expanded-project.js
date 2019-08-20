@@ -15,6 +15,9 @@ export default class ExpandedProject extends React.Component {
   constructor(props) {
     super(props);
 
+
+    // TODO: bring all videos to beginning of array
+    // will make sorting thumbails easier maybe??
     this.state = {
       photoIndex: 0,
       videoThumbs: [],
