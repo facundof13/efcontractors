@@ -77,18 +77,18 @@ class ProjectsUpload extends Component {
       // Array.from(selectedFiles).forEach((file, i) => {
       let mp4Avail = false;
       for (let file of Array.from(selectedFiles)) {
-        if (file.name.slice(-4).includes(".mp4")) {
+        if (file.name.toLowerCase().slice(-4).includes(".mp4")) {
           mp4Avail = true;
         }
       }
       if (mp4Avail) {
         for (let file of Array.from(selectedFiles)) {
-          if (file.name.slice(-4).includes(".mp4")) {
+          if (file.name.toLowerCase().slice(-4).includes(".mp4")) {
             this.takeScreenshot(file).then(uri => {
               data.append(
                 "galleryImage",
                 this.dataURItoBlob(uri),
-                file.name.replace(".mp4", "thumb.jpg")
+                file.name.toLowerCase().replace(".mp4", "thumb.jpg")
               );
               resolve();
             });
@@ -109,7 +109,7 @@ class ProjectsUpload extends Component {
         data.append(
           "galleryImage",
           selectedFiles[i],
-          selectedFiles[i].name.replace(/\s/g, "")
+          selectedFiles[i].name.toLowerCase().replace(/\s/g, "")
         );
       }
       if (this.state.selectedFiles.length > 30) {
