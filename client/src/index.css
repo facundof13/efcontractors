@@ -525,15 +525,34 @@ h5 {
 }
 
 .small-images-container {
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row;  */
+   /* flex-wrap: wrap;  */
+   white-space: nowrap;
   justify-content: center;
-  margin: 10px;
   overflow: auto;
+  height: 105px;
+  width: 70vw;
+  margin-left: 15vw;
+  margin-right: 15vw;
 }
 
 .small-images {
-margin: 5px;
+  display: inline-block;
+}
+
+.small-images img {
+  width: 100px;
+  height: 100px;
+}
+
+.small-images video {
+  width: 100px;
+  height: 100px;
+}
+
+.small-images {
+  margin: 5px;
 }
 
 .expanded-project {
@@ -566,7 +585,7 @@ margin: 5px;
   .arrow {
     width: 100%;
   }
-  .arrow .MuiButtonBase-root{
+  .arrow .MuiButtonBase-root {
     align-self: center;
     flex-grow: 2;
     height: 100%;

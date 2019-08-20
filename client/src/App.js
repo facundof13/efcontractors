@@ -28,12 +28,12 @@ class App extends Component {
     this.getUser();
     this.state = {
       // Disable these for testing
-      loggedIn: false,
-      finished: false
+      // loggedIn: false,
+      // finished: false
 
       //Enable these when testing
-      // loggedIn: true,
-      // finished: true,
+      loggedIn: true,
+      finished: true,
     };
 
     this.getUser = this.getUser.bind(this);
@@ -52,16 +52,16 @@ class App extends Component {
 
   getUser() {
     // Disable here for testing
-    axios.get("/user").then(response => {
-      if (response.data) {
-        this.setState({
-          loggedIn: true,
-          finished: true
-        });
-      } else {
-        this.setState({ loggedIn: false, finished: true });
-      }
-    });
+    // axios.get("/user").then(response => {
+    //   if (response.data) {
+    //     this.setState({
+    //       loggedIn: true,
+    //       finished: true
+    //     });
+    //   } else {
+    //     this.setState({ loggedIn: false, finished: true });
+    //   }
+    // });
   }
 
   render() {

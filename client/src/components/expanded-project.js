@@ -10,12 +10,11 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { Swipeable } from "react-swipeable";
 
-
 export default class ExpandedProject extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { photoIndex: 0 };
+    this.state = { photoIndex: 0, videoThumbs: [] };
 
     this.handleArrows = this.handleArrows.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
@@ -25,6 +24,7 @@ export default class ExpandedProject extends React.Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleArrows, false);
+    // this.takeScreenshot();
   }
 
   componentWillUnmount() {
@@ -73,21 +73,47 @@ export default class ExpandedProject extends React.Component {
     });
   }
 
-  // TODO: Fix videos, fix styling of scrollable container under
+  takeScreenshot() {
+    let images = this.props.project.images;
+    images.forEach((img, i) => {
+      if (img.slice(-4).match(".mp4")) {
+        var video = document.createElement("video");
+        video.src = img;
+        video.crossOrigin='anonymous'
+        // video.muted = true;
+        video.play();
+
+        var canvas = document.createElement("canvas");
+        canvas.width = 100;
+        canvas.height = 100;
+
+        //convert to desired file format
+        setTimeout(() => {
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          var dataURI = canvas.toDataURL("image/jpeg"); // can also use 'image/png'
+          video.pause();
+          console.log(dataURI);
+        }, 1000);
+      }
+    });
+    // return new Promise((resolve, reject) => {
+    //     resolve(dataURI)
+    // })
+  }
 
   extractFrame(video, canvas, offset) {
     return new Promise((resolve, reject) => {
       video.onseeked = event => {
-        var ctx = canvas.getContext('2d');
+        var ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
-          resolve({offset: offset, imgUrl: canvas.toDataURL() , blob: blob});
+          resolve({ offset: offset, imgUrl: canvas.toDataURL(), blob: blob });
         }, "image/png");
       };
       video.currentTime = offset;
     });
-  };
-
+  }
 
   render() {
     return (
@@ -125,7 +151,7 @@ export default class ExpandedProject extends React.Component {
             {this.props.project.images[this.state.photoIndex]
               .slice(-4)
               .match(/(.mp4)|(.mov)|(.m4v)/) ? (
-                <video
+              <video
                 src={this.props.project.images[this.state.photoIndex]}
                 className="big-image"
                 // playsInline
@@ -163,8 +189,8 @@ export default class ExpandedProject extends React.Component {
               <div className="small-images" key={img}>
                 <ButtonBase>
                   {img.slice(-4) === ".mp4" ? (
-                    <video
-                      src={img}
+                    <img
+                      src='https://efcontractors.s3.us-east-2.amazonaws.com/video.jpg'
                       onClick={() => {
                         this.gotoThumb(img);
                       }}

@@ -36,14 +36,15 @@ export default class Viewprojects extends React.Component {
     axios.get("/projects").then(res => this.setState({ projects: res.data }));
   }
 
+
   showProject(project) {
     let arr = [];
     this.setState({ selected: project, open: true }, () => {
       this.state.selected.images.map(img => {
         let item = (
-          <div>
+          <div key='img'>
             {img.slice(-4) === ".mp4" ? (
-              <iframe width="560" height="315" src={img} />
+              <video controls src={img} />
             ) : (
               <img src={img} />
             )}
@@ -61,7 +62,6 @@ export default class Viewprojects extends React.Component {
 
   render() {
     if (this.state.selected.images) {
-      console.log(this.state.selected.images[0]);
     }
     return (
       <div>
@@ -102,19 +102,20 @@ export default class Viewprojects extends React.Component {
             )}
           </div>
         )}
-        {this.state.open && (
+        {/* {this.state.open && (
           <div className="carousel">
-            <Carousel showThumbs={false}>
-              <div>
+            <Carousel dynamicHeight={true} showThumbs={false}>
+              {this.state.elemArr}
+              {<div>
                 <video
                   controls
                   src="https://efcontractors.s3.us-east-2.amazonaws.com/5d5873135f5c87cd54f4708c/test-1566077722306.mp4"
                 />
-              </div>
+              </div>}
             </Carousel>
           </div>
-        )}
-        {/* {this.state.open && this.state.selected.images.length > 0 && <ExpandedProject project={this.state.selected} closeProject={this.closeProject} />} */}
+        )} */}
+        {this.state.open && this.state.selected.images.length > 0 && <ExpandedProject project={this.state.selected} closeProject={this.closeProject} />}
       </div>
     );
   }
