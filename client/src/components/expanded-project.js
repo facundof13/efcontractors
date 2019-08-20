@@ -9,6 +9,7 @@ import {
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { Swipeable } from "react-swipeable";
+import FadeIn from 'react-fade-in';
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
@@ -35,11 +36,9 @@ export default class ExpandedProject extends React.Component {
     var newProjects = this.state.project.images.filter(item => {
       return !item.includes("thumb");
     });
-    console.log(thumbArray)
-    console.log(newProjects)
-    let newProject = JSON.parse(JSON.stringify(this.state.project))
-    newProject.images = [...newProjects]
-    this.setState({project: newProject, videoThumbs: [...thumbArray]})
+    let newProject = JSON.parse(JSON.stringify(this.state.project));
+    newProject.images = [...newProjects];
+    this.setState({ project: newProject, videoThumbs: [...thumbArray] });
   }
 
   componentWillUnmount() {
@@ -108,7 +107,6 @@ export default class ExpandedProject extends React.Component {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           var dataURI = canvas.toDataURL("image/jpeg"); // can also use 'image/png'
           video.pause();
-          console.log(dataURI);
         }, 1000);
       }
     });
@@ -131,7 +129,7 @@ export default class ExpandedProject extends React.Component {
   }
 
   render() {
-    console.log(this.state);
+
     return (
       <div>
         <Typography color="secondary" component="span" variant="h5">
@@ -167,24 +165,31 @@ export default class ExpandedProject extends React.Component {
             {this.state.project.images[this.state.photoIndex]
               .slice(-4)
               .match(/(.mp4)|(.mov)|(.m4v)/) ? (
-              <video
-                src={this.state.project.images[this.state.photoIndex]}
-                className="big-image"
-                // playsInline
-                controls
-                type="video/mp4"
-                id="myVid"
-                key={this.state.project.images[this.state.photoIndex]}
-                poster={this.state.videoThumbs[this.state.photoIndex % this.state.videoThumbs.length]}
-
-              />
+                <div className='fade-in'>
+                  <video
+                    src={this.state.project.images[this.state.photoIndex]}
+                    className="big-image"
+                    // playsInline
+                    controls
+                    type="video/mp4"
+                    id="myVid"
+                    key={this.state.project.images[this.state.photoIndex]}
+                    poster={
+                      this.state.videoThumbs[
+                        this.state.photoIndex % this.state.videoThumbs.length
+                      ]
+                    }
+                  />
+                </div>
             ) : (
-              <img
-                key={this.state.project.images[this.state.photoIndex]}
-                src={this.state.project.images[this.state.photoIndex]}
-                alt=""
-                className="big-image"
-              />
+              <div className='fade-in'>
+                <img
+                  key={this.state.project.images[this.state.photoIndex]}
+                  src={this.state.project.images[this.state.photoIndex]}
+                  alt=""
+                  className="big-image"
+                />
+              </div>
             )}
           </Swipeable>
           <div className="arrow">
@@ -208,7 +213,11 @@ export default class ExpandedProject extends React.Component {
                 <ButtonBase>
                   {img.slice(-4) === ".mp4" ? (
                     <img
-                      src={this.state.videoThumbs[i % this.state.videoThumbs.length]}
+                      src={
+                        this.state.videoThumbs[
+                          i % this.state.videoThumbs.length
+                        ]
+                      }
                       onClick={() => {
                         this.gotoThumb(img);
                       }}
