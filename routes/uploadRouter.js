@@ -33,6 +33,7 @@ function checkFileType(file, cb) {
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   // Check mime
   const mimetype = filetypes.test(file.mimetype);
+  console.log(`extname: ${path.extname(file.originalname).toLowerCase()}}`);
   if (mimetype && extname) {
     return cb(null, true);
   } else {
@@ -60,7 +61,7 @@ const uploadsBusinessGallery = multer({
       cb(null, fullpath);
     }
   }),
-  limits: { fileSize: 524288000 }, // In bytes: 2000000 bytes = 2 MB
+  limits: { fileSize: 524288000 },
   fileFilter: function(req, file, cb) {
     checkFileType(file, cb);
   }
@@ -78,9 +79,9 @@ router.post("/multiple-file-upload", (req, res) => {
         // If Success
         //add each file to project user's db
         for (let i = 0; i < fileUrls.length; i++) {
-          projects.updateImagesSrc(name, fileUrls[i])
+          projects.updateImagesSrc(name, fileUrls[i]);
         }
-        fileUrls = []
+        fileUrls = [];
         let fileArray = req.files,
           fileLocation;
         const galleryImgLocationArray = [];

@@ -14,7 +14,11 @@ export default class ExpandedProject extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { photoIndex: 0, videoThumbs: [] };
+    this.state = {
+      photoIndex: 0,
+      videoThumbs: [],
+      project: JSON.parse(JSON.stringify(this.props.project))
+    };
 
     this.handleArrows = this.handleArrows.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
@@ -24,7 +28,18 @@ export default class ExpandedProject extends React.Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleArrows, false);
-    // this.takeScreenshot();
+    var thumbArray = this.state.project.images.filter(item => {
+      return item.includes("thumb");
+    });
+
+    var newProjects = this.state.project.images.filter(item => {
+      return !item.includes("thumb");
+    });
+    console.log(thumbArray)
+    console.log(newProjects)
+    let newProject = JSON.parse(JSON.stringify(this.state.project))
+    newProject.images = [...newProjects]
+    this.setState({project: newProject, videoThumbs: [...thumbArray]})
   }
 
   componentWillUnmount() {
@@ -33,15 +48,15 @@ export default class ExpandedProject extends React.Component {
 
   gotoNext() {
     this.setState(prevState => ({
-      photoIndex: (prevState.photoIndex + 1) % this.props.project.images.length
+      photoIndex: (prevState.photoIndex + 1) % this.state.project.images.length
     }));
   }
 
   gotoPrev() {
     this.setState(prevState => ({
       photoIndex:
-        (prevState.photoIndex + this.props.project.images.length - 1) %
-        this.props.project.images.length
+        (prevState.photoIndex + this.state.project.images.length - 1) %
+        this.state.project.images.length
     }));
   }
 
@@ -63,8 +78,8 @@ export default class ExpandedProject extends React.Component {
 
   gotoThumb(img) {
     let index = 0;
-    for (let i = 0; i < this.props.project.images.length; i++) {
-      if (this.props.project.images[i] === img) {
+    for (let i = 0; i < this.state.project.images.length; i++) {
+      if (this.state.project.images[i] === img) {
         index = i;
       }
     }
@@ -74,18 +89,18 @@ export default class ExpandedProject extends React.Component {
   }
 
   takeScreenshot() {
-    let images = this.props.project.images;
+    let images = this.state.project.images;
     images.forEach((img, i) => {
       if (img.slice(-4).match(".mp4")) {
         var video = document.createElement("video");
         video.src = img;
-        video.crossOrigin='anonymous'
+        video.crossOrigin = "anonymous";
         // video.muted = true;
         video.play();
 
         var canvas = document.createElement("canvas");
-        canvas.width = 100;
-        canvas.height = 100;
+        canvas.width = 640;
+        canvas.height = 480;
 
         //convert to desired file format
         setTimeout(() => {
@@ -116,10 +131,11 @@ export default class ExpandedProject extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div>
         <Typography color="secondary" component="span" variant="h5">
-          <h5>{this.props.project.name + " " + this.props.project.location}</h5>
+          <h5>{this.state.project.name + " " + this.state.project.location}</h5>
         </Typography>
 
         <Divider className=".top" />
@@ -148,22 +164,24 @@ export default class ExpandedProject extends React.Component {
           </div>
           {/* TODO: fix video icon not showing on ios */}
           <Swipeable onSwipedRight={this.gotoPrev} onSwipedLeft={this.gotoNext}>
-            {this.props.project.images[this.state.photoIndex]
+            {this.state.project.images[this.state.photoIndex]
               .slice(-4)
               .match(/(.mp4)|(.mov)|(.m4v)/) ? (
               <video
-                src={this.props.project.images[this.state.photoIndex]}
+                src={this.state.project.images[this.state.photoIndex]}
                 className="big-image"
                 // playsInline
                 controls
                 type="video/mp4"
                 id="myVid"
-                key={this.props.project.images[this.state.photoIndex]}
+                key={this.state.project.images[this.state.photoIndex]}
+                poster={this.state.videoThumbs[this.state.photoIndex % this.state.videoThumbs.length]}
+
               />
             ) : (
               <img
-                key={this.props.project.images[this.state.photoIndex]}
-                src={this.props.project.images[this.state.photoIndex]}
+                key={this.state.project.images[this.state.photoIndex]}
+                src={this.state.project.images[this.state.photoIndex]}
                 alt=""
                 className="big-image"
               />
@@ -181,16 +199,16 @@ export default class ExpandedProject extends React.Component {
           </div>
         </div>
         <Typography component="p" variant="caption" color="secondary">
-          {this.state.photoIndex + 1}/{this.props.project.images.length}
+          {this.state.photoIndex + 1}/{this.state.project.images.length}
         </Typography>
         <div className="small-images-container">
-          {this.props.project.images.map(img => {
+          {this.state.project.images.map((img, i) => {
             return (
               <div className="small-images" key={img}>
                 <ButtonBase>
                   {img.slice(-4) === ".mp4" ? (
                     <img
-                      src='https://efcontractors.s3.us-east-2.amazonaws.com/video.jpg'
+                      src={this.state.videoThumbs[i % this.state.videoThumbs.length]}
                       onClick={() => {
                         this.gotoThumb(img);
                       }}

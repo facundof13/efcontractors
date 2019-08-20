@@ -28,26 +28,66 @@ class ProjectsUpload extends Component {
       video.src = url;
       // video.muted = true;
       video.play();
-  
+
       var canvas = document.createElement("canvas");
-      canvas.width = 100;
-      canvas.height = 100;
-      
+      canvas.width = 640;
+      canvas.height = 480;
+
       //convert to desired file format
       setTimeout(() => {
         var ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         var dataURI = canvas.toDataURL("image/jpeg"); // can also use 'image/png'
-        URL.revokeObjectURL(url)
-        video.pause()
-        resolve(dataURI)
+        URL.revokeObjectURL(url);
+        video.pause();
+        resolve(dataURI);
       }, 1000);
-    })
+    });
+  }
+  dataURItoBlob(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = atob(dataURI.split(',')[1]);
+  
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+  
+    // create a view into the buffer
+    var ia = new Uint8Array(ab);
+  
+    // set the bytes of the buffer to the correct values
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+  
+    // write the ArrayBuffer to a blob, and you're done
+    var blob = new Blob([ab], {type: mimeString});
+    return blob;
+  
   }
 
+  getThumbnails(selectedFiles, data) {
+    return new Promise((resolve, reject) => {
+      // console.log(selectedFiles)
+      // Array.from(selectedFiles).forEach((file, i) => {
+        for (let file of Array.from(selectedFiles)) {
+        if (file.name.slice(-4).includes('.mp4')) {
+          this.takeScreenshot(file)
+          .then((uri) => {
+            data.append('galleryImage', this.dataURItoBlob(uri), file.name.replace('.mp4', 'thumb.jpg'))
+            resolve()
+          })
+        }
+      }
+      resolve()
+    });
+  }
 
   multipleFileUploadHandler = () => {
-    const data = new FormData();
+    var data = new FormData();
     let selectedFiles = this.state.selectedFiles;
     // If file selected
     if (selectedFiles) {
@@ -64,7 +104,7 @@ class ProjectsUpload extends Component {
         this.setState({
           uploading: true
         });
-        setTimeout(() => {
+        this.getThumbnails(selectedFiles, data).then(res => {
           axios
             .post("/upload/multiple-file-upload", data, {
               params: {
@@ -74,18 +114,20 @@ class ProjectsUpload extends Component {
               headers: {
                 accept: "application/json",
                 "Accept-Language": "en-US,en;q=0.8",
-                "Content-Type": `multipart/form-data; boundary=${data._boundary}`
+                "Content-Type": `multipart/form-data; boundary=${
+                  data._boundary
+                }`
               }
             })
             .then(response => {
+              this.setState({
+                label: "Select Files",
+                selectedFiles: null,
+                uploading: false
+              });
               if (200 === response.status) {
                 // If file size is larger than expected.
                 if (response.data.error) {
-                  this.setState({
-                    label: "Select Files",
-                    selectedFiles: null,
-                    uploading: false
-                  });
                   if ("LIMIT_FILE_SIZE" === response.data.error.code) {
                     window.alert("File is larger than max size");
                   } else if (
@@ -97,26 +139,17 @@ class ProjectsUpload extends Component {
                     window.alert("Incorrect file type");
                   }
                 } else {
-                  // Success
-                  // let fileName = response.data;
-                  // window.alert("Upload successful!");
                   this.props.finishedFunction(this.props.user._id);
                   this.props.finishedFunction();
-                  this.setState({
-                    label: "Select Files",
-                    selectedFiles: null,
-                    uploading: false
-                  });
-                }
+              }
               }
             })
             .catch(error => {
               // If another error
               window.alert(error);
             });
-          
-        }, 5000);
-        }
+        });
+      }
     } else {
       // if file not selected throw error
       window.alert("Please upload file.");
