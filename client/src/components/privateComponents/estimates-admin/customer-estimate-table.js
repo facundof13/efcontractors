@@ -125,15 +125,20 @@ export default class CustomerEstimateTable extends React.Component {
       imgUrl: this.state.imgUrl
     }).then(pdf => {
       var x = window.open();
-      x.document.getElementsByTagName("html")[0].style =
-        "overflow: hidden; margin-bottom:20px;";
-        // TODO: Fix popups causing crash on safari
-      var iframe = x.document.createElement("iframe");
-      iframe.width = "100%";
-      iframe.height = "98%";
-      iframe.style = "overflow: hidden";
-      iframe.src = pdf.data; //data-uri content here
-      x.document.body.appendChild(iframe);
+      if (x == null || typeof(x)=='undefined') {
+        window.alert('Popup blocked!') 
+      } else {
+        x.document.getElementsByTagName("html")[0].style =
+          "overflow: hidden; margin-bottom:20px;";
+          // TODO: Fix popups causing crash on safari
+        var iframe = x.document.createElement("iframe");
+        iframe.width = "100%";
+        iframe.height = "98%";
+        iframe.style = "overflow: hidden";
+        iframe.src = pdf.data; //data-uri content here
+        x.document.body.appendChild(iframe);
+      }
+
     });
   }
 

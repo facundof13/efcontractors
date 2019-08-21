@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { pathToFileURL } from "url";
+
+const videoTypes = [".mp4", ".mov"];
 
 class ProjectsUpload extends Component {
   constructor(props) {
@@ -24,9 +25,11 @@ class ProjectsUpload extends Component {
   takeScreenshot(vid) {
     return new Promise((resolve, reject) => {
       var url = URL.createObjectURL(vid);
+      console.log(url);
       var video = document.createElement("video");
       video.src = url;
-      // video.muted = true;
+      video.playsInline = true;
+      video.muted = true;
       video.play();
 
       var canvas = document.createElement("canvas");
@@ -37,16 +40,13 @@ class ProjectsUpload extends Component {
       setTimeout(() => {
         var ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        var dataURI = canvas.toDataURL("image/jpeg"); // can also use 'image/png'
+        var dataURI = canvas.toDataURL("image/jpeg");
         URL.revokeObjectURL(url);
-        video.pause();
         resolve(dataURI);
-      }, 1000);
+      }, 1000); //at one second into the video
     });
   }
   dataURItoBlob(dataURI) {
-    // convert base64 to raw binary data held in a string
-    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
     var byteString = atob(dataURI.split(",")[1]);
 
     // separate out the mime component
@@ -72,28 +72,27 @@ class ProjectsUpload extends Component {
   }
 
   getThumbnails(selectedFiles, data) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       // console.log(selectedFiles)
       // Array.from(selectedFiles).forEach((file, i) => {
       let mp4Avail = false;
-      for (let file of Array.from(selectedFiles)) {
-        if (file.name.toLowerCase().slice(-4).includes(".mp4")) {
+      for (var file of Array.from(selectedFiles)) {
+        if (videoTypes.includes(file.name.toLowerCase().slice(-4))) {
           mp4Avail = true;
         }
       }
       if (mp4Avail) {
-        for (let file of Array.from(selectedFiles)) {
-          if (file.name.toLowerCase().slice(-4).includes(".mp4")) {
-            this.takeScreenshot(file).then(uri => {
-              data.append(
-                "galleryImage",
-                this.dataURItoBlob(uri),
-                file.name.toLowerCase().replace(".mp4", "thumb.jpg")
-              );
-              resolve();
-            });
+        for (var file of Array.from(selectedFiles)) {
+          if (videoTypes.includes(file.name.toLowerCase().slice(-4))) {
+            let url = await this.takeScreenshot(file);
+            data.append(
+              "galleryImage",
+              this.dataURItoBlob(url),
+              file.name.toLowerCase().replace(/\.mp4|\.mov/g, "thumb.jpg")
+            );
           }
         }
+        resolve()
       } else {
         resolve();
       }
@@ -119,6 +118,7 @@ class ProjectsUpload extends Component {
           uploading: true
         });
         this.getThumbnails(selectedFiles, data).then(res => {
+          console.log(this.state);
           axios
             .post("/upload/multiple-file-upload", data, {
               params: {
@@ -149,6 +149,7 @@ class ProjectsUpload extends Component {
                   ) {
                     window.alert("Only 30 images allowed at a time");
                   } else {
+                    console.log(response.data.error);
                     // If not the given file type
                     window.alert("Incorrect file type");
                   }

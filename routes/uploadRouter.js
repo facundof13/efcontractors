@@ -28,12 +28,13 @@ var fileUrls = [];
  */
 function checkFileType(file, cb) {
   // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif|m4v|mp4|mov/;
+  const filetypes = /jpeg|jpg|png|gif|m4v|mp4|mov|quicktime/;
   // Check ext
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   // Check mime
   const mimetype = filetypes.test(file.mimetype);
-  console.log(`extname: ${path.extname(file.originalname).toLowerCase()}}`);
+  console.log(`extname: ${path.extname(file.originalname).toLowerCase()} mimetype: ${file.mimetype}`);
+  console.log(`${extname} ${mimetype}`)
   if (mimetype && extname) {
     return cb(null, true);
   } else {

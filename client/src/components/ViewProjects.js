@@ -6,11 +6,10 @@ import {
   CardHeader,
   CardMedia,
   CardActionArea,
-  Grid
 } from "@material-ui/core";
 import ExpandedProject from "./expanded-project";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
+const videoTypes = ['.mp4', '.mov']
+
 
 export default class Viewprojects extends React.Component {
   constructor(props) {
@@ -32,7 +31,7 @@ export default class Viewprojects extends React.Component {
     this.getAllProjects().then(() => {
       var newProjects = [...this.state.projects]
       this.state.projects.forEach((project, i) => {
-        if(project.images[0].includes('.mp4')) {
+        if(videoTypes.includes(project.images[0])) {
           var firstThumbIndex = project.images.findIndex((elem) => {
             return elem.includes('thumb')
           }) 
@@ -64,7 +63,7 @@ export default class Viewprojects extends React.Component {
       this.state.selected.images.map(img => {
         let item = (
           <div key="img">
-            {img.slice(-4) === ".mp4" ? (
+            {videoTypes.includes(img.slice(-4)) ? (
               <video controls src={img} />
             ) : (
               <img src={img} />
@@ -106,7 +105,7 @@ export default class Viewprojects extends React.Component {
                     >
                       <CardMedia
                         component={
-                          project.images[0].slice(-4) === ".mp4"
+                          videoTypes.includes(project.images[0].slice(-4))
                             ? "video"
                             : "img"
                         }
@@ -123,19 +122,6 @@ export default class Viewprojects extends React.Component {
             )}
           </div>
         )}
-        {/* {this.state.open && (
-          <div className="carousel">
-            <Carousel dynamicHeight={true} showThumbs={false}>
-              {this.state.elemArr}
-              {<div>
-                <video
-                  controls
-                  src="https://efcontractors.s3.us-east-2.amazonaws.com/5d5873135f5c87cd54f4708c/test-1566077722306.mp4"
-                />
-              </div>}
-            </Carousel>
-          </div>
-        )} */}
         {this.state.open && this.state.selected.images.length > 0 && (
           <ExpandedProject
             project={this.state.selected}

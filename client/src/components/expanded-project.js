@@ -9,7 +9,8 @@ import {
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { Swipeable } from "react-swipeable";
-import FadeIn from 'react-fade-in';
+
+const videoTypes = ['.mp4', '.mov']
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
@@ -90,49 +91,8 @@ export default class ExpandedProject extends React.Component {
     });
   }
 
-  takeScreenshot() {
-    let images = this.state.project.images;
-    images.forEach((img, i) => {
-      if (img.slice(-4).match(".mp4")) {
-        var video = document.createElement("video");
-        video.src = img;
-        video.crossOrigin = "anonymous";
-        // video.muted = true;
-        video.play();
-
-        var canvas = document.createElement("canvas");
-        canvas.width = 640;
-        canvas.height = 480;
-
-        //convert to desired file format
-        setTimeout(() => {
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          var dataURI = canvas.toDataURL("image/jpeg"); // can also use 'image/png'
-          video.pause();
-        }, 1000);
-      }
-    });
-    // return new Promise((resolve, reject) => {
-    //     resolve(dataURI)
-    // })
-  }
-
-  extractFrame(video, canvas, offset) {
-    return new Promise((resolve, reject) => {
-      video.onseeked = event => {
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(blob => {
-          resolve({ offset: offset, imgUrl: canvas.toDataURL(), blob: blob });
-        }, "image/png");
-      };
-      video.currentTime = offset;
-    });
-  }
-
   render() {
-
+    console.log(this.state)
     return (
       <div>
         <Typography color="secondary" component="span" variant="h5">
@@ -163,11 +123,9 @@ export default class ExpandedProject extends React.Component {
               <ArrowBack />
             </IconButton>
           </div>
-          {/* TODO: fix video icon not showing on ios */}
           <Swipeable onSwipedRight={this.gotoPrev} onSwipedLeft={this.gotoNext}>
-            {this.state.project.images[this.state.photoIndex]
-              .slice(-4)
-              .match(/(.mp4)|(.mov)|(.m4v)/) ? (
+            {videoTypes.includes(this.state.project.images[this.state.photoIndex]
+              .slice(-4)) ? (
                 <div className='fade-in'>
                   <video
                     src={this.state.project.images[this.state.photoIndex]}
@@ -214,7 +172,7 @@ export default class ExpandedProject extends React.Component {
             return (
               <div className="small-images" key={img}>
                 <ButtonBase>
-                  {img.slice(-4) === ".mp4" ? (
+                  {videoTypes.includes(img.slice(-4)) ? (
                     <img
                       src={
                         this.state.videoThumbs[
