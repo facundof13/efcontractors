@@ -152,8 +152,10 @@ class ProjectsUpload extends Component {
                     window.alert("Incorrect file type");
                   }
                 } else {
-                  this.props.finishedFunction(this.props.user._id);
-                  this.props.finishedFunction();
+                  setTimeout(() => {
+                    this.props.finishedFunction(this.props.user._id);
+                    this.props.finishedFunction();
+                  }, 2000); // wait 2 seconds for videos/files to finish uploading
                 }
               }
             })
