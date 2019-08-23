@@ -33,8 +33,6 @@ function checkFileType(file, cb) {
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   // Check mime
   const mimetype = filetypes.test(file.mimetype);
-  console.log(`extname: ${path.extname(file.originalname).toLowerCase()} mimetype: ${file.mimetype}`);
-  console.log(`${extname} ${mimetype}`)
   if (mimetype && extname) {
     return cb(null, true);
   } else {
@@ -54,8 +52,6 @@ const uploadsBusinessGallery = multer({
       name = req.query.projectName;
       var partPath =
         path.basename(file.originalname, path.extname(file.originalname)) +
-        "-" +
-        Date.now() +
         path.extname(file.originalname);
       var fullpath = req.query.projectName + "/" + partPath;
       fileUrls.push(`${baseurl}${fullpath}`);
@@ -79,9 +75,28 @@ router.post("/multiple-file-upload", (req, res) => {
       } else {
         // If Success
         //add each file to project user's db
-        for (let i = 0; i < fileUrls.length; i++) {
-          projects.updateImagesSrc(name, fileUrls[i]);
-        }
+        let videos = fileUrls.filter(item => {
+          return item.includes('.mov') || item.includes('.mp4')
+        })
+
+        fileUrls = fileUrls.filter(item => {
+          return !item.includes('.mov') && !item.includes('.mp4') && !item.includes('thumb')
+        })
+        
+        // console.log(fileUrls)
+        // console.log(videos)
+
+        fileUrls.forEach(url =>  { //these are just the pictures
+          projects.updateImagesSrc(name, url)
+        })
+
+        videos.forEach(item => { //these are videos w/o thumbnails
+          projects.updateImagesSrc(name, item, item.slice(0, -4) + 'thumb' + '.jpg')
+        })
+
+        // for (let i = 0; i < fileUrls.length; i++) {
+        //   projects.updateImagesSrc(name, fileUrls[i]);
+        // }
         fileUrls = [];
         let fileArray = req.files,
           fileLocation;

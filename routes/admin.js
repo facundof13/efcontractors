@@ -9,18 +9,6 @@ const titleize = require("titleize");
 const moment = require("moment");
 const pdfgenerator = require("../models/pdfgenerator");
 
-// TODO: Refactor/clean up admin.js
-
-/* GET admins listing. */
-
-// router.all('/*', (req, res, next) => {
-//   if (!req.session.passport || !req.session.passport.user)
-//     return res.status(401).json({
-//       status: "Please log in"
-//     });
-//   return next();
-// })
-
 router.post("/sendemail", function(req, res, next) {
   invoices.sendEmail(req.body);
   res.end();
@@ -40,7 +28,6 @@ router.delete("/testimonials", function(req, res, next) {
 
 // update testimonials
 router.post("/updatetestimonials", function(req, res, next) {
-  console.log(req.body);
   req.body.testimonials.map(testimonial => {
     let query = {
       text: testimonial.text,
@@ -68,34 +55,21 @@ router.get('/invoicesettings', function (req, res, next) {
 
 router.post('/settings', function(req, res, next) {
   settings.updateSettings(req.body.settings)
-  // console.log(req.body.settings)
   res.end()
 })
 
 router.post('/invoicesettings', function(req, res, next) {
   settings.updateInvoiceSettings(req.body.settings)
-  // console.log(req.body.settings)
   res.end()
 })
 
 //add service
-router.post("/addservices", function(
-  req,
-  res,
-  next
-) {
-  // query = {
-  // Service: "Roofing",
-  // Residential: 1,
-  // Commercial: 0
-  // }
-
+router.post("/addservices", function(req, res, next) {
   query = {
     Service: req.body.Service,
     Residential: req.body.Residential,
     Commercial: req.body.Commercial
   };
-  console.log(query)
   services.addService(query);
   res.end();
 });
@@ -107,11 +81,8 @@ router.delete("/services", function(req, res, next) {
 });
 
 //update service
-router.post(
-  "/services",
-  function(req, res, next) {
+router.post( "/services", function(req, res, next) {
     let query = {Service: req.body.Service, Residential: req.body.Residential, Commercial: req.body.Commercial }
-    console.log(query)
     services.updateService(req.body._id, query);
     res.end();
   }
@@ -131,28 +102,23 @@ router.get("/projectname", async function(req, res, next) {
 
 // admin/newproject
 router.post("/newproject", async function(req, res, next) {
-  const name = req.body.name;
-  const location = req.body.location;
+
   query = {
-    name: name,
-    location: location,
+    name: req.body.name,
+    location: req.body.location,
     images: []
   };
 
   if (
     //check if strings are empty or undefined
-    name === "" ||
-    name === undefined ||
-    location === "" ||
-    location === undefined
+    query.name === "" ||
+    query.name === undefined ||
+    query.location === "" ||
+    query.location === undefined
   ) {
     res.json({ error: `Project cannot have an empty name/location` });
   } else {
     projects.addProject(query);
-    res.sendStatus(200);
-    // add project to db
-    //check if s3 has a folder with project
-    // const matchingFolder = await projects.findMatchingFolder(name + "/");
     res.end();
   }
 });
@@ -163,14 +129,12 @@ router.delete("/deleteimg", function(req, res, next) {
 
   projects.removeImageFromFolder(id, imagesrc);
   path = imagesrc.replace(/.+amazonaws.com\//g, "");
-  console.log(`path:${path}`);
   projects.deleteImageFromS3(path);
   res.end();
 });
 
 router.delete("/deleteproject", function(req, res, next) {
   const id = req.body.id;
-  console.log(id);
   projects.deleteEntireProject(id);
   res.end();
 });
@@ -184,7 +148,6 @@ router.get("/invoiceServices", async function(req, res, next) {
 router.get("/invoiceCustomers", async function(req, res, next) {
   invoices.getInvoiceCustomers().then(items => {
     res.json(items);
-    // res.end()
   });
 });
 
@@ -286,10 +249,6 @@ router.delete("/deleteestimate", function(req, res, next) {
   res.end();
 });
 
-router.post("/savepdf", function(req, res, next) {
-  let pdf = req.body.pdf;
-});
-
 router.get("/imgurl", function(req, res, next) {
   invoices.getLogoURI().then(item => {
     res.send(item);
@@ -359,7 +318,6 @@ router.post("/estimatesinmonth", function(req, res, next) {
       });
     });
     res.json(estimates);
-    // console.log(new Date(invoice.date).getMonth + 1 === new Date(req.body.month).getMonth + 1)
   });
 });
 

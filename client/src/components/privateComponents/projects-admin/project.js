@@ -56,19 +56,19 @@ class Project extends Component {
           {this.state.uploading ? <CircularProgress color="secondary" /> : ""}
         </div>
         {this.props.user[0].images.map(image =>
-          image.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
+          image.url.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
             <video
               controls
               width="200px"
               height="200px"
-              src={image}
-              key={image}
+              src={image.url}
+              key={image.url}
               onClick={this.imgDelete}
             />
           ) : (
             <img
-              key={image}
-              src={image}
+              key={image.url}
+              src={image.url}
               onClick={this.imgDelete}
               alt=""
               height="200px"

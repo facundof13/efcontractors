@@ -237,6 +237,12 @@ input[type="number"]::-webkit-outer-spin-button {
   /* max-width: 90%; */
   width: 70vw;
   overflow-x: auto;
+  max-height: 20vh;
+}
+
+.client-estimates-table {
+  max-height: 20vh;
+overflow: auto;
 }
 
 .item-table {

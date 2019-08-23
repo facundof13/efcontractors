@@ -1,13 +1,22 @@
 var settings = require("../models/settings");
 var taxAmt = 0;
-
+var company = ''
+var cityState = ''
+var address= ''
+var zip= ''
+var phone = ''
+settings.getSettings().then(res => {
+  phone = res[0].telephone
+})
 settings.getInvoiceSettings().then(res => {
   taxAmt = Number(res[0].taxAmt)
+  company = res[0].company
+  cityState = res[0].cityState
+  address = res[0].address
+  zip = res[0].zip
 })
 
 function renderPdf(data, cb) {
-  // TODO: Refactor this function, split into multiple functions
-  // TODO: Call imgUrl api from here, not from front end
   var fonts = {
     Roboto: {
       normal: "fonts/Roboto-Regular.ttf",
@@ -59,7 +68,7 @@ function renderPdf(data, cb) {
   for (let i = 0; i < data.estimate.items.length; i++) {
     let num = data.estimate.items[i].amount;
     if (data.estimate.items[i].tax) {
-      taxes += num.replace("$", "") / (taxAmt); //TODO: change to dynamic variable stored in db (tax amt)
+      taxes += num.replace("$", "") / (taxAmt);
     }
   }
   let grandTotal = taxes + data.estimate.total;
@@ -139,7 +148,7 @@ function renderPdf(data, cb) {
       {
         columns: [
           {
-            text: ["\n\nPO Box 3104\n", "Lilburn, GA\n", "30048"],
+            text: [`\n\n${address}\n`, `${cityState}\n`, `${zip}`],
             color: "grey",
             alignment: "left"
           },
@@ -246,14 +255,14 @@ function renderPdf(data, cb) {
   if (data.estimate.attachContract && !data.estimate.paid) {
     docDefinition.content.push(
       {
-        text: "EF Contractors LLC",
+        text: company,
         bold: true,
         alignment: "center",
         fontSize: "24",
         pageBreak: "before"
       },
       {
-        text: "404-409-3715", //TODO: Make phone number dynamic, store in db!
+        text: phone, 
         alignment: "center",
         fontSize: 10
       },
@@ -282,7 +291,7 @@ function renderPdf(data, cb) {
         text: "\nArticle One: Contract Document"
       },
       {
-        text: `\nThese documents constitute an agreement between EF Contractors LLC hereinafter referred to as the "Contractor" and ${
+        text: `\nThese documents constitute an agreement between ${company} hereinafter referred to as the "Contractor" and ${
           data.client.name
         } hereinafter referred to as the "Owner", to renovate the project located at ${
           data.client.address

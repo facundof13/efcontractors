@@ -114,10 +114,6 @@ export default class CustomerEstimateTable extends React.Component {
     this.setState({ currentlyEditing: false, estimateToEdit: [] });
   }
 
-  handleEstimateDelete(estimate) {
-    console.log(estimate);
-  }
-
   async createPdf(row) {
     Axios.post("/admin/generatePDF", {
       client: this.props.customerInfo,
@@ -127,10 +123,10 @@ export default class CustomerEstimateTable extends React.Component {
       var x = window.open();
       if (x == null || typeof(x)=='undefined') {
         window.alert('Popup blocked!') 
+        x.close()
       } else {
         x.document.getElementsByTagName("html")[0].style =
           "overflow: hidden; margin-bottom:20px;";
-          // TODO: Fix popups causing crash on safari
         var iframe = x.document.createElement("iframe");
         iframe.width = "100%";
         iframe.height = "98%";

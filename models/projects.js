@@ -67,14 +67,20 @@ function findMatchingFolder(name) {
   });
 }
 
-function updateImagesSrc(id, arr) {
+function updateImagesSrc(id, imageUrl, thumbUrl) {
+  let obj = {
+    url: imageUrl,
+  };
+
+  thumbUrl ? obj.thumbUrl = thumbUrl : ''
+
   projects.updateOne(
     {
       _id: ObjectId(id)
     },
     {
       $addToSet: {
-        images: arr
+        images: obj
       }
     },
     (err, item) => {
@@ -88,7 +94,7 @@ function removeImageFromFolder(id, imagesrc) {
     {
       _id: ObjectId(id)
     },
-    { $pull: { images: imagesrc } },
+    { $pull: { images: {url: imagesrc} } },
     (err, item) => {
       console.log("Removed project Image");
     }
@@ -125,4 +131,3 @@ module.exports = {
   returnProject,
   getProjectById
 };
-

@@ -25,7 +25,6 @@ class ProjectsUpload extends Component {
   takeScreenshot(vid) {
     return new Promise((resolve, reject) => {
       var url = URL.createObjectURL(vid);
-      console.log(url);
       var video = document.createElement("video");
       video.src = url;
       video.playsInline = true;
@@ -118,7 +117,6 @@ class ProjectsUpload extends Component {
           uploading: true
         });
         this.getThumbnails(selectedFiles, data).then(res => {
-          console.log(this.state);
           axios
             .post("/upload/multiple-file-upload", data, {
               params: {

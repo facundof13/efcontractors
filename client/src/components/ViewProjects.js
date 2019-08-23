@@ -63,10 +63,10 @@ export default class Viewprojects extends React.Component {
       this.state.selected.images.map(img => {
         let item = (
           <div key="img">
-            {videoTypes.includes(img.slice(-4)) ? (
-              <video controls src={img} />
+            {videoTypes.includes(img.url.slice(-4)) ? (
+              <video controls src={img.url} />
             ) : (
-              <img src={img} />
+              <img src={img.url} />
             )}
           </div>
         );
@@ -81,8 +81,7 @@ export default class Viewprojects extends React.Component {
   }
 
   render() {
-    if (this.state.selected.images) {
-    }
+    console.log(this.state)
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">
@@ -104,12 +103,13 @@ export default class Viewprojects extends React.Component {
                       }}
                     >
                       <CardMedia
-                        component={
-                          videoTypes.includes(project.images[0].slice(-4))
-                            ? "video"
-                            : "img"
-                        }
-                        image={project.images[0]}
+                        component='img'
+                        // {
+                        //   videoTypes.includes(project.images[0].slice(-4))
+                        //     ? "video"
+                        //     : "img"
+                        // }
+                        image={project.images[0].thumbUrl || project.images[0].url}
                         height={200}
                       />
                       <CardHeader

@@ -15,10 +15,7 @@ const videoTypes = ['.mp4', '.mov']
 export default class ExpandedProject extends React.Component {
   constructor(props) {
     super(props);
-
-
-    // TODO: bring all videos to beginning of array
-    // will make sorting thumbails easier maybe??
+    
     this.state = {
       photoIndex: 0,
       videoThumbs: [],
@@ -29,20 +26,11 @@ export default class ExpandedProject extends React.Component {
     this.gotoNext = this.gotoNext.bind(this);
     this.gotoPrev = this.gotoPrev.bind(this);
     this.gotoThumb = this.gotoThumb.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this)
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.handleArrows, false);
-    var thumbArray = this.state.project.images.filter(item => {
-      return item.includes("thumb");
-    });
-
-    var newProjects = this.state.project.images.filter(item => {
-      return !item.includes("thumb");
-    });
-    let newProject = JSON.parse(JSON.stringify(this.state.project));
-    newProject.images = [...newProjects];
-    this.setState({ project: newProject, videoThumbs: [...thumbArray] });
   }
 
   componentWillUnmount() {
@@ -64,8 +52,6 @@ export default class ExpandedProject extends React.Component {
   }
 
   handleArrows(e) {
-    // left is 37
-    // right is 39
 
     if (e.keyCode === 39) {
       // Move index + 1
@@ -82,7 +68,7 @@ export default class ExpandedProject extends React.Component {
   gotoThumb(img) {
     let index = 0;
     for (let i = 0; i < this.state.project.images.length; i++) {
-      if (this.state.project.images[i] === img) {
+      if (this.state.project.images[i].url === img) {
         index = i;
       }
     }
@@ -99,9 +85,7 @@ export default class ExpandedProject extends React.Component {
           <h5>{this.state.project.name + " " + this.state.project.location}</h5>
         </Typography>
 
-        <Divider className=".top" />
-
-        {/* TODO: sort videos to beginning of array */}
+        <Divider className="top" />
         <div>
           <Button
             variant="outlined"
@@ -124,29 +108,25 @@ export default class ExpandedProject extends React.Component {
             </IconButton>
           </div>
           <Swipeable onSwipedRight={this.gotoPrev} onSwipedLeft={this.gotoNext}>
-            {videoTypes.includes(this.state.project.images[this.state.photoIndex]
+            {videoTypes.includes(this.state.project.images[this.state.photoIndex].url
               .slice(-4)) ? (
                 <div className='fade-in'>
                   <video
-                    src={this.state.project.images[this.state.photoIndex]}
+                    src={this.state.project.images[this.state.photoIndex].url}
                     className="big-image"
                     // playsInline
                     controls
                     type="video/mp4"
                     id="myVid"
-                    key={this.state.project.images[this.state.photoIndex]}
-                    poster={
-                      this.state.videoThumbs[
-                        this.state.photoIndex % this.state.videoThumbs.length
-                      ]
-                    }
+                    key={this.state.project.images[this.state.photoIndex].url}
+                    poster={this.state.project.images[this.state.photoIndex].thumbUrl}
                   />
                 </div>
             ) : (
               <div className='fade-in'>
                 <img
-                  key={this.state.project.images[this.state.photoIndex]}
-                  src={this.state.project.images[this.state.photoIndex]}
+                  key={this.state.project.images[this.state.photoIndex].url}
+                  src={this.state.project.images[this.state.photoIndex].url}
                   alt=""
                   className="big-image"
                 />
@@ -170,24 +150,21 @@ export default class ExpandedProject extends React.Component {
         <div className="small-images-container">
           {this.state.project.images.map((img, i) => {
             return (
-              <div className="small-images" key={img}>
+              <div className="small-images" key={img.url}>
                 <ButtonBase>
-                  {videoTypes.includes(img.slice(-4)) ? (
+                  {videoTypes.includes(img.url.slice(-4)) ? (
                     <img
-                      src={
-                        this.state.videoThumbs[
-                          i % this.state.videoThumbs.length
-                        ]
+                      src={img.thumbUrl
                       }
                       onClick={() => {
-                        this.gotoThumb(img);
+                        this.gotoThumb(img.url);
                       }}
                     />
                   ) : (
                     <img
-                      src={img}
+                      src={img.url}
                       onClick={() => {
-                        this.gotoThumb(img);
+                        this.gotoThumb(img.url);
                       }}
                     />
                   )}
