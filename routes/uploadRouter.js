@@ -82,9 +82,6 @@ router.post("/multiple-file-upload", (req, res) => {
         fileUrls = fileUrls.filter(item => {
           return !item.includes('.mov') && !item.includes('.mp4') && !item.includes('thumb')
         })
-        
-        // console.log(fileUrls)
-        // console.log(videos)
 
         fileUrls.forEach(url =>  { //these are just the pictures
           projects.updateImagesSrc(name, url)
@@ -93,10 +90,6 @@ router.post("/multiple-file-upload", (req, res) => {
         videos.forEach(item => { //these are videos w/o thumbnails
           projects.updateImagesSrc(name, item, item.slice(0, -4) + 'thumb' + '.jpg')
         })
-
-        // for (let i = 0; i < fileUrls.length; i++) {
-        //   projects.updateImagesSrc(name, fileUrls[i]);
-        // }
         fileUrls = [];
         let fileArray = req.files,
           fileLocation;

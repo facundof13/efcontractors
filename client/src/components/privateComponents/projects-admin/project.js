@@ -42,7 +42,6 @@ class Project extends Component {
   }
 
   render() {
-    // console.log(this.props.user[0].name)
     return (
       <div className="user-container">
         <Typography color="secondary" component="span" variant="h5">

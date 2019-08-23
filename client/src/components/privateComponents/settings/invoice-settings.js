@@ -19,7 +19,6 @@ export default class InvoiceSettings extends React.Component {
 
   componentDidMount() {
     Axios.get("/admin/invoicesettings").then(res => {
-      //   console.log(res.data)
       this.setState({
         company: res.data.company,
         address: res.data.address,

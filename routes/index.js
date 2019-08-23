@@ -13,8 +13,6 @@ router.use(function(req, res, next) {
 router.post(
   "/login",
   function(req, res, next) {
-    // console.log('routes/user.js, login, req.body: ');
-    // console.log(req.body)
     next();
   },
   passport.authenticate("local"),
@@ -43,12 +41,7 @@ router.get("/testimonials", async function(req, res, next) {
 });
 
 //add testimonial
-router.post("/testimonials", function(
-  req,
-  res,
-  next
-) {
-
+router.post("/testimonials", function(req, res, next) {
   const query = {
     text: req.body.text,
     name: req.body.name,
@@ -61,13 +54,6 @@ router.post("/testimonials", function(
 
   res.end();
 });
-
-// router.get('/login', function (req, res, next) {
-//   res.render('login', {
-//     title: 'Login',
-//     user: req.user
-//   });
-// });
 
 router.post("/register/:user/:pass", function(req, res, next) {
   const user = req.params.user;
@@ -82,13 +68,6 @@ router.post("/register/:user/:pass", function(req, res, next) {
 });
 
 router.get("/user", (req, res, next) => {
-  // console.log('===== user!!======')
-  // console.log(req.user)
-  // if (req.user) {
-  //     res.json({ user: req.user })
-  // } else {
-  //     res.json({ user: null })
-  // }
   res.json(req.user);
 });
 
@@ -105,12 +84,6 @@ router.get("/users/id/:id", function(req, res, next) {
   users.getUserById(id);
   res.end();
 });
-
-// router.post('/login',
-//   passport.authenticate('local', {
-//     successRedirect: '/admin',
-//     failureRedirect: '/login'
-//   }));
 
 router.get("/projects", async function(req, res, next) {
   res.json(await projects.getAllProjects());

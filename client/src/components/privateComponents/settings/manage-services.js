@@ -62,7 +62,6 @@ export default class ManageServices extends React.Component {
   }
 
   deleteRow(e) {
-    console.log(e);
     if (window.confirm("Delete service?")) {
       Axios.delete("/admin/services", { data: { _id: e } });
       this.setState(
@@ -106,6 +105,7 @@ export default class ManageServices extends React.Component {
           Commercial: service.Commercial
         });
       }
+      return 0;
     });
     setTimeout(() => {
       this.setState({ loading: false, servicesToChange: [], });

@@ -78,7 +78,6 @@ export default class ExpandedProject extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Typography color="secondary" component="span" variant="h5">
@@ -156,12 +155,14 @@ export default class ExpandedProject extends React.Component {
                     <img
                       src={img.thumbUrl
                       }
+                      alt=''
                       onClick={() => {
                         this.gotoThumb(img.url);
                       }}
                     />
                   ) : (
                     <img
+                    alt=''
                       src={img.url}
                       onClick={() => {
                         this.gotoThumb(img.url);

@@ -87,6 +87,16 @@ FormControl .MuiInput-underline:before {
   border-bottom-color: #ffff00 !important;
 }
 
+@media (max-width: 599px) {
+
+  .projects-container {
+    margin-right: 10vw !important;
+    margin-left: 10vw !important;
+    margin-top: 20px !important;
+  }
+}
+
+
 @media (min-width: 600px) {
   .projects-container {
     display: flex;
@@ -645,4 +655,8 @@ h5 {
 @-o-keyframes fadein {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+.error {
+  color:red;
 }

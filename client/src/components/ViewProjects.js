@@ -66,11 +66,12 @@ export default class Viewprojects extends React.Component {
             {videoTypes.includes(img.url.slice(-4)) ? (
               <video controls src={img.url} />
             ) : (
-              <img src={img.url} />
+              <img src={img.url} alt=''/>
             )}
           </div>
         );
         arr = [...arr, item];
+        return 0;
       });
       this.setState({ elemArr: arr });
     });
@@ -81,7 +82,6 @@ export default class Viewprojects extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">

@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { Button, Tabs, Tab, AppBar } from "@material-ui/core";
+import { Tabs, Tab, AppBar } from "@material-ui/core";
 
 //components
 import EstimatesTable from "./estimates-table";
@@ -14,7 +14,7 @@ export default class Estimates extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e, value) {
+  handleChange(value) {
     this.setState({ value: value });
   }
 

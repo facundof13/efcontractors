@@ -4,7 +4,6 @@ import {
   Typography,
   TableRow,
   TableCell,
-  Paper,
   Table,
   TableHead,
   TableBody,
@@ -52,7 +51,6 @@ export default class Services extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <Typography color="secondary" component="span" variant="h4">

@@ -5,16 +5,28 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Typography } from "@material-ui/core";
 
+var myTimeout;
 class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
       password: "",
-      redirectTo: null
+      redirectTo: null,
+      error: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(myTimeout)
+    this.setState({
+        username: "",
+        password: "",
+        redirectTo: null,
+        error: false
+    })
   }
 
   handleChange(event) {
@@ -44,7 +56,13 @@ class LoginForm extends Component {
           });
         }
       })
-      .catch(error => {});
+      .catch(error => {
+        this.setState({ error: true }, () => {
+          myTimeout = setTimeout(() => {
+            this.setState({ error: false, });
+          }, 3000);
+        });
+      });
   }
 
   render() {
@@ -56,6 +74,11 @@ class LoginForm extends Component {
           <Typography component="span" variant="h4" color="secondary">
             <h4>Login</h4>
           </Typography>
+          {this.state.error && (
+            <div className="error">
+              <p>Wrong username or password</p>
+            </div>
+          )}
           <form>
             <div>
               <Typography color="secondary">

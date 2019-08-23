@@ -72,16 +72,14 @@ class ProjectsUpload extends Component {
 
   getThumbnails(selectedFiles, data) {
     return new Promise(async (resolve, reject) => {
-      // console.log(selectedFiles)
-      // Array.from(selectedFiles).forEach((file, i) => {
       let mp4Avail = false;
-      for (var file of Array.from(selectedFiles)) {
+      for (let file of Array.from(selectedFiles)) {
         if (videoTypes.includes(file.name.toLowerCase().slice(-4))) {
           mp4Avail = true;
         }
       }
       if (mp4Avail) {
-        for (var file of Array.from(selectedFiles)) {
+        for (let file of Array.from(selectedFiles)) {
           if (videoTypes.includes(file.name.toLowerCase().slice(-4))) {
             let url = await this.takeScreenshot(file);
             data.append(

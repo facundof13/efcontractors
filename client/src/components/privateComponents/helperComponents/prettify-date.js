@@ -12,9 +12,6 @@ export default function prettifyDate(date) {
         .padStart(2, "0") +
       "/" +
       newDate.getFullYear();
-
-
-    // console.log(ret)
     return new Date(dateString).toLocaleDateString()
 }
 
@@ -30,8 +27,4 @@ export function addDates(created, expiredNum) {
   let createDate = new Date(created)
   createDate.setDate(createDate.getDate() + Number(expiredNum))
   return(createDate.toISOString())
-}
-
-export function compareDates(date1, date2) {
-  console.log(date1, date2)
 }

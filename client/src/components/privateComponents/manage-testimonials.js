@@ -64,7 +64,6 @@ export default class ManageTestimonials extends React.Component {
   }
 
   deleteTestimonial(id) {
-    console.log(id);
     if (window.confirm(`Delete testimonial?`)) {
       Axios.delete(`/admin/testimonials`, { data: { id: id } }).then(() => {
         this.getTestimonials();
@@ -73,7 +72,6 @@ export default class ManageTestimonials extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <div className="manage-testimonials">

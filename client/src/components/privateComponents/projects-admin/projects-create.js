@@ -21,7 +21,6 @@ class ProjectsCreate extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // console.log(this.state.name + this.state.location)
     Axios.post("/admin/newproject", {
       name: this.state.name,
       location: this.state.location

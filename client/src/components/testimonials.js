@@ -47,6 +47,7 @@ export default class Testimonials extends React.Component {
             {i === res.data.length - 1 ? "" : <Divider />}
           </div>
         );
+        return 0
       });
       this.setState({ testimonials: [...arr] });
     });

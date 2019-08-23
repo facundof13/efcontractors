@@ -11,16 +11,13 @@ class Home extends Component {
   componentDidMount() {
     Axios.get("/admin/imgurl").then(res => {
       this.setState({ logoUrl: res.data[0].img });
-      // console.log(res.data[0].img)
     });
     Axios.get('/testimonials').then(res => {
-      console.log(res.data)
       this.setState({testimonial: res.data[Math.floor((Math.random()* res.data.length))]})
     })
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <img
