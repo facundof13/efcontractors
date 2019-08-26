@@ -14,8 +14,8 @@ export default class Estimates extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value) {
-    this.setState({ value: value });
+  handleChange(e, val) {
+    this.setState({ value: val });
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class Estimates extends React.Component {
         <AppBar position="static" className="tabs-bar">
           <Tabs
             value={this.state.value}
-            onChange={this.handleChange}
+            onChange={(e, val) => this.handleChange(e, val)}
             centered={true}
           >
             <Tab value="one" label="Create Estimates" />

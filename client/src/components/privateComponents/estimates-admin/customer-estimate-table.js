@@ -123,7 +123,6 @@ export default class CustomerEstimateTable extends React.Component {
       var x = window.open();
       if (x == null || typeof(x)=='undefined') {
         window.alert('Popup blocked!') 
-        x.close()
       } else {
         x.document.getElementsByTagName("html")[0].style =
           "overflow: hidden; margin-bottom:20px;";

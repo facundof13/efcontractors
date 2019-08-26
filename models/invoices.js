@@ -23,7 +23,6 @@ function getServices() {
     invoices
       .find({ _id: ObjectId("5d2e983f1c9d4400005a4e5a") })
       .toArray((err, items) => {
-        console.log(items);
         resolve(items[0].services);
       });
   });
