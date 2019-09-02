@@ -44,14 +44,14 @@ class ProjectsCreate extends Component {
             name="name"
             type="text"
             color="secondary"
-            placeholder="Facundo Figueroa"
+            placeholder="First Last"
             onChange={this.handleChange}
           />
           <TextField
             name="location"
             type="text"
             color="secondary"
-            placeholder="Lilburn, GA"
+            placeholder="City, GA"
             onChange={this.handleChange}
           />
           <Button
