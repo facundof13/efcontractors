@@ -437,6 +437,9 @@ h5 {
     font-style: italic;
     text-shadow: 2px 2px 8px #212121;
   }
+  .services-table-root * .MuiTableCell-sizeSmall {
+    padding: 6px 1px 1px 6px;
+  }
 }
 
 .divider {
@@ -659,4 +662,10 @@ h5 {
 
 .error {
   color:red;
+}
+
+@media screen and (max-width: 340px) {
+.facebook-button{
+  overflow: auto;
+}
 }

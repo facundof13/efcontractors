@@ -10,12 +10,12 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { Swipeable } from "react-swipeable";
 
-const videoTypes = ['.mp4', '.mov']
+const videoTypes = [".mp4", ".mov"];
 
 export default class ExpandedProject extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       photoIndex: 0,
       videoThumbs: [],
@@ -26,7 +26,7 @@ export default class ExpandedProject extends React.Component {
     this.gotoNext = this.gotoNext.bind(this);
     this.gotoPrev = this.gotoPrev.bind(this);
     this.gotoThumb = this.gotoThumb.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this)
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +52,6 @@ export default class ExpandedProject extends React.Component {
   }
 
   handleArrows(e) {
-
     if (e.keyCode === 39) {
       // Move index + 1
       this.gotoNext();
@@ -107,22 +106,38 @@ export default class ExpandedProject extends React.Component {
             </IconButton>
           </div>
           <Swipeable onSwipedRight={this.gotoPrev} onSwipedLeft={this.gotoNext}>
-            {videoTypes.includes(this.state.project.images[this.state.photoIndex].url
-              .slice(-4)) ? (
-                <div className='fade-in'>
-                  <video
+            {videoTypes.includes(
+              this.state.project.images[this.state.photoIndex].url.slice(-4)
+            ) ? (
+              <div className="fade-in">
+                {/* <video controls playsInline id='myVid'
+                  poster={this.state.project.images[this.state.photoIndex].thumbUrl}
+                >
+                  <source
+                    type=
                     src={this.state.project.images[this.state.photoIndex].url}
+                  />
+                </video> */}
+                <video
+                src={this.state.project.images[this.state.photoIndex].url}
                     className="big-image"
-                    // playsInline
+                    playsInline
                     controls
-                    type="video/mp4"
+                    loop
+                    type={
+                      this.state.project.images[
+                        this.state.photoIndex
+                      ].url.slice(-4) === ".mp4"
+                        ? "video/mp4"
+                        : "video/quicktime"
+                    }
                     id="myVid"
                     key={this.state.project.images[this.state.photoIndex].url}
                     poster={this.state.project.images[this.state.photoIndex].thumbUrl}
                   />
-                </div>
+              </div>
             ) : (
-              <div className='fade-in'>
+              <div className="fade-in">
                 <img
                   key={this.state.project.images[this.state.photoIndex].url}
                   src={this.state.project.images[this.state.photoIndex].url}
@@ -153,16 +168,15 @@ export default class ExpandedProject extends React.Component {
                 <ButtonBase>
                   {videoTypes.includes(img.url.slice(-4)) ? (
                     <img
-                      src={img.thumbUrl
-                      }
-                      alt=''
+                      src={img.thumbUrl}
+                      alt=""
                       onClick={() => {
                         this.gotoThumb(img.url);
                       }}
                     />
                   ) : (
                     <img
-                    alt=''
+                      alt=""
                       src={img.url}
                       onClick={() => {
                         this.gotoThumb(img.url);

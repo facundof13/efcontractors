@@ -12,7 +12,6 @@ class ProjectsUpload extends Component {
       selectedFiles: null,
       label: "",
       uploading: false,
-      done: false
     };
   }
   multipleFileChangedHandler = event => {
@@ -160,6 +159,8 @@ class ProjectsUpload extends Component {
             .catch(error => {
               // If another error
               window.alert(error);
+              this.setState({uploading: false, selectedFiles: null,
+              })
             });
         });
       }
@@ -173,7 +174,7 @@ class ProjectsUpload extends Component {
     return (
       <div>
         <div>
-          <Button color="secondary" variant="text" component="label">
+          <Button color="secondary" disabled={this.state.uploading} variant="text" component="label">
             {this.state.label === "" ? "Select Files" : this.state.label}
             <input
               type="file"
@@ -182,7 +183,7 @@ class ProjectsUpload extends Component {
               className="hide"
             />
           </Button>
-          <Button color="secondary" onClick={this.multipleFileUploadHandler}>
+          <Button color="secondary" disabled={this.state.uploading} onClick={this.multipleFileUploadHandler}>
             Upload!
           </Button>
         </div>

@@ -61,7 +61,7 @@ export default class Services extends React.Component {
         </div>
         <div className="services-table-root">
           {/* <Paper> */}
-            <Table >
+            <Table size='small' >
               <TableHead>
                 <TableRow >
                   <TableCell>

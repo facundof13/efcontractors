@@ -87,8 +87,8 @@ router.post("/multiple-file-upload", (req, res) => {
           projects.updateImagesSrc(name, url)
         })
 
-        videos.forEach(item => { //these are videos w/o thumbnails
-          projects.updateImagesSrc(name, item, item.slice(0, -4) + 'thumb' + '.jpg')
+        videos.forEach(url => { //these are videos urls w/o thumbnails
+          projects.updateImagesSrc(name, url, url.slice(0, -4) + 'thumb' + '.jpg')
         })
         fileUrls = [];
         let fileArray = req.files,
