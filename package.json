@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "cd react-ui && npm install && npm run build"
   },
   "dependencies": {
     "aws-sdk": "^2.489.0",
