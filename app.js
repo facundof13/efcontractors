@@ -35,6 +35,7 @@ mongoUtil.connectToServer((err, client) => {
       resave: true
     })
   );
+  app.use(express.static(path.join(__dirname, "cient/build")));
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -94,6 +95,7 @@ mongoUtil.connectToServer((err, client) => {
     res.status(err.status || 500);
     res.send("error");
   });
+
   // ----- FINISH REST OF APP SETUP ------
 });
 
