@@ -329,8 +329,5 @@ router.post("/api/estimatesinmonth", function(req, res, next) {
   });
 });
 
-router.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../react-ui/build/index.html'));
-});
 
 module.exports = router;
