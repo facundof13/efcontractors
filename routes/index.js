@@ -90,4 +90,8 @@ router.get("/api/projects", async function(req, res, next) {
   res.json(await projects.getAllProjects());
 });
 
+// router.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/../react-ui/build/index.html'));
+// });
+
 module.exports = router;

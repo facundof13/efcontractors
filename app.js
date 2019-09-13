@@ -58,6 +58,10 @@ mongoUtil.connectToServer((err, client) => {
   app.use("/admin", adminRouter);
   app.use("/upload", uploadRouter);
 
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../react-ui/build/index.html'));
+  });
+  
   var localStrategy = require("passport-local").Strategy;
   passport.use(
     new localStrategy(function(username, password, done) {
