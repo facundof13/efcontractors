@@ -37,6 +37,7 @@ mongoUtil.connectToServer((err, client) => {
     })
   );
   app.use(express.static(path.join(__dirname, "react-ui/build")));
+  
 
   app.use(passport.initialize());
   app.use(passport.session());
