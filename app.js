@@ -13,6 +13,7 @@ mongoUtil.connectToServer((err, client) => {
   var passport = require("passport");
   var users = require("./models/users");
   const bodyParser = require("body-parser");
+  var path = require("path");
 
   app.use(
     bodyParser.urlencoded({
