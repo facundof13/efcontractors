@@ -37,7 +37,6 @@ mongoUtil.connectToServer((err, client) => {
     })
   );
   app.use(express.static(path.join(__dirname, "react-ui/build")));
-  
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -58,8 +57,15 @@ mongoUtil.connectToServer((err, client) => {
   app.use("/admin", adminRouter);
   app.use("/upload", uploadRouter);
 
-  app.use(express.static(path.join(__dirname, 'react-ui/build')));
-  
+  app.get("/*", function(req, res) {
+    res.sendFile(path.join(__dirname, "react-ui/build/index.html"), function(
+      err
+    ) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    });
+  });
   var localStrategy = require("passport-local").Strategy;
   passport.use(
     new localStrategy(function(username, password, done) {
