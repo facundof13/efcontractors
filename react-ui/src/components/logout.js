@@ -12,7 +12,7 @@ export default class Logout extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get('/logout')
+    Axios.get('/api/logout')
     .then(() => {
       this.setState({loggedOut: true})
       this.props.updateUser({
