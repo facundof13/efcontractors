@@ -20,7 +20,7 @@ export default class ProjectList extends React.Component {
   }
 
   handleSubmit(name, location) {
-    Axios.post("/admin/newproject", {
+    Axios.post("/admin/api/newproject", {
       name: name,
       location: location
     }).then(res => {

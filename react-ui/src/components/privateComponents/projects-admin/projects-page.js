@@ -29,7 +29,7 @@ class ProjectsPage extends Component {
   }
 
   getUser(id) {
-    Axios.get("/admin/projectname", { params: { id: id } }).then(res => {
+    Axios.get("/admin/api/projectname", { params: { id: id } }).then(res => {
       this.setState({ currentUser: res.data });
     });
   }
@@ -39,7 +39,7 @@ class ProjectsPage extends Component {
   }
 
   getProjects() {
-    Axios.get("/admin/projects").then(res => {
+    Axios.get("/admin/api/projects").then(res => {
       this.setState({
         data: res.data
       });
@@ -63,7 +63,7 @@ class ProjectsPage extends Component {
       if (project.images.length > 0) {
         window.alert("You must delete all images from a project first!");
       } else {
-        Axios.delete("/admin/deleteproject", {
+        Axios.delete("/admin/api/deleteproject", {
           data: {
             id: project._id
           }

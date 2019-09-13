@@ -12,7 +12,7 @@ export default class AboutUs extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get("/admin/settings").then(res => {this.setState({telephone: res.data.telephone})});
+    Axios.get("/admin/api/settings").then(res => {this.setState({telephone: res.data.telephone})});
   }
 
   render() {

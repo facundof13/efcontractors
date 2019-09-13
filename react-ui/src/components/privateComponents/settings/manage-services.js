@@ -63,7 +63,7 @@ export default class ManageServices extends React.Component {
 
   deleteRow(e) {
     if (window.confirm("Delete service?")) {
-      Axios.delete("/admin/services", { data: { _id: e } });
+      Axios.delete("/admin/api/services", { data: { _id: e } });
       this.setState(
         prevState => ({
           services: prevState.services.filter(item => {
@@ -92,13 +92,13 @@ export default class ManageServices extends React.Component {
     this.setState({ loading: true });
     this.state.servicesToChange.map(service => {
       if (typeof service._id === "number") {
-        Axios.post("/admin/addservices", {
+        Axios.post("/admin/api/addservices", {
           Service: service.Service,
           Residential: service.Residential,
           Commercial: service.Commercial
         });
       } else {
-        Axios.post("/admin/services", {
+        Axios.post("/admin/api/services", {
           _id: service._id,
           Service: service.Service,
           Residential: service.Residential,

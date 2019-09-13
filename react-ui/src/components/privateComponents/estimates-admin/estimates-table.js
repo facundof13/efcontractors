@@ -72,7 +72,7 @@ export default class EstimatesTable extends React.Component {
   }
 
   getCustomers(changeItems) {
-    Axios.get("/admin/invoiceCustomers").then(res => {
+    Axios.get("/admin/api/invoiceCustomers").then(res => {
       this.setState(
         { customers: res.data, filteredCustomers: [...res.data] },
         function() {
@@ -96,7 +96,7 @@ export default class EstimatesTable extends React.Component {
   deleteCustomer(customer) {
     var id = customer._id;
     if (window.confirm(`Delete client ${customer.name}?`)) {
-      Axios.delete("/admin/invoiceCustomerId", { data: { id } }).then(res => {
+      Axios.delete("/admin/api/invoiceCustomerId", { data: { id } }).then(res => {
         if (res.status === 200 || res.status === 304) {
           this.setState({
             customerItems: []
@@ -192,7 +192,7 @@ export default class EstimatesTable extends React.Component {
     } else zipOk = false;
 
     if (emailOk && phoneOk && cityStateOk && zipOk) {
-      Axios.post("/admin/updateCustomer", {
+      Axios.post("/admin/api/updateCustomer", {
         customer: this.state.customerToEdit[0]
       }).then(res => {
         if (res.status === 200 || res.status === 304) {
@@ -213,7 +213,7 @@ export default class EstimatesTable extends React.Component {
 
   handleEstimateSave = obj => {
     let id = this.state.customerInfo._id;
-    Axios.post("/admin/updateestimate", { id: id, obj: obj }).then(() => {
+    Axios.post("/admin/api/updateestimate", { id: id, obj: obj }).then(() => {
       this.getCustomers(true);
     });
   };
@@ -221,7 +221,7 @@ export default class EstimatesTable extends React.Component {
   handleEstimateDelete(obj) {
     let id = this.state.customerInfo._id;
     if (window.confirm(`Delete estimate "${obj.title}"`)) {
-      Axios.delete("/admin/deleteestimate", {
+      Axios.delete("/admin/api/deleteestimate", {
         data: { id: id, obj: obj }
       }).then(() => {
         this.getCustomers(true);
@@ -238,7 +238,7 @@ export default class EstimatesTable extends React.Component {
 
   markEstimatePaid(row) {
     if (window.confirm(`Mark invoice ${row.title} as paid?`)) {
-      Axios.post("/admin/updateestimate", {
+      Axios.post("/admin/api/updateestimate", {
         obj: {
           date: row.date,
           items: row.items,

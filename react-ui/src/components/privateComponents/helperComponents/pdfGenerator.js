@@ -2,7 +2,7 @@ import Axios from "axios";
 
 export async function generatePDF(client, estimate) {
   //get image as base64 add it to pdf
-  let res = await Axios.get("/admin/imgurl");
+  let res = await Axios.get("/admin/api/imgurl");
   var img = res.data[0].img;
 }
 

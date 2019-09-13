@@ -55,7 +55,7 @@ export default class CreateEstimate extends React.Component {
 
     this.getCustomers();
 
-    Axios.get("/admin/estimateNum").then(res => {
+    Axios.get("/admin/api/estimateNum").then(res => {
       this.setState({ estimateNum: res.data });
     });
   }
@@ -68,7 +68,7 @@ export default class CreateEstimate extends React.Component {
 
   getServices() {
     return new Promise((resolve, reject) => {
-      Axios.get("/admin/invoiceServices").then(res => {
+      Axios.get("/admin/api/invoiceServices").then(res => {
         this.setState({ services: res.data });
         resolve();
       });
@@ -77,7 +77,7 @@ export default class CreateEstimate extends React.Component {
 
   getCustomers() {
     // get available customers
-    Axios.get("/admin/invoiceCustomers").then(res => {
+    Axios.get("/admin/api/invoiceCustomers").then(res => {
       this.setState({ customers: res.data });
     });
   }
@@ -251,9 +251,9 @@ export default class CreateEstimate extends React.Component {
     if (this.state.clientSelected) {
       query.id = this.state.idToUpdate;
       query.date = new Date();
-      Axios.post("/admin/invoiceupdate", query).then(res => {
+      Axios.post("/admin/api/invoiceupdate", query).then(res => {
         if (res.status === 200) {
-          Axios.post("/admin/estimateNum").then(() => {
+          Axios.post("/admin/api/estimateNum").then(() => {
             this.resetFields();
           });
         }
@@ -266,9 +266,9 @@ export default class CreateEstimate extends React.Component {
       query.phone = this.state.phone;
       query.email = this.state.email;
       query.dateSubmitted = new Date();
-      Axios.post("/admin/invoice", query).then(res => {
+      Axios.post("/admin/api/invoice", query).then(res => {
         if (res.status === 200) {
-          Axios.post("/admin/estimateNum").then(() => {
+          Axios.post("/admin/api/estimateNum").then(() => {
             this.resetFields();
           });
         }

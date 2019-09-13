@@ -28,7 +28,7 @@ export default class ManageTestimonials extends React.Component {
   }
 
   getTestimonials() {
-    Axios.get("/admin/testimonials").then(res => {
+    Axios.get("/admin/api/testimonials").then(res => {
       this.setState({ testimonials: res.data });
     });
   }
@@ -54,7 +54,7 @@ export default class ManageTestimonials extends React.Component {
 
   handleSubmit() {
     this.setState({ loading: true });
-    Axios.post("/admin/updatetestimonials", {
+    Axios.post("/admin/api/updatetestimonials", {
       testimonials: this.state.updatedTestimonials
     }).then(() => {
       setTimeout(() => {
@@ -65,7 +65,7 @@ export default class ManageTestimonials extends React.Component {
 
   deleteTestimonial(id) {
     if (window.confirm(`Delete testimonial?`)) {
-      Axios.delete(`/admin/testimonials`, { data: { id: id } }).then(() => {
+      Axios.delete(`/admin/api/testimonials`, { data: { id: id } }).then(() => {
         this.getTestimonials();
       });
     }

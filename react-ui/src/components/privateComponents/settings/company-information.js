@@ -18,7 +18,7 @@ export default class CompanyInformation extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get("/admin/settings").then(res => {
+    Axios.get("/admin/api/settings").then(res => {
       this.setState({
         telephone: res.data.telephone,
         email: res.data.email,
@@ -36,7 +36,7 @@ export default class CompanyInformation extends React.Component {
   }
 
   handleSave() {
-    Axios.post("/admin/settings", {
+    Axios.post("/admin/api/settings", {
       settings: {
         telephone: this.state.telephone,
         email: this.state.email,

@@ -58,7 +58,7 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get("/admin/imgurl").then(res => {
+    Axios.get("/admin/api/imgurl").then(res => {
       this.setState({
         imgUrl: res.data[0].img
       });
@@ -84,12 +84,12 @@ export default class CustomerEstimateTable extends React.Component {
 
   sendEstimate(row) {
     if (window.confirm(`Send an email to ${this.props.customerInfo.email}?`)) {
-      Axios.post("/admin/generatePDF", {
+      Axios.post("/admin/api/generatePDF", {
         client: this.props.customerInfo,
         estimate: row,
         imgUrl: this.state.imgUrl
       }).then(pdf => {
-        Axios.post("/admin/sendemail", {
+        Axios.post("/admin/api/sendemail", {
           estimate: row,
           client: this.props.customerInfo,
           pdf: pdf.data
@@ -115,7 +115,7 @@ export default class CustomerEstimateTable extends React.Component {
   }
 
   async createPdf(row) {
-    Axios.post("/admin/generatePDF", {
+    Axios.post("/admin/api/generatePDF", {
       client: this.props.customerInfo,
       estimate: row,
       imgUrl: this.state.imgUrl

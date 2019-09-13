@@ -124,7 +124,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
   getServices() {
     return new Promise((resolve, reject) => {
-      Axios.get("/admin/invoiceServices").then(res => {
+      Axios.get("/admin/api/invoiceServices").then(res => {
         this.setState({ services: res.data });
         resolve();
       });

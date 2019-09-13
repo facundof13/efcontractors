@@ -17,7 +17,7 @@ class Project extends Component {
   imgDelete(event) {
     if (window.confirm("Delete this image?")) {
       this.setState({deleting: true})
-      Axios.delete("/admin/deleteimg", {
+      Axios.delete("/admin/api/deleteimg", {
         data: { id: this.props.user[0]._id, image: event.target.src }
       }).then(res => {
         this.props.finishedFunction(this.props.user[0]._id);

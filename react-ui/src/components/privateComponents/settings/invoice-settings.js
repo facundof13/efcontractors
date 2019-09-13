@@ -18,7 +18,7 @@ export default class InvoiceSettings extends React.Component {
   }
 
   componentDidMount() {
-    Axios.get("/admin/invoicesettings").then(res => {
+    Axios.get("/admin/api/invoicesettings").then(res => {
       this.setState({
         company: res.data.company,
         address: res.data.address,
@@ -36,7 +36,7 @@ export default class InvoiceSettings extends React.Component {
   }
 
   handleSave() {
-    Axios.post("/admin/invoicesettings", {
+    Axios.post("/admin/api/invoicesettings", {
       settings: {
         company: this.state.company,
         address: this.state.address,

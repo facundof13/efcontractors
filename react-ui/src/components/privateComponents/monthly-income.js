@@ -34,7 +34,7 @@ export default class MonthlyIncome extends React.Component {
 
   getGrandTotal() {
     let grandTotal = 0;
-    Axios.post("/admin/estimatesinmonth").then(res => {
+    Axios.post("/admin/api/estimatesinmonth").then(res => {
       res.data.map(invoice => {
         if (invoice.paid) {
           invoice.items.map(item => {
@@ -56,7 +56,7 @@ export default class MonthlyIncome extends React.Component {
 
   displayMonthIncome() {
     // Get estimates from this month
-    Axios.post("/admin/estimatesinmonth", {
+    Axios.post("/admin/api/estimatesinmonth", {
       month: this.state.currentMonth
     }).then(res => {
       // get paid total
@@ -97,7 +97,7 @@ export default class MonthlyIncome extends React.Component {
   }
 
   getDates() {
-    Axios.get("/admin/months").then(res => {
+    Axios.get("/admin/api/months").then(res => {
       this.setState({
         months: res.data
       });

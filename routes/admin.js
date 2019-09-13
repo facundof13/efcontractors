@@ -9,25 +9,25 @@ const titleize = require("titleize");
 const moment = require("moment");
 const pdfgenerator = require("../models/pdfgenerator");
 
-router.post("/sendemail", function(req, res, next) {
+router.post("/api/sendemail", function(req, res, next) {
   invoices.sendEmail(req.body);
   res.end();
 });
 
-router.get("/testimonials", function(req, res, next) {
+router.get("/api/testimonials", function(req, res, next) {
   testimonials.getAllTestimonials().then(testimonials => {
     res.json(testimonials);
   });
 });
 
 // delete testimonial
-router.delete("/testimonials", function(req, res, next) {
+router.delete("/api/testimonials", function(req, res, next) {
   testimonials.removeTestimonial(req.body.id);
   res.end();
 });
 
 // update testimonials
-router.post("/updatetestimonials", function(req, res, next) {
+router.post("/api/updatetestimonials", function(req, res, next) {
   req.body.testimonials.map(testimonial => {
     let query = {
       text: testimonial.text,
@@ -41,30 +41,30 @@ router.post("/updatetestimonials", function(req, res, next) {
   res.end();
 });
 
-router.get("/settings", function(req, res, next) {
+router.get("/api/settings", function(req, res, next) {
   settings.getSettings().then(settings => {
     res.json(settings[0]);
   });
 });
 
-router.get('/invoicesettings', function (req, res, next) {
+router.get("/api/invoicesettings", function(req, res, next) {
   settings.getInvoiceSettings().then(settings => {
-    res.json(settings[0])
-  })
-})
+    res.json(settings[0]);
+  });
+});
 
-router.post('/settings', function(req, res, next) {
-  settings.updateSettings(req.body.settings)
-  res.end()
-})
+router.post("/api/settings", function(req, res, next) {
+  settings.updateSettings(req.body.settings);
+  res.end();
+});
 
-router.post('/invoicesettings', function(req, res, next) {
-  settings.updateInvoiceSettings(req.body.settings)
-  res.end()
-})
+router.post("/api/invoicesettings", function(req, res, next) {
+  settings.updateInvoiceSettings(req.body.settings);
+  res.end();
+});
 
 //add service
-router.post("/addservices", function(req, res, next) {
+router.post("/api/addservices", function(req, res, next) {
   query = {
     Service: req.body.Service,
     Residential: req.body.Residential,
@@ -75,34 +75,36 @@ router.post("/addservices", function(req, res, next) {
 });
 
 //delete service
-router.delete("/services", function(req, res, next) {
+router.delete("/api/services", function(req, res, next) {
   services.removeService(req.body._id);
   res.end();
 });
 
 //update service
-router.post( "/services", function(req, res, next) {
-    let query = {Service: req.body.Service, Residential: req.body.Residential, Commercial: req.body.Commercial }
-    services.updateService(req.body._id, query);
-    res.end();
-  }
-);
+router.post("/api/services", function(req, res, next) {
+  let query = {
+    Service: req.body.Service,
+    Residential: req.body.Residential,
+    Commercial: req.body.Commercial
+  };
+  services.updateService(req.body._id, query);
+  res.end();
+});
 
 /// admin/projects
-router.get("/projects", function(req, res, next) {
+router.get("/api/projects", function(req, res, next) {
   projects.getAllProjects().then(items => {
     res.json(items);
   });
 });
 
-router.get("/projectname", async function(req, res, next) {
+router.get("/api/projectname", async function(req, res, next) {
   const result = await projects.getProjectById(req.query.id);
   res.json(result);
 });
 
 // admin/newproject
-router.post("/newproject", async function(req, res, next) {
-
+router.post("/api/newproject", async function(req, res, next) {
   query = {
     name: req.body.name,
     location: req.body.location,
@@ -123,12 +125,12 @@ router.post("/newproject", async function(req, res, next) {
   }
 });
 
-router.delete("/deleteimg", function(req, res, next) {
+router.delete("/api/deleteimg", function(req, res, next) {
   const id = req.body.id;
   const imagesrc = req.body.image;
   // Add the url to be deleted, as well as the thumbnail url
-  if (imagesrc.slice(-4) === '.mp4' || imagesrc.slice(-4) === '.mov') {
-    const thumbsrc = imagesrc.replace(/(\.mp4)|(\.mov)/gm, 'thumb.jpg')
+  if (imagesrc.slice(-4) === ".mp4" || imagesrc.slice(-4) === ".mov") {
+    const thumbsrc = imagesrc.replace(/(\.mp4)|(\.mov)/gm, "thumb.jpg");
     const path2 = thumbsrc.replace(/.+amazonaws.com\//g, "");
     projects.deleteImageFromS3(path2);
   }
@@ -139,30 +141,30 @@ router.delete("/deleteimg", function(req, res, next) {
   res.end();
 });
 
-router.delete("/deleteproject", function(req, res, next) {
+router.delete("/api/deleteproject", function(req, res, next) {
   const id = req.body.id;
   projects.deleteEntireProject(id);
   res.end();
 });
 
-router.get("/invoiceServices", async function(req, res, next) {
+router.get("/api/invoiceServices", async function(req, res, next) {
   invoices.getServices().then(item => {
     res.json(item);
   });
 });
 
-router.get("/invoiceCustomers", async function(req, res, next) {
+router.get("/api/invoiceCustomers", async function(req, res, next) {
   invoices.getInvoiceCustomers().then(items => {
     res.json(items);
   });
 });
 
-router.delete("/invoiceCustomerId", function(req, res, next) {
+router.delete("/api/invoiceCustomerId", function(req, res, next) {
   invoices.deleteCustomer(req.body.id);
   res.end();
 });
 
-router.post("/invoiceupdate", function(req, res, next) {
+router.post("/api/invoiceupdate", function(req, res, next) {
   let total = 0;
   req.body.items.forEach(item => {
     total += Number(item.amount.replace("$", "")) * Number(item.quantity);
@@ -170,7 +172,7 @@ router.post("/invoiceupdate", function(req, res, next) {
 
   let query = {
     expiration: req.body.expiration,
-    title:  titleize(req.body.title),
+    title: titleize(req.body.title),
     items: req.body.items,
     date: req.body.date,
     total: total,
@@ -188,7 +190,7 @@ router.post("/invoiceupdate", function(req, res, next) {
   res.end();
 });
 
-router.post("/invoice", function(req, res, next) {
+router.post("/api/invoice", function(req, res, next) {
   let items = req.body.items;
 
   let total = 0;
@@ -228,14 +230,14 @@ router.post("/invoice", function(req, res, next) {
   res.end();
 });
 
-router.post("/updateCustomer", function(req, res, next) {
+router.post("/api/updateCustomer", function(req, res, next) {
   var id = req.body.customer._id;
 
   invoices.updateCustomer(id, req.body.customer);
   res.end();
 });
 
-router.post("/updateestimate", function(req, res, next) {
+router.post("/api/updateestimate", function(req, res, next) {
   let query = req.body.obj;
 
   let total = 0;
@@ -247,7 +249,7 @@ router.post("/updateestimate", function(req, res, next) {
   invoices.updateEstimate(query).then(res.sendStatus(200));
 });
 
-router.delete("/deleteestimate", function(req, res, next) {
+router.delete("/api/deleteestimate", function(req, res, next) {
   let query = req.body.obj;
   let id = req.body.id;
 
@@ -255,30 +257,30 @@ router.delete("/deleteestimate", function(req, res, next) {
   res.end();
 });
 
-router.get("/imgurl", function(req, res, next) {
+router.get("/api/imgurl", function(req, res, next) {
   invoices.getLogoURI().then(item => {
     res.send(item);
   });
 });
 
-router.post("/generatePDF", function(req, res, next) {
+router.post("/api/generatePDF", function(req, res, next) {
   pdfgenerator.renderPdf(req.body, pdf => {
     res.json(pdf);
   });
 });
 
-router.get("/estimateNum", function(req, res, next) {
+router.get("/api/estimateNum", function(req, res, next) {
   invoices.getCurrentEstimateNum().then(resp => {
     res.json(resp);
   });
 });
 
-router.post("/estimateNum", function(req, res, next) {
+router.post("/api/estimateNum", function(req, res, next) {
   invoices.incrementEstimateNum();
   res.end();
 });
 
-router.get("/months", function(req, res, next) {
+router.get("/api/months", function(req, res, next) {
   // get all invoices
   // sort them by date,
   // res.json the first and last invoices
@@ -304,7 +306,7 @@ router.get("/months", function(req, res, next) {
   // res.end();
 });
 
-router.post("/estimatesinmonth", function(req, res, next) {
+router.post("/api/estimatesinmonth", function(req, res, next) {
   var estimates = [];
   invoices.getAllInvoices().then(invoices => {
     invoices.map(invoice => {
@@ -326,7 +328,5 @@ router.post("/estimatesinmonth", function(req, res, next) {
     res.json(estimates);
   });
 });
-
-
 
 module.exports = router;

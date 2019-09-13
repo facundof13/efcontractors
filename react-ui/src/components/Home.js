@@ -9,7 +9,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    Axios.get("/admin/imgurl").then(res => {
+    Axios.get("/admin/api/imgurl").then(res => {
       this.setState({ logoUrl: res.data[0].img });
     });
     Axios.get("/api/testimonials").then(res => {
