@@ -126,8 +126,9 @@ router.post("/newproject", async function(req, res, next) {
 router.delete("/deleteimg", function(req, res, next) {
   const id = req.body.id;
   const imagesrc = req.body.image;
-  if (imagesrc.slice(-4) === '.mp4' || imagesrc.slice(-4) === '.mp4') {
-    const thumbsrc = imagesrc.replace('.mp4', 'thumb.jpg')
+  // Add the url to be deleted, as well as the thumbnail url
+  if (imagesrc.slice(-4) === '.mp4' || imagesrc.slice(-4) === '.mov') {
+    const thumbsrc = imagesrc.replace(/(\.mp4)|(\.mov)/gm, 'thumb.jpg')
     const path2 = thumbsrc.replace(/.+amazonaws.com\//g, "");
     projects.deleteImageFromS3(path2);
   }

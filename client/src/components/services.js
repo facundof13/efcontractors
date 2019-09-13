@@ -35,7 +35,7 @@ export default class Services extends React.Component {
   }
 
   getServices() {
-    Axios.get("/services").then(res => {
+    Axios.get("/api/services").then(res => {
       this.setState({ services: res.data });
     });
   }

@@ -49,7 +49,7 @@ export default class Viewprojects extends React.Component {
 
   getAllProjects() {
     return new Promise((r, rj) => {
-      axios.get("/projects").then(res =>
+      axios.get("/api/projects").then(res =>
         this.setState({ projects: res.data }, () => {
           r();
         })

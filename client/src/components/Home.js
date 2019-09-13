@@ -12,7 +12,7 @@ class Home extends Component {
     Axios.get("/admin/imgurl").then(res => {
       this.setState({ logoUrl: res.data[0].img });
     });
-    Axios.get("/testimonials").then(res => {
+    Axios.get("/api/testimonials").then(res => {
       this.setState({
         testimonial: res.data[Math.floor(Math.random() * res.data.length)]
       });

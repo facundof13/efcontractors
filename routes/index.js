@@ -11,7 +11,7 @@ router.use(function(req, res, next) {
 });
 
 router.post(
-  "/login",
+  "/api/login",
   function(req, res, next) {
     next();
   },
@@ -25,23 +25,23 @@ router.post(
   }
 );
 
-router.get("/logout", function(req, res, next) {
+router.get("/api/logout", function(req, res, next) {
   // console.log('Server logging out!');
   req.logout();
   res.json("Ok");
 });
-router.get("/services", async function(req, res, next) {
+router.get("/api/services", async function(req, res, next) {
   const serv = await services.getAllServices();
   res.json(serv);
 });
 
-router.get("/testimonials", async function(req, res, next) {
+router.get("/api/testimonials", async function(req, res, next) {
   const tests = await testimonials.getAllVerifiedTestimonials();
   res.json(tests);
 });
 
 //add testimonial
-router.post("/testimonials", function(req, res, next) {
+router.post("/api/testimonials", function(req, res, next) {
   const query = {
     text: req.body.text,
     name: req.body.name,
@@ -55,7 +55,7 @@ router.post("/testimonials", function(req, res, next) {
   res.end();
 });
 
-router.post("/register/:user/:pass", function(req, res, next) {
+router.post("/api/register/:user/:pass", function(req, res, next) {
   const user = req.params.user;
   const pass = req.params.pass;
 
@@ -67,25 +67,25 @@ router.post("/register/:user/:pass", function(req, res, next) {
   res.end();
 });
 
-router.get("/user", (req, res, next) => {
+router.get("/api/user", (req, res, next) => {
   res.json(req.user);
 });
 
-router.get("/users/username/:username", function(req, res, next) {
+router.get("/api/users/username/:username", function(req, res, next) {
   const user = req.params.username;
 
   users.getUserByUsername(user);
   res.end();
 });
 
-router.get("/users/id/:id", function(req, res, next) {
+router.get("/api/users/id/:id", function(req, res, next) {
   const id = req.params.id;
 
   users.getUserById(id);
   res.end();
 });
 
-router.get("/projects", async function(req, res, next) {
+router.get("/api/projects", async function(req, res, next) {
   res.json(await projects.getAllProjects());
 });
 

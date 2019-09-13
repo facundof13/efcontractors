@@ -52,7 +52,7 @@ class App extends Component {
 
   getUser() {
     // Disable here for testing
-    axios.get("/user").then(response => {
+    axios.get("/api/user").then(response => {
       if (response.data) {
         this.setState({
           loggedIn: true,

@@ -30,7 +30,7 @@ export default class Testimonials extends React.Component {
   }
   //get all testimonials
   componentDidMount() {
-    Axios.get("/testimonials").then(res => {
+    Axios.get("/api/testimonials").then(res => {
       var arr = [];
       res.data.map((testimonial, i) => {
         arr.push(
@@ -79,7 +79,7 @@ export default class Testimonials extends React.Component {
     ) {
       window.alert("Empty field!");
     } else {
-      Axios.post("/testimonials", {
+      Axios.post("/api/testimonials", {
         text: this.state.text,
         name: this.state.name,
         cityState: this.state.cityState

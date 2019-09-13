@@ -11,7 +11,7 @@ class ProjectsUpload extends Component {
     this.state = {
       selectedFiles: null,
       label: "",
-      uploading: false,
+      uploading: false
     };
   }
   multipleFileChangedHandler = event => {
@@ -22,26 +22,29 @@ class ProjectsUpload extends Component {
   };
 
   takeScreenshot(vid) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       var url = URL.createObjectURL(vid);
       var video = document.createElement("video");
       video.src = url;
       video.playsInline = true;
       video.muted = true;
       video.play();
+      //we want to make the canvas the size of the video being uploaded
+      //get video width and height
+      video.oncanplay = function() {
+        var canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
 
-      var canvas = document.createElement("canvas");
-      canvas.width = 640;
-      canvas.height = 480;
-
-      //convert to desired file format
-      setTimeout(() => {
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        var dataURI = canvas.toDataURL("image/jpeg");
-        URL.revokeObjectURL(url);
-        resolve(dataURI);
-      }, 1000); //at one second into the video
+        //convert to desired file format
+        setTimeout(() => {
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          var dataURI = canvas.toDataURL("image/jpeg");
+          URL.revokeObjectURL(url);
+          resolve(dataURI);
+        }, 1000); //at one second into the video
+      };
     });
   }
   dataURItoBlob(dataURI) {
@@ -88,7 +91,7 @@ class ProjectsUpload extends Component {
             );
           }
         }
-        resolve()
+        resolve();
       } else {
         resolve();
       }
@@ -123,9 +126,7 @@ class ProjectsUpload extends Component {
               headers: {
                 accept: "application/json",
                 "Accept-Language": "en-US,en;q=0.8",
-                "Content-Type": `multipart/form-data; boundary=${
-                  data._boundary
-                }`
+                "Content-Type": `multipart/form-data; boundary=${data._boundary}`
               }
             })
             .then(response => {
@@ -159,8 +160,7 @@ class ProjectsUpload extends Component {
             .catch(error => {
               // If another error
               window.alert(error);
-              this.setState({uploading: false, selectedFiles: null,
-              })
+              this.setState({ uploading: false, selectedFiles: null });
             });
         });
       }
@@ -174,7 +174,12 @@ class ProjectsUpload extends Component {
     return (
       <div>
         <div>
-          <Button color="secondary" disabled={this.state.uploading} variant="text" component="label">
+          <Button
+            color="secondary"
+            disabled={this.state.uploading}
+            variant="text"
+            component="label"
+          >
             {this.state.label === "" ? "Select Files" : this.state.label}
             <input
               type="file"
@@ -183,7 +188,11 @@ class ProjectsUpload extends Component {
               className="hide"
             />
           </Button>
-          <Button color="secondary" disabled={this.state.uploading} onClick={this.multipleFileUploadHandler}>
+          <Button
+            color="secondary"
+            disabled={this.state.uploading}
+            onClick={this.multipleFileUploadHandler}
+          >
             Upload!
           </Button>
         </div>
