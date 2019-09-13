@@ -36,7 +36,7 @@ export default class ProjectList extends React.Component {
     this.props.getUser(id);
   }
 
- 
+
 
   render() {
     return (

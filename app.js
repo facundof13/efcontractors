@@ -36,7 +36,7 @@ mongoUtil.connectToServer((err, client) => {
       resave: true
     })
   );
-  app.use(express.static(path.join(__dirname, "cient/build")));
+  app.use(express.static(path.join(__dirname, "react-ui/build")));
 
   app.use(passport.initialize());
   app.use(passport.session());
