@@ -102,7 +102,6 @@ export default class Testimonials extends React.Component {
             <h4>Testimonials</h4>
           </Typography>
         </div>
-        <div className="testimonials-grid">{this.state.testimonials}</div>
         <div className="submit-testimonial">
           <div>
             <Button
@@ -170,6 +169,7 @@ export default class Testimonials extends React.Component {
             </Dialog>
           </div>
         </div>
+        <div className="testimonials-grid">{this.state.testimonials}</div>
         <div>
           <Typography className='small-text' component='span'>
             <p>

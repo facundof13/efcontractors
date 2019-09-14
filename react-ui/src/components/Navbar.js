@@ -8,108 +8,131 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
+import { Drawer,ClickAwayListener, Divider } from "@material-ui/core";
 
-export default function Navbar(props) {
+export default class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { open: false };
+
+    this.handleClick = this.handleClick.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    
+  }
   // console.log(`Logged In: ${props.loggedIn}`);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
+  handleClick() {
+    this.setState({ open: true });
   }
 
-  function handleClose(event) {
-    setAnchorEl(null);
+  handleClose() {
+    this.setState({ open: false });
   }
+  render() {
+    return (
+      <div className="root">
+        <ClickAwayListener onClickAway={this.handleClose}>
 
-  return (
-    <div className="root">
-      <AppBar position="static" >
-        <Toolbar>
-          <Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-            color="secondary"
-          >
-            <MenuIcon />
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            color="primary"
-          >
+        <AppBar position="static">
+          <Toolbar>
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={this.handleClick}
+              color="secondary"
+            >
+              <MenuIcon />
+            </Button>
+            <Typography color="secondary" variant="h6" className="title">
+              EFContractors
+            </Typography>
+            {this.props.loggedIn ? (
+              <Link className="navbar-link" to="/logout">
+                <Button color="secondary">Logout</Button>
+              </Link>
+            ) : (
+              <Link className="navbar-link" to="/login">
+                <Button color="secondary">Login</Button>
+              </Link>
+            )}
+          </Toolbar>
+          <Drawer className='navbar-drawer' variant="temporary" anchor="left" open={this.state.open}>
             {/* Show different links depending on logged in status */}
             {/* Logged in currently: */}
-            {props.loggedIn ? (
+            {this.props.loggedIn ? (
               <div>
                 <Link className="navbar-link" to="/admin">
-                  <MenuItem color="secondary" onClick={handleClose}>Admin Home</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Admin Home
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/admin/projects">
-                  <MenuItem color="secondary" onClick={handleClose}>Manage Projects</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Manage Projects
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/admin/estimates">
-                  <MenuItem color="secondary" onClick={handleClose}>Manage Estimates</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Manage Estimates
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/admin/testimonials">
-                  <MenuItem color="secondary" onClick={handleClose}>Manage Testimonials</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Manage Testimonials
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/admin/settings">
-                  <MenuItem color="secondary" onClick={handleClose}>Settings</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Settings
+                  </MenuItem>
                 </Link>
+                <Divider />
               </div>
             ) : (
               <div>
-              {/* Not Logged in currently: */}
+                {/* Not Logged in currently: */}
                 <Link className="navbar-link" to="/">
-                  <MenuItem color="secondary" onClick={handleClose}>Home</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Home
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/about">
-                  <MenuItem color="secondary" onClick={handleClose}>About Us</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    About Us
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/testimonials">
-                  <MenuItem color="secondary" onClick={handleClose}>Testimonials</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Testimonials
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/projects">
-                  <MenuItem color="secondary" onClick={handleClose}>Projects</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Projects
+                  </MenuItem>
                 </Link>
+                <Divider />
                 <Link className="navbar-link" to="/services">
-                  <MenuItem color="secondary" onClick={handleClose}>Services</MenuItem>
+                  <MenuItem color="secondary" onClick={this.handleClose}>
+                    Services
+                  </MenuItem>
                 </Link>
-                
+                <Divider />
               </div>
             )}
-          </Menu>
-          <Typography color="secondary" variant="h6" className="title">
-            EFContractors
-          </Typography>
-          {props.loggedIn ? (
-            <Link className="navbar-link" to="/logout">
-              <Button color="secondary">Logout</Button>
-            </Link>
-          ) : (
-            <Link className="navbar-link" to="/login">
-              <Button color="secondary">Login</Button>
-            </Link>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
-    /*
-              <section>
-                <Link to="/" className="">
-                  <span className="">Home</span>
-                </Link>
-                <Link to="/projects" className="">
-                  <span className="">Projects</span>
-                </Link>
-                <Link to="/login" className="">
-                  <span className="">Login</span>
-                </Link>
-              </section>
-            )} }*/
-  );
+          </Drawer>
+        </AppBar>
+        </ClickAwayListener>
+      </div>
+    );
+  }
 }

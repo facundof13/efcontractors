@@ -485,9 +485,10 @@ h5 {
   }
 
   .about-us-body {
-    text-align: justify;
+    text-align: left;
     color: #e0e0e0;
     margin-left: 5vw;
+    letter-spacing: 0.5px;
   }
 }
 @media screen and (max-width: 768px) {
@@ -506,9 +507,10 @@ h5 {
   }
 
   .about-us-body {
-    text-align: justify;
+    text-align: left;
     color: #e0e0e0;
     margin-left: 5vw;
+    letter-spacing: 0.5px;
   }
 }
 
@@ -669,4 +671,14 @@ h5 {
 .facebook-button{
   overflow: auto;
 }
+}
+
+.navbar-drawer .MuiPaper-root{
+  background: #424242 !important;
+  color: yellow !important;
+  width: 200px !important;
+}
+
+.navbar-drawer {
+  font-size: 1.2em;
 }
