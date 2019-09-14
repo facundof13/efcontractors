@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Axios from "axios";
 import { Divider } from "@material-ui/core";
 
-class ProjectsPage extends Component {
+export default class ProjectsPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -40,19 +40,21 @@ class ProjectsPage extends Component {
   }
 
   handleSubmit() {
-    this.getProjects()
-    .then(() => {
-      this.setState({ currentUser: this.state.data[this.state.data.length - 1] }, () => {
-        this.getUser(this.state.currentUser._id)
-      });
-    })
+    this.getProjects().then(() => {
+      this.setState(
+        { currentUser: this.state.data[this.state.data.length - 1] },
+        () => {
+          this.finished(this.state.currentUser._id);
+        }
+      );
+    });
   }
 
   async getProjects() {
-    let projects = await Axios.get("/admin/api/projects")
+    let projects = await Axios.get("/admin/api/projects");
     this.setState({
       data: projects.data
-    })
+    });
   }
 
   finished(id) {
@@ -113,14 +115,3 @@ class ProjectsPage extends Component {
     );
   }
 }
-
-export default ProjectsPage;
-
-// <ProjectsCreate handleSubmit={this.handleSubmit} />
-// <ul>
-//   {this.state.data.map(project => (
-//     <div key={project._id}>
-//       <Project data={project} finishedFunction={this.finished}  />
-//     </div>
-//   ))}{" "}
-// </ul>

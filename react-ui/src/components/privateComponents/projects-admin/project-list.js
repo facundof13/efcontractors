@@ -4,26 +4,17 @@ import { FormControl, Select, MenuItem, InputLabel } from "@material-ui/core";
 export default class ProjectList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { project: "" };
+    this.state = { project: " " };
 
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  componentDidUpdate() {
-    if (this.props.user.length > 0) {
-      // this.setState({ project: this.props.user[0].name });
-      // Infinite loop here
-    }
   }
 
   handleChange(event, value) {
     this.setState({ project: event.target.value });
     this.props.getUser(value.key);
-    // console.log(value)
   }
 
   render() {
-    // console.log(this.state.project.name);
     return (
       <div>
         <form id="item-form">

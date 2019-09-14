@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import ProjectsUpload from "./projects-upload";
-import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Button } from "@material-ui/core";
 
@@ -43,12 +42,8 @@ class Project extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="user-container">
-        <Typography color="secondary" component="span" variant="h5">
-          <h5>{this.props.user[0].name}</h5>
-        </Typography>
         <ProjectsUpload
           user={this.props.user[0]}
           finishedFunction={this.props.finishedFunction}
@@ -66,8 +61,7 @@ class Project extends Component {
             <video
             className='small-preview'
               controls
-              width="200px"
-              height="200px"
+              width="175px"
               src={image.url}
               key={image.url}
               onClick={this.imgDelete}
@@ -79,41 +73,11 @@ class Project extends Component {
               src={image.url}
               onClick={this.imgDelete}
               alt=""
-              height="200px"
-              width="200px"
+              width="175px"
             />
           )
         )}
       </div>
-      /*{ { <ul>
-          <li>{this.props.data.name + " " + this.props.data.location}</li>
-          <Button variant="contained" onClick={this.toggleImages}>Show options</Button>
-          <div className={this.state.areImagesVisible ? "" : "hidden"}>
-            {this.props.data.images.map(image =>
-              image.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
-                <video
-                  controls
-                  width="200px"
-                  height="200px"
-                  src={image}
-                  key={image}
-                  onClick={this.imgDelete}
-                />
-              ) : (
-                <img
-                  key={image}
-                  src={image}
-                  onClick={this.imgDelete}
-                  alt=""
-                  height="200px"
-                  width="200px"
-                />
-              )
-            )}
-            <Button variant="contained" onClick={this.deleteProject}>Delete this project</Button>
-            
-          </div>
-        </ul> } }*/
     );
   }
 }

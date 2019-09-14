@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
-import { TextField, InputField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Axios from "axios";
 
 class ProjectsCreate extends Component {
@@ -60,7 +60,6 @@ class ProjectsCreate extends Component {
           <Button
             color="secondary"
             variant="text"
-            // onClick={this.handleSubmit}
             type="submit"
             className="create-project-btn"
           >
