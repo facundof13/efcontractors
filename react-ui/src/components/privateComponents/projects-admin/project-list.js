@@ -1,63 +1,64 @@
 import React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { Paper, IconButton } from "@material-ui/core";
-import Axios from "axios";
+import { FormControl, Select, MenuItem, InputLabel } from "@material-ui/core";
 
 export default class ProjectList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { target: "", data: [] };
+    this.state = { project: "" };
 
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
-    // this.getProjects();
+  componentDidUpdate() {
+    if (this.props.user.length > 0) {
+      // this.setState({ project: this.props.user[0].name });
+      // Infinite loop here
+    }
   }
 
-  handleSubmit(name, location) {
-    Axios.post("/admin/api/newproject", {
-      name: name,
-      location: location
-    }).then(res => {
-      if (res.data.error) {
-        window.alert(res.data.error);
-      } else if (res.status === 200) {
-        this.props.finishedFunction();
-      }
-    });
+  handleChange(event, value) {
+    this.setState({ project: event.target.value });
+    this.props.getUser(value.key);
+    // console.log(value)
   }
-
-  handleClick(id) {
-    this.props.getUser(id);
-  }
-
-
 
   render() {
+    // console.log(this.state.project.name);
     return (
-        <div className="projects-container">
-          <Paper>
-            {this.props.projects ? (this.props.projects.map(project => (
-              <div justify="space-between" key={project._id}>
-                <ListItem
-                  dense={true}
-                  button
-                  onClick={() => this.handleClick(project._id)}
-                >
-                  {project.name}
-                  <IconButton onClick={() => this.props.deleteProject(project)}>
-                    <DeleteOutlinedIcon />
-                  </IconButton>
-                </ListItem>
-                <Divider />
-              </div>
-            ))) : ("")}
-          </Paper>
+      <div>
+        <form id="item-form">
+          <div className="login">
+            <FormControl>
+              <InputLabel htmlFor="customer-select">
+                Select a project
+              </InputLabel>
+              <Select
+                className="estimate-item-select-width"
+                id="item-select"
+                // className="estimate-item-select-width"
+                // id="customer-select"
+                onChange={this.handleChange}
+                // onOpen={this.handleOpen}
+                value={this.state.project}
+                name="selectedCustomer"
+                // required
+              >
+                <MenuItem value="">None</MenuItem>
+                {this.props.projects
+                  ? this.props.projects.map(project => (
+                      <MenuItem
+                        value={project.name}
+                        id={project._id}
+                        key={project._id}
+                      >
+                        {project.name}
+                      </MenuItem>
+                    ))
+                  : ""}
+              </Select>
+            </FormControl>
+          </div>
+        </form>
       </div>
     );
   }

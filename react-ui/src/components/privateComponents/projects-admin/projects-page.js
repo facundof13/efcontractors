@@ -4,6 +4,7 @@ import ProjectsCreate from "./projects-create";
 import ProjectList from "./project-list";
 import Typography from "@material-ui/core/Typography";
 import Axios from "axios";
+import { Divider } from "@material-ui/core";
 
 class ProjectsPage extends Component {
   constructor() {
@@ -29,30 +30,36 @@ class ProjectsPage extends Component {
   }
 
   getUser(id) {
-    Axios.get("/admin/api/projectname", { params: { id: id } }).then(res => {
-      this.setState({ currentUser: res.data });
-    });
-  }
-
-  handleSubmit(name, location) {
-    this.setState({ newName: name, newLocation: location });
-  }
-
-  getProjects() {
-    Axios.get("/admin/api/projects").then(res => {
-      this.setState({
-        data: res.data
+    if (id) {
+      Axios.get("/admin/api/projectname", { params: { id: id } }).then(res => {
+        this.setState({ currentUser: res.data });
       });
-    });
+    } else {
+      this.setState({ currentUser: [] });
+    }
   }
 
-  
+  handleSubmit() {
+    this.getProjects()
+    .then(() => {
+      this.setState({ currentUser: this.state.data[this.state.data.length - 1] }, () => {
+        this.getUser(this.state.currentUser._id)
+      });
+    })
+  }
+
+  async getProjects() {
+    let projects = await Axios.get("/admin/api/projects")
+    this.setState({
+      data: projects.data
+    })
+  }
 
   finished(id) {
     if (id) {
       this.getUser(id);
     } else {
-      this.getProjects()
+      this.getProjects();
     }
   }
 
@@ -67,12 +74,11 @@ class ProjectsPage extends Component {
           data: {
             id: project._id
           }
-        }).then(res => {
-          // this.props.finishedFunction(project._id)
-          this.getProjects()
+        });
+        this.setState({ currentUser: [], data: [] }, () => {
+          this.getProjects();
         });
       }
-    } else {
     }
   }
 
@@ -82,14 +88,22 @@ class ProjectsPage extends Component {
         <Typography color="secondary" component="span" variant="h4">
           <h4>Manage projects</h4>
         </Typography>
-        <ProjectsCreate handleSubmit={this.getProjects} />
+        <div className="projects-top">
+          <ProjectsCreate handleSubmit={this.handleSubmit} />
+          <ProjectList
+            projects={this.state.data}
+            getUser={this.getUser}
+            finishedFunction={this.getProjects}
+            user={this.state.currentUser}
+          />
+        </div>
+        <Divider />
         <div className="container">
-          <ProjectList projects={this.state.data} getUser={this.getUser} finishedFunction={this.getProjects} deleteProject={this.deleteProject}/>
           {this.state.currentUser.length > 0 ? (
             <Project
+              deleteProject={this.deleteProject}
               user={this.state.currentUser}
               finishedFunction={this.finished}
-              deleteUser={this.userIdChanged}
             />
           ) : (
             ""

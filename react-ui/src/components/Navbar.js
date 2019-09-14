@@ -59,6 +59,8 @@ export default class Navbar extends React.Component {
             )}
           </Toolbar>
           <Drawer className='navbar-drawer' variant="temporary" anchor="left" open={this.state.open}>
+          <img src='https://efcontractors.s3.us-east-2.amazonaws.com/logosmall.png' alt='small logo' width='200px'></img>
+          <Divider />
             {/* Show different links depending on logged in status */}
             {/* Logged in currently: */}
             {this.props.loggedIn ? (

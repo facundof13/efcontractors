@@ -91,56 +91,15 @@ FormControl .MuiInput-underline:before {
   border-bottom-color: #ffff00 !important;
 }
 
-@media (max-width: 599px) {
 
-  .projects-container {
-    margin-right: 10vw !important;
-    margin-left: 10vw !important;
-    margin-top: 20px !important;
-  }
+.projects-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-
-@media (min-width: 600px) {
-  .projects-container {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    width: 30%;
-    max-width: 315px !important;
-    margin-left: 50px;
-    height: 500px;
-  }
-
-  .container {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .list {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .MuiListItem-root {
-    justify-content: space-between !important;
-  }
-
-  .create-container {
-    margin-bottom: 30px;
-  }
-  .submit-list-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .user-container {
-    flex-grow: 2;
-    height: 500px;
-    overflow-y: auto;
-    width: 60%;
-  }
+.create-project-btn {
+  margin: 10px !important;
 }
 
 .hide {
@@ -681,4 +640,12 @@ h5 {
 
 .navbar-drawer {
   font-size: 1.2em;
+}
+
+.small-preview{
+  margin: 5px;
+}
+
+.alert-delete {
+  color: red !important;
 }

@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
-import { TextField } from "@material-ui/core";
+import { TextField, InputField } from "@material-ui/core";
 import Axios from "axios";
 
 class ProjectsCreate extends Component {
   constructor() {
     super();
     this.state = {
-      correctInputs: false
+      correctInputs: false,
+      name: "",
+      location: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,8 +30,8 @@ class ProjectsCreate extends Component {
       if (res.data.error) {
         window.alert(res.data.error);
       } else if (res.status === 200) {
-        this.setState({name: "", location: ""})
-        document.getElementById("project-form").reset()
+        this.setState({ name: "", location: "" });
+        document.getElementById("project-form").reset();
         this.props.handleSubmit();
       }
     });
@@ -39,30 +41,31 @@ class ProjectsCreate extends Component {
     return (
       <div className="create-container">
         <form autoComplete="off" id="project-form" onSubmit={this.handleSubmit}>
-          <div className='login'>
-          <TextField
-            name="name"
-            type="text"
-            color="secondary"
-            placeholder="First Last"
-            onChange={this.handleChange}
-          />
-          <TextField
-            name="location"
-            type="text"
-            color="secondary"
-            placeholder="City, GA"
-            onChange={this.handleChange}
-          />
+          <div className="login">
+            <TextField
+              label="First Last"
+              name="name"
+              type="text"
+              color="secondary"
+              onChange={this.handleChange}
+            />
+            <TextField
+              label="City, State"
+              name="location"
+              type="text"
+              color="secondary"
+              onChange={this.handleChange}
+            />
+          </div>
           <Button
             color="secondary"
             variant="text"
             // onClick={this.handleSubmit}
             type="submit"
+            className="create-project-btn"
           >
             Create new project
           </Button>
-          </div>
         </form>
       </div>
     );

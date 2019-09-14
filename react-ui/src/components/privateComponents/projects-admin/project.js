@@ -3,6 +3,7 @@ import Axios from "axios";
 import ProjectsUpload from "./projects-upload";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Button } from "@material-ui/core";
 
 class Project extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class Project extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className="user-container">
         <Typography color="secondary" component="span" variant="h5">
@@ -51,12 +53,18 @@ class Project extends Component {
           user={this.props.user[0]}
           finishedFunction={this.props.finishedFunction}
         />
+        <Button 
+        className='alert-delete'
+        onClick={() => {this.props.deleteProject(this.props.user[0])}} >
+          Delete Project
+        </Button>
         <div>
           {this.state.uploading ? <CircularProgress color="secondary" /> : ""}
         </div>
         {this.props.user[0].images.map(image =>
           image.url.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (
             <video
+            className='small-preview'
               controls
               width="200px"
               height="200px"
@@ -66,6 +74,7 @@ class Project extends Component {
             />
           ) : (
             <img
+            className='small-preview'
               key={image.url}
               src={image.url}
               onClick={this.imgDelete}
