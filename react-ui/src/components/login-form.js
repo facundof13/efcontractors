@@ -20,13 +20,13 @@ class LoginForm extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(myTimeout)
+    clearTimeout(myTimeout);
     this.setState({
-        username: "",
-        password: "",
-        redirectTo: null,
-        error: false
-    })
+      username: "",
+      password: "",
+      redirectTo: null,
+      error: false
+    });
   }
 
   handleChange(event) {
@@ -59,7 +59,7 @@ class LoginForm extends Component {
       .catch(error => {
         this.setState({ error: true }, () => {
           myTimeout = setTimeout(() => {
-            this.setState({ error: false, });
+            this.setState({ error: false });
           }, 3000);
         });
       });
@@ -82,12 +82,11 @@ class LoginForm extends Component {
           <form>
             <div>
               <Typography color="secondary">
-                <label className="" htmlFor="username">
-                  Username
-                </label>
+                <label htmlFor="username">Username</label>
               </Typography>
               <div className="login">
                 <TextField
+                  autoComplete="username"
                   type="text"
                   id="username"
                   name="username"
@@ -98,10 +97,11 @@ class LoginForm extends Component {
                   onChange={this.handleChange}
                 />
                 <Typography color="secondary">
-                  <label htmlFor="password">Password: </label>
+                  <label htmlFor="password">Password </label>
                 </Typography>
 
                 <TextField
+                  autoComplete="current-password"
                   name="password"
                   type="password"
                   placeholder="password"
