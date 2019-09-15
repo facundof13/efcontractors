@@ -84,9 +84,6 @@ export default class Viewprojects extends React.Component {
   render() {
     return (
       <div>
-        <Typography color="secondary" component="span" variant="h4">
-          <h4>Projects</h4>
-        </Typography>
         {this.state.open ? (
           ""
         ) : (

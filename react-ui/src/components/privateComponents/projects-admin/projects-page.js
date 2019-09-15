@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Project from "./project";
 import ProjectsCreate from "./projects-create";
 import ProjectList from "./project-list";
-import Typography from "@material-ui/core/Typography";
 import Axios from "axios";
 import { Divider } from "@material-ui/core";
 
@@ -87,9 +86,6 @@ export default class ProjectsPage extends Component {
   render() {
     return (
       <div>
-        <Typography color="secondary" component="span" variant="h4">
-          <h4>Manage projects</h4>
-        </Typography>
         <div className="projects-top">
           <ProjectsCreate handleSubmit={this.handleSubmit} />
           <ProjectList

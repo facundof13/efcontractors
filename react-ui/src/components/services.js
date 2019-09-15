@@ -1,7 +1,6 @@
 import React from "react";
 import orderBy from "lodash/orderBy";
 import {
-  Typography,
   TableRow,
   TableCell,
   Table,
@@ -53,9 +52,6 @@ export default class Services extends React.Component {
   render() {
     return (
       <div>
-        <Typography color="secondary" component="span" variant="h4">
-          <h4>Services</h4>
-        </Typography>
         <div>
           <p className='services-text'>All the services you need, and a lot more.</p>
         </div>

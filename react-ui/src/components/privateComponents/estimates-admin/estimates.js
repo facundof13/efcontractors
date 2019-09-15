@@ -21,9 +21,6 @@ export default class Estimates extends React.Component {
   render() {
     return (
       <div>
-        <Typography component="span" variant="h4" color="secondary">
-          <h4>Manage Estimates</h4>
-        </Typography>
         <AppBar position="static" className="tabs-bar">
           <Tabs
             value={this.state.value}

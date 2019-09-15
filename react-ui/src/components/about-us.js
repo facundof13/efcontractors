@@ -18,9 +18,6 @@ export default class AboutUs extends React.Component {
   render() {
     return (
       <div>
-        <Typography color="secondary" component="span" variant="h4">
-          <h4>About Us</h4>
-        </Typography>
         <div className='about-us-root'>
           <div>
             <h5 className="about-us-header">

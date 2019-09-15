@@ -98,19 +98,9 @@ export default class Testimonials extends React.Component {
     return (
       <div>
         <div>
-          <Typography color="secondary" component="span" variant="h4">
-            <h4>Testimonials</h4>
-          </Typography>
         </div>
         <div className="submit-testimonial">
           <div>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={this.handleClickOpen}
-            >
-              Submit a testimonial
-            </Button>
             <Dialog
               open={this.state.open}
               onClose={this.handleClose}
@@ -170,6 +160,13 @@ export default class Testimonials extends React.Component {
           </div>
         </div>
         <div className="testimonials-grid">{this.state.testimonials}</div>
+        <Button
+              variant="outlined"
+              color="secondary"
+              onClick={this.handleClickOpen}
+            >
+              Submit a testimonial
+            </Button>
         <div>
           <Typography className='small-text' component='span'>
             <p>

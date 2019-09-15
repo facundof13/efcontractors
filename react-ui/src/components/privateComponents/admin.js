@@ -13,9 +13,6 @@ export default class Admin extends React.Component {
   render() {
     return (
       <div>
-      <Typography component="span" variant="h4" color='secondary'>
-        <h4>Admin Home</h4>
-      </Typography>
       <MonthlyIncome />
       </div>
     );
