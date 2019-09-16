@@ -71,9 +71,6 @@ class LoginForm extends Component {
     } else {
       return (
         <div>
-          <Typography component="span" variant="h4" color="secondary">
-            <h4>Login</h4>
-          </Typography>
           {this.state.error && (
             <div className="error">
               <p>Wrong username or password</p>

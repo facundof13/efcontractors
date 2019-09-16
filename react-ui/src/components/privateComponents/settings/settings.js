@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Typography,
   Tabs,
   Tab,
   AppBar,
@@ -27,9 +26,6 @@ export default class Settings extends React.Component {
   render() {
     return (
       <div className="settings-root">
-        <Typography color="secondary" component="span" variant="h4">
-          <h4>Settings</h4>
-        </Typography>
         <AppBar position="static" className='tabs-bar'>
           <Tabs value={this.state.value} onChange={this.handleChange} centered={true}>
             <Tab value="one" label="Company Settings" />

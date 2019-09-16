@@ -8,28 +8,42 @@ import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Drawer, ClickAwayListener, Divider } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 
 const pathNames = {
   "/": " ",
+  "/login": "Login",
   "/about": "About us",
   "/testimonials": "Testimonials",
   "/projects": "Projects",
   "/services": "Services",
-  '/admin':"Admin Home",
-  '/admin/projects': "Manage Projects",
-  '/admin/estimates': "Manage Estimates",
-  '/admin/testimonials': "Manage Testimonials",
-  '/admin/settings': "Settings",
+  "/admin": "Admin Home",
+  "/admin/projects": "Manage Projects",
+  "/admin/estimates": "Manage Estimates",
+  "/admin/testimonials": "Manage Testimonials",
+  "/admin/settings": "Settings"
 };
 
-export default class Navbar extends React.Component {
+class Navbar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { open: false };
+    this.state = { open: false, class:'', title: pathNames[window.location.pathname] };
 
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.history.listen(() => {
+      this.setState({ title: pathNames[window.location.pathname] }, () => {
+        if(this.state.title === 'Manage Estimates' || this.state.title === 'Settings') {
+          this.setState({
+            class: 'no-shadow'
+          })
+        }
+      });
+    });
   }
 
   handleClick() {
@@ -40,10 +54,11 @@ export default class Navbar extends React.Component {
     this.setState({ open: false });
   }
   render() {
+    // console.log(this.state)
     return (
       <div className="root">
         <ClickAwayListener onClickAway={this.handleClose}>
-          <AppBar position="static">
+          <AppBar position="static" className={this.state.class}>
             <Toolbar>
               <Button
                 aria-controls="simple-menu"
@@ -54,7 +69,7 @@ export default class Navbar extends React.Component {
                 <MenuIcon />
               </Button>
               <Typography color="secondary" variant="h6" className="title">
-                {pathNames[window.location.pathname]}
+                {this.state.title}
               </Typography>
               {this.props.loggedIn ? (
                 <Link className="navbar-link" to="/logout">
@@ -155,3 +170,5 @@ export default class Navbar extends React.Component {
     );
   }
 }
+
+export default withRouter(Navbar);

@@ -51,9 +51,6 @@ export default class CompanyInformation extends React.Component {
     return (
       <div className='company-information'>
         <div>
-          <Typography color="secondary" component="span" variant="h5">
-            <h5>Lookup Information</h5>
-          </Typography>
           <TextField
             value={this.state.telephone}
             name="telephone"

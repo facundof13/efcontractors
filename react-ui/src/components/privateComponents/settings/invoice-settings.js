@@ -50,10 +50,6 @@ export default class InvoiceSettings extends React.Component {
   render() {
     return (
       <div>
-        <Typography color="secondary" component="span" variant="h5">
-          <h5>Invoice Settings</h5>
-        </Typography>
-
         <div>
           <TextField
             value={this.state.company}

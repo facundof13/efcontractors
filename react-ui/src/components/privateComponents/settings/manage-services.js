@@ -116,11 +116,6 @@ export default class ManageServices extends React.Component {
   render() {
     return (
       <div className="manage-services">
-        <div>
-          <Typography color="secondary" component="span" variant="h5">
-            <h5>Manage Services</h5>
-          </Typography>
-        </div>
         <div className="loading">
           {this.state.loading ? (
             <CircularProgress size={30} color="secondary" />

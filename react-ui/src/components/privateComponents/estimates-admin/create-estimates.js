@@ -279,10 +279,6 @@ export default class CreateEstimate extends React.Component {
   render() {
     return (
       <div>
-        <Typography variant="h5" component="span" color="secondary">
-          <h5>Create an Estimate</h5>
-        </Typography>
-
         {/* //update existing customer */}
         {this.state.customers.length > 0 ? (
           <SelectExistingClient

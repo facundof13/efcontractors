@@ -650,3 +650,7 @@ h5 {
 .alert-delete {
   color: red !important;
 }
+
+.no-shadow {
+  box-shadow: none !important;
+}
