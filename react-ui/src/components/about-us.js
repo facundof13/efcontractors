@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Divider } from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 import Axios from "axios";
 
 export default class AboutUs extends React.Component {

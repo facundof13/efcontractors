@@ -14,6 +14,14 @@ export default class ProjectList extends React.Component {
     this.props.getUser(value.key);
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.user.name !== undefined) {
+      return state = {project: props.user.name}
+    } else {
+      return state
+    }
+  }
+
   render() {
     return (
       <div>

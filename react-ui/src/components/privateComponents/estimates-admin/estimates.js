@@ -1,5 +1,4 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import { Tabs, Tab, AppBar } from "@material-ui/core";
 
 //components

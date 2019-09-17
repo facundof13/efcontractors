@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, TextField, Button } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import Axios from "axios";
 export default class InvoiceSettings extends React.Component {
   constructor(props) {

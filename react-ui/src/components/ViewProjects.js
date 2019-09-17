@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import Typography from "@material-ui/core/Typography";
 import {
   Card,
   CardHeader,
