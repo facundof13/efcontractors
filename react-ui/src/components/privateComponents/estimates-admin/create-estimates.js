@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Button, Divider } from "@material-ui/core";
+import { TextField, Button, Divider, Table} from "@material-ui/core";
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
 import SelectExistingClient from "./select-existing-client";
@@ -420,9 +420,6 @@ export default class CreateEstimate extends React.Component {
               />
             </div>
           </form>
-          <Divider />
-          <Divider />
-          <Divider />
         </div>
         <Button
           color="secondary"
@@ -431,7 +428,9 @@ export default class CreateEstimate extends React.Component {
         >
           Add Item
         </Button>
+        <Table>
         {this.state.itemsField}
+        </Table>
         <Button
           color="secondary"
           className="add-item-btn"

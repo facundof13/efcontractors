@@ -64,7 +64,7 @@ body {
   color: black !important;
 }
 
-.login .MuiInput-underline:after {
+/* .login .MuiInput-underline:after {
   border-bottom: 2px solid #ffff00 !important;
   border-bottom-width: 2px !important;
   border-bottom-style: solid !important;
@@ -75,9 +75,9 @@ body {
   border-bottom-width: 1px !important;
   border-bottom-style: solid !important;
   border-bottom-color: #ffff00 !important;
-}
+} */
 
-FormControl .MuiInput-underline:after {
+/* FormControl .MuiInput-underline:after {
   border-bottom: 2px solid #ffff00 !important;
   border-bottom-width: 2px !important;
   border-bottom-style: solid !important;
@@ -88,7 +88,7 @@ FormControl .MuiInput-underline:before {
   border-bottom-width: 1px !important;
   border-bottom-style: solid !important;
   border-bottom-color: #ffff00 !important;
-}
+} */
 
 
 .projects-top {

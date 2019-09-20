@@ -71,64 +71,6 @@ export default class ItemField extends React.Component {
     this.setState({ [event.target.name]: isChecked }, () =>
       this.updateValues()
     );
-
-    // let boxChecked = event.target.name;
-    // // if(boxChecked === 'neither') {
-    // //   if (this.state.neither) {
-    // //     this.setState({neither: false, tax: true})
-    // //   } else if (!this.state.neither) {
-    // //     this.setState({neither: true, tax: false, expense: false})
-    // //   }
-    // // } else {
-    // //   if (boxChecked === 'tax') {
-    // //     this.setState({neither: false, tax: true})
-    // //   }
-    // // }
-
-    // // switch(boxChecked) {
-    // //   case 'tax':
-    // //     this.setState(prevState => ({tax:!prevState.tax}))
-    // //     break;
-    // //   case 'expense':
-    // //       this.setState(prevState => ({expense:!prevState.expense}))
-    // //     break;
-    // //   case 'neither':
-    // //       this.setState(prevState => ({neither:!prevState.neither}))
-    // //     break;
-    // //   default:
-    // //     break;
-    // // }
-
-    // let taxClicked = event.target.name === "tax";
-    // let expenseClicked = event.target.name === "expense";
-    // let neitherClicked = event.target.name === "neither";
-    // let tax = this.state.tax;
-    // let expense = this.state.expense;
-    // let neither = this.state.neither;
-
-    // if (neitherClicked && neither) {
-    //   this.setState({ neither: false, tax: true });
-    // } else if (neitherClicked && !neither) {
-    //   this.setState({ neither: true, tax: false, expense: false });
-    // } else if (taxClicked && neither) {
-    //   this.setState({ tax: true, neither: false });
-    // } else if (taxClicked && !neither) {
-    //   if (!tax && !expense) {
-    //     this.setState({ tax: true });
-    //   } else if (expense) {
-    //     this.setState(prevState => ({ tax: !prevState.tax }));
-    //   } else if (tax && !expense) {
-    //     this.setState({ tax: false, neither: true });
-    //   }
-    // } else if (expenseClicked && !neither) {
-    //   if (tax) {
-    //     this.setState(prevState => ({ expense: !prevState.expense }));
-    //   } else if (!tax && expense) {
-    //     this.setState({ expense: false, neither: true });
-    //   }
-    // } else if (expenseClicked && neither) {
-    //   this.setState({ neither: false, expense: true });
-    // }
   }
 
   handleMoney(event) {
