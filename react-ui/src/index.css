@@ -367,6 +367,10 @@ h5 {
   box-shadow: none !important;
 }
 
+header.MuiPaper-elevation4 {
+  box-shadow: none !important;
+}
+
 .estimates-items-table .MuiTableCell-root {
 /* border-bottom: none !important; */
 }
