@@ -332,9 +332,45 @@ h5 {
   margin: 10px;
 }
 
+.items-table:nth-child(even) {
+  background-color: #616161;
+}
+
+.items-container {
+  display: flex;
+  justify-content: center;
+}
+
 .services-text-body:nth-child(odd) {
   background-color: #616161;
 }
+
+.estimates-items-table {
+  max-width: 80vw;
+  overflow: auto;
+}
+
+.estimates-form .MuiInputBase-input{
+  width: 300px !important;
+  text-align: left !important;
+}
+
+.estimates-items-table .MuiTableCell-head {
+  color: #e0e0e0 !important;
+}
+
+.estimates-items-table.MuiPaper-root {
+  background-color:inherit !important;
+}
+
+.estimates-items-table.MuiPaper-elevation1 {
+  box-shadow: none !important;
+}
+
+.estimates-items-table .MuiTableCell-root {
+/* border-bottom: none !important; */
+}
+
 
 @media screen and (min-width: 600px) {
   .services-table-root {
@@ -632,6 +668,8 @@ h5 {
   overflow: auto;
 }
 }
+
+
 
 .navbar-drawer .MuiPaper-root{
   background: #424242 !important;

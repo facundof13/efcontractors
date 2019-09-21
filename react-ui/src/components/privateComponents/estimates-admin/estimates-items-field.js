@@ -8,7 +8,9 @@ import {
   IconButton,
   FormHelperText,
   FormControl,
-  InputLabel
+  InputLabel,
+  TableCell,
+  TableRow
 } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
@@ -107,8 +109,10 @@ export default class ItemField extends React.Component {
 
   render() {
     return (
-      <form id="item-form">
-        <div className='login'>
+      // <form id="item-form">
+      //   <div className="login">
+      <TableRow className='items-table'>
+        <TableCell>
           <FormControl>
             <InputLabel htmlFor="customer-select">Item</InputLabel>
             <Select
@@ -132,88 +136,84 @@ export default class ItemField extends React.Component {
               {this.state.serviceItem === "" ? this.state.itemError : ""}
             </FormHelperText>
           </FormControl>
+        </TableCell>
 
+        <TableCell>
           {/* <div className="login"> */}
-            <TextField
-              label="Description"
-              name="itemDescription"
-              type="text"
-              color="secondary"
-              placeholder="Description"
-              className="description"
-              multiline={true}
-              value={this.state.itemDescription}
-              helperText={
-                this.state.itemDescription === ""
-                  ? this.state.descriptionError
-                  : ""
-              }
-              onChange={this.handleChange}
-            />
-
-            <TextField
-              className="quantity-amount-width"
-              label="Quantity"
-              name="quantity"
-              type="number"
-              color="secondary"
-              placeholder="Quantity"
-              helperText={
-                this.state.quantity === "" ? this.state.quantityError : ""
-              }
-              value={this.state.quantity}
-              onChange={this.handleChange}
-            />
-            <TextField
-              className="quantity-amount-width"
-              label="Amount"
-              name="dollarAmount"
-              type="text"
-              color="secondary"
-              placeholder="$0.00"
-              helperText={
-                this.state.dollarAmount === "" ||
-                this.state.dollarAmount === "$"
-                  ? this.state.amountError
-                  : ""
-              }
-              value={this.state.dollarAmount}
-              onChange={this.handleMoney}
-            />
-
-            <IconButton
-              color="secondary"
-              onClick={() => this.props.removeItem(this.props.num)}
-              title="Delete"
-            >
-              <DeleteOutlinedIcon />
-            </IconButton>
-            {/* checkboxes */}
-            <div>
-              <FormControlLabel
-                checked={this.state.tax}
-                color="secondary"
-                className="unselectable"
-                name="tax"
-                control={<Checkbox color="secondary" />}
-                label="Tax"
-                labelPlacement="end"
-                onChange={this.handleCheckbox}
-              />
-              <FormControlLabel
-                checked={this.state.expense}
-                color="secondary"
-                className="unselectable"
-                name="expense"
-                control={<Checkbox color="secondary" />}
-                label="Expense"
-                labelPlacement="end"
-                onChange={this.handleCheckbox}
-              />
-            </div>
-          </div>
-        {/* </div> */}
-      </form>
+          <TextField
+            name="itemDescription"
+            type="text"
+            color="secondary"
+            placeholder="Description"
+            value={this.state.itemDescription}
+            helperText={
+              this.state.itemDescription === ""
+                ? this.state.descriptionError
+                : ""
+            }
+            onChange={this.handleChange}
+          />
+        </TableCell>
+        <TableCell>
+          <TextField
+            name="quantity"
+            type="number"
+            color="secondary"
+            placeholder="Quantity"
+            helperText={
+              this.state.quantity === "" ? this.state.quantityError : ""
+            }
+            value={this.state.quantity}
+            onChange={this.handleChange}
+          />
+        </TableCell>
+        <TableCell>
+          <TextField
+            name="dollarAmount"
+            type="text"
+            color="secondary"
+            placeholder="$0.00"
+            helperText={
+              this.state.dollarAmount === "" || this.state.dollarAmount === "$"
+                ? this.state.amountError
+                : ""
+            }
+            value={this.state.dollarAmount}
+            onChange={this.handleMoney}
+          />
+        </TableCell>
+        <TableCell>
+          {/* checkboxes */}
+          <FormControlLabel
+            checked={this.state.tax}
+            color="secondary"
+            name="tax"
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleCheckbox}
+          />
+        </TableCell>
+        <TableCell>
+          <FormControlLabel
+            checked={this.state.expense}
+            color="secondary"
+            name="expense"
+            control={<Checkbox color="secondary" />}
+            onChange={this.handleCheckbox}
+          />
+        </TableCell>
+        <TableCell>
+          <IconButton
+            color="secondary"
+            onClick={() => this.props.removeItem(this.props.num)}
+            title="Delete"
+          >
+            <DeleteOutlinedIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      //   </div>
+      //   {/* </div> */}
+      // </form>
     );
   }
 }

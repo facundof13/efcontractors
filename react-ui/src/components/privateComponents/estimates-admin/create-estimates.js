@@ -1,5 +1,15 @@
 import React from "react";
-import { TextField, Button, Divider, Table} from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Divider,
+  Table,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableHead,
+  Paper
+} from "@material-ui/core";
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
 import SelectExistingClient from "./select-existing-client";
@@ -101,7 +111,6 @@ export default class CreateEstimate extends React.Component {
   addItem() {
     let date = Date.now();
     let newItem = (
-      <div key={date}>
         <ItemField
           key={date}
           num={date}
@@ -109,8 +118,6 @@ export default class CreateEstimate extends React.Component {
           services={this.state.services}
           updateItems={this.updateItems}
         />
-        <Divider />
-      </div>
     );
     this.setState(prevState => ({
       itemsField: [...prevState.itemsField, newItem]
@@ -288,7 +295,7 @@ export default class CreateEstimate extends React.Component {
           ""
         )}
 
-        <div>
+        <div className='estimates-form'>
           <form autoComplete="off" id="create-form">
             <div className="top login">
               <TextField
@@ -428,9 +435,24 @@ export default class CreateEstimate extends React.Component {
         >
           Add Item
         </Button>
-        <Table>
-        {this.state.itemsField}
-        </Table>
+        <div className='items-container'>
+        <Paper className='estimates-items-table'>
+          <Table size='small' >
+            <TableHead>
+              <TableRow>
+                <TableCell>Item</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Quantity</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Tax</TableCell>
+                <TableCell>Expense</TableCell>
+                <TableCell>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+              {this.state.itemsField}
+          </Table>
+        </Paper>
+        </div>
         <Button
           color="secondary"
           className="add-item-btn"
