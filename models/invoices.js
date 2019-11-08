@@ -2,13 +2,7 @@ var mongoUtil = require("../mongoUtil");
 var db = mongoUtil.getDb();
 const invoices = db.collection("invoices");
 var ObjectId = require("mongodb").ObjectID;
-
-function compareDates(date1, date2) {
-  let newDate1 = new Date(date1);
-  let newDate2 = new Date(date2);
-
-  return newDate1.getTime() === newDate2.getTime();
-}
+require('dotenv').config()
 
 function getAllInvoices() {
   return new Promise((resolve, reject) => {
@@ -32,9 +26,9 @@ function sendEmail(query) {
   const email = require('../node_modules/');
   // TODO: Add real server information here
   var server = email.server.connect({
-    user: "FacundoF13@gmail.com",
-    password: 'umckzffqgahddbox',
-    host: "smtp.gmail.com",
+    user: process.env.EMAIL,
+    password: process.env.EMAIL_PASSWORD,
+    host: process.env.EMAIL_HOST,
     ssl: true,
   }, (err, msg) => {
     console.log(err || msg)
@@ -52,7 +46,7 @@ function sendEmail(query) {
         type: "currency",
         currency: "USD"
       })}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
-      from: "facundof13@gmail.com",
+      from: process.env.EMAIL,
       to: query.client.email,
       subject: "EF Contractors LLC",
       attachment: [
