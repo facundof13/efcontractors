@@ -1,20 +1,20 @@
 var settings = require("../models/settings");
 var taxAmt = 0;
-var company = ''
-var cityState = ''
-var address= ''
-var zip= ''
-var phone = ''
+var company = "";
+var cityState = "";
+var address = "";
+var zip = "";
+var phone = "";
 settings.getSettings().then(res => {
-  phone = res[0].telephone
-})
+  phone = res[0].telephone;
+});
 settings.getInvoiceSettings().then(res => {
-  taxAmt = Number(res[0].taxAmt)
-  company = res[0].company
-  cityState = res[0].cityState
-  address = res[0].address
-  zip = res[0].zip
-})
+  taxAmt = Number(res[0].taxAmt);
+  company = res[0].company;
+  cityState = res[0].cityState;
+  address = res[0].address;
+  zip = res[0].zip;
+});
 
 function renderPdf(data, cb) {
   var fonts = {
@@ -53,12 +53,12 @@ function renderPdf(data, cb) {
   });
 
   for (let j = 0; j < data.estimate.paymentSteps.length; j++) {
-    console.log(data.estimate.paymentSteps[j].stepAmount)
+    console.log(data.estimate.paymentSteps[j].stepAmount);
     paymentSchedule.push(
       `${data.estimate.paymentSteps[j].stepName} ${
         data.estimate.paymentSteps[j].stepDescription
       } ${currencyFormatter.format(
-        Number(data.estimate.paymentSteps[j].stepAmount.replace('$', ''))
+        Number(data.estimate.paymentSteps[j].stepAmount.replace("$", ""))
       )}\n`
     );
   }
@@ -68,7 +68,7 @@ function renderPdf(data, cb) {
   for (let i = 0; i < data.estimate.items.length; i++) {
     let num = data.estimate.items[i].amount;
     if (data.estimate.items[i].tax) {
-      taxes += num.replace("$", "") / (taxAmt);
+      taxes += num.replace("$", "") / taxAmt;
     }
   }
   let grandTotal = taxes + data.estimate.total;
@@ -159,9 +159,7 @@ function renderPdf(data, cb) {
           },
           {
             text: [
-              `\n\n${data.client.name}\n${data.client.address}\n${
-                data.client.cityState
-              }\n${data.client.zip}`
+              `\n\n${data.client.name}\n${data.client.address}\n${data.client.cityState}\n${data.client.zip}`
             ],
             color: "grey",
             alignment: "right"
@@ -262,7 +260,7 @@ function renderPdf(data, cb) {
         pageBreak: "before"
       },
       {
-        text: phone, 
+        text: phone,
         alignment: "center",
         fontSize: 10
       },
@@ -291,11 +289,7 @@ function renderPdf(data, cb) {
         text: "\nArticle One: Contract Document"
       },
       {
-        text: `\nThese documents constitute an agreement between ${company} hereinafter referred to as the "Contractor" and ${
-          data.client.name
-        } hereinafter referred to as the "Owner", to renovate the project located at ${
-          data.client.address
-        }, ${data.client.cityState} ${data.client.zip}`,
+        text: `\nThese documents constitute an agreement between ${company} hereinafter referred to as the "Contractor" and ${data.client.name} hereinafter referred to as the "Owner", to renovate the project located at ${data.client.address}, ${data.client.cityState} ${data.client.zip}`,
         margin: [40, 0],
         alignment: "left"
       },
@@ -338,16 +332,27 @@ function renderPdf(data, cb) {
       },
       {
         text: [
-          "\nA Change Order is any charge to the original contracted plans and/or specifications.",
-          "\n\nAll change orders to be administered through direct contact between the Owner and the Contractor.",
+          "\nA Change Order is any change to the original contracted plans and/or specifications.",
+          "\n\nAll change orders are to be administered through direct contact between the Owner and the Contractor.",
           "\n\nAny additional time needed to complete change order is into consideration in the project completion date."
         ],
         alignment: "left",
         margin: [40, 0]
       },
       {
-        text:
-          "\n\nAny delays or changes in finish selection schedules may delay the projected completion date. Contractor's Initials ____"
+        text: [
+          "\nAny Change Order is subject to a fee of $175.",
+          "\n\nDelayed deliveries and back orders from the Owner will be considered as a Change Order."
+        ],
+        alignment: "left",
+        margin: [40, 0],
+        bold: true
+      },
+      {
+        text: [
+          "\n\nAny delays or changes in finish selection schedules may delay the projected completion date. Contractor's Initials ____",
+          "\n\nOwner understands any Change Order will be a fee of $175.\nOwner's Initials ____"
+        ]
       },
       {
         text: "\n\nArticle Five: Building & Specifications"

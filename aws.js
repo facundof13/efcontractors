@@ -1,5 +1,5 @@
 const aws = require("aws-sdk");
-require('dotenv').config()
+require("dotenv").config();
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -7,4 +7,4 @@ const s3 = new aws.S3({
   Bucket: process.env.S3_BUCKET
 });
 
-module.exports = s3
+module.exports = s3;

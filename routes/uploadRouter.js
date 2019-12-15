@@ -67,6 +67,7 @@ const uploadsBusinessGallery = multer({
 router.post("/multiple-file-upload", (req, res) => {
   uploadsBusinessGallery(req, res, error => {
     if (error) {
+      console.log(error);
       res.json({ error: error });
     } else {
       // If File not found
@@ -76,20 +77,30 @@ router.post("/multiple-file-upload", (req, res) => {
         // If Success
         //add each file to project user's db
         let videos = fileUrls.filter(item => {
-          return item.includes('.mov') || item.includes('.mp4')
-        })
+          return item.includes(".mov") || item.includes(".mp4");
+        });
 
         fileUrls = fileUrls.filter(item => {
-          return !item.includes('.mov') && !item.includes('.mp4') && !item.includes('thumb')
-        })
+          return (
+            !item.includes(".mov") &&
+            !item.includes(".mp4") &&
+            !item.includes("thumb")
+          );
+        });
 
-        fileUrls.forEach(url =>  { //these are just the pictures
-          projects.updateImagesSrc(name, url)
-        })
+        fileUrls.forEach(url => {
+          //these are just the pictures
+          projects.updateImagesSrc(name, url);
+        });
 
-        videos.forEach(url => { //these are videos urls w/o thumbnails
-          projects.updateImagesSrc(name, url, url.slice(0, -4) + 'thumb' + '.jpg')
-        })
+        videos.forEach(url => {
+          //these are videos urls w/o thumbnails
+          projects.updateImagesSrc(
+            name,
+            url,
+            url.slice(0, -4) + "thumb" + ".jpg"
+          );
+        });
         fileUrls = [];
         let fileArray = req.files,
           fileLocation;

@@ -43,11 +43,10 @@ class Home extends Component {
         </div>
         <div className="facebook-button">
           <iframe
-          title='facebook-button'
+            title="facebook-button"
             src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fefcontractorsllc2015%2F&tabs&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=false&appId"
             width="340"
             height="130"
-            // style="border:none;overflow:hidden"
             scrolling="no"
             frameBorder="0"
             allowtransparency="true"
