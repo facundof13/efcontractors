@@ -3,10 +3,10 @@ import {
   TextField,
   Button,
   Table,
-  TableRow,
+  Paper,
   TableCell,
   TableHead,
-  Paper
+  TableRow
 } from "@material-ui/core";
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
@@ -40,7 +40,8 @@ export default class CreateEstimate extends React.Component {
       paymentSteps: [],
       pdfLink: "",
       estimateNum: 0,
-      paidDate: ""
+      paidDate: "",
+      runningTotal: 0
     };
     this.handleChange = this.handleChange.bind(this);
     this.addItem = this.addItem.bind(this);
@@ -48,10 +49,20 @@ export default class CreateEstimate extends React.Component {
     this.checkForm = this.checkForm.bind(this);
     this.updateItems = this.updateItems.bind(this);
     this.resetFields = this.resetFields.bind(this);
-    // this.filterItemsArr = this.filterItemsArr.bind(this);
     this.submitInvoice = this.submitInvoice.bind(this);
     this.getCustomers = this.getCustomers.bind(this);
     this.fillWithSelectedCustomer = this.fillWithSelectedCustomer.bind(this);
+  }
+
+  componentDidUpdate(_, prevState) {
+    //always loop through, if total is different than what we have, update state
+    let total = 0;
+    this.state.items.forEach(i => {
+      total = total + Number(i.amount.replace("$", "")) * i.quantity;
+    });
+    if (this.state.runningTotal !== total) {
+      this.setState({ runningTotal: total });
+    }
   }
 
   componentDidMount() {
@@ -127,6 +138,9 @@ export default class CreateEstimate extends React.Component {
       this.setState(prevState => ({
         itemsField: prevState.itemsField.filter(function(item) {
           return String(date) !== String(item.key);
+        }),
+        items: prevState.items.filter(function(item) {
+          return String(date) !== String(item.num);
         })
       }));
     }
@@ -281,6 +295,7 @@ export default class CreateEstimate extends React.Component {
   }
 
   render() {
+    // this.state.items.map(i => {});
     return (
       <div>
         {/* //update existing customer */}
@@ -436,17 +451,17 @@ export default class CreateEstimate extends React.Component {
         <div className="items-container">
           <Paper className="estimates-items-table">
             <Table className="items-fields" size="small">
-              {/* <TableHead>
-              <TableRow>
-                <TableCell>Item</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Tax</TableCell>
-                <TableCell>Expense</TableCell>
-                <TableCell>Delete</TableCell>
-              </TableRow>
-            </TableHead> */}
+              <TableHead>
+                <TableRow>
+                  <TableCell>Item</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Tax</TableCell>
+                  <TableCell>Expense</TableCell>
+                  <TableCell>Delete</TableCell>
+                </TableRow>
+              </TableHead>
               {this.state.itemsField}
             </Table>
           </Paper>
@@ -467,6 +482,7 @@ export default class CreateEstimate extends React.Component {
         >
           Submit Estimate
         </Button>
+        <p className="yellow">Total: ${this.state.runningTotal}</p>
       </div>
     );
   }
