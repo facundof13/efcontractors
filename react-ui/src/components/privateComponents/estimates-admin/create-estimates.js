@@ -11,6 +11,12 @@ import {
 import Axios from "axios";
 import ItemField from "./estimates-items-field";
 import SelectExistingClient from "./select-existing-client";
+
+var currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD"
+});
+
 export default class CreateEstimate extends React.Component {
   constructor() {
     super();
@@ -482,7 +488,9 @@ export default class CreateEstimate extends React.Component {
         >
           Submit Estimate
         </Button>
-        <p className="yellow">Total: ${this.state.runningTotal}</p>
+        <p className="yellow">
+          Total: {currencyFormatter.format(this.state.runningTotal)}
+        </p>
       </div>
     );
   }
