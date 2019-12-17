@@ -41,7 +41,7 @@ export default class CustomerEstimateTable extends React.Component {
     super(props);
 
     this.state = {
-      columnToSort: "item",
+      columnToSort: "date",
       sortDirection: "desc",
       currentlyEditing: false,
       estimateToEdit: [],

@@ -248,7 +248,10 @@ export default class CreateEstimate extends React.Component {
     }
 
     if (itemsOk && zipOk && cityStateOk && emailOk && phoneOk && titleOk) {
-      this.setState({ disabled: false });
+      this.submitInvoice();
+      window.alert("Invoice submitted");
+    } else {
+      window.alert("Form is incomplete.");
     }
   }
 
@@ -301,7 +304,6 @@ export default class CreateEstimate extends React.Component {
   }
 
   render() {
-    // this.state.items.map(i => {});
     return (
       <div>
         {/* //update existing customer */}
@@ -472,25 +474,21 @@ export default class CreateEstimate extends React.Component {
             </Table>
           </Paper>
         </div>
+        <p className="total-text">
+          Total:{" "}
+          <span className="green">
+            {currencyFormatter.format(this.state.runningTotal)}
+          </span>
+        </p>
         <Button
           color="secondary"
           className="add-item-btn"
           onClick={this.checkForm}
           disabled={false}
+          variant="outlined"
         >
-          Save Form
+          Check Form and Submit
         </Button>
-        <Button
-          color="secondary"
-          className="add-item-btn"
-          onClick={this.submitInvoice}
-          disabled={this.state.disabled}
-        >
-          Submit Estimate
-        </Button>
-        <p className="yellow">
-          Total: {currencyFormatter.format(this.state.runningTotal)}
-        </p>
       </div>
     );
   }
