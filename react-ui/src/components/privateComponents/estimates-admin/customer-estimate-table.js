@@ -84,6 +84,16 @@ export default class CustomerEstimateTable extends React.Component {
 
   sendEstimate(row) {
     if (window.confirm(`Send an email to ${this.props.customerInfo.email}?`)) {
+      let otherEmails = window.prompt(
+        "Send to other emails?\n\nemail@email.com, email2@email.com"
+      );
+      let emails = [];
+      if (otherEmails) {
+        let emailArr = otherEmails.split(",");
+        emailArr.forEach(i => {
+          emails.push(i.replace(/ /g, ""));
+        });
+      }
       Axios.post("/admin/api/generatePDF", {
         client: this.props.customerInfo,
         estimate: row,
@@ -92,7 +102,8 @@ export default class CustomerEstimateTable extends React.Component {
         Axios.post("/admin/api/sendemail", {
           estimate: row,
           client: this.props.customerInfo,
-          pdf: pdf.data
+          pdf: pdf.data,
+          emails: emails
         }).then(
           res => {
             window.alert("Email sent!");
@@ -121,8 +132,8 @@ export default class CustomerEstimateTable extends React.Component {
       imgUrl: this.state.imgUrl
     }).then(pdf => {
       var x = window.open();
-      if (x == null || typeof(x)=='undefined') {
-        window.alert('Popup blocked!') 
+      if (x == null || typeof x == "undefined") {
+        window.alert("Popup blocked!");
       } else {
         x.document.getElementsByTagName("html")[0].style =
           "overflow: hidden; margin-bottom:20px;";
@@ -133,7 +144,6 @@ export default class CustomerEstimateTable extends React.Component {
         iframe.src = pdf.data; //data-uri content here
         x.document.body.appendChild(iframe);
       }
-
     });
   }
 

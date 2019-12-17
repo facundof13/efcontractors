@@ -11,7 +11,7 @@ const pdfgenerator = require("../models/pdfgenerator");
 
 router.post("/api/sendemail", function(req, res, next) {
   invoices.sendEmail(req.body);
-  res.end();
+  res.sendStatus(200);
 });
 
 router.get("/api/testimonials", function(req, res, next) {
@@ -328,6 +328,5 @@ router.post("/api/estimatesinmonth", function(req, res, next) {
     res.json(estimates);
   });
 });
-
 
 module.exports = router;

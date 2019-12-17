@@ -91,7 +91,8 @@ export default class ItemField extends React.Component {
     if (
       this.state.serviceItem !== "" &&
       this.state.quantity !== "" &&
-      (this.state.dollarAmount !== "" && this.state.dollarAmount !== "$") &&
+      this.state.dollarAmount !== "" &&
+      this.state.dollarAmount !== "$" &&
       this.state.itemDescription !== ""
     ) {
       let itemsToReturn = {
@@ -111,106 +112,110 @@ export default class ItemField extends React.Component {
     return (
       // <form id="item-form">
       //   <div className="login">
-      <TableRow className='items-table'>
-        <TableCell>
-          <FormControl>
-            <InputLabel htmlFor="customer-select">Item</InputLabel>
-            <Select
-              className="estimate-item-select-width"
-              id="item-select"
-              onChange={this.handleChange}
-              onOpen={this.handleOpen}
-              value={this.state.serviceItem}
-              name="serviceItem"
-              required
-            >
-              {this.props.services
-                ? this.props.services.map(item => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))
-                : ""}
-            </Select>
-            <FormHelperText>
-              {this.state.serviceItem === "" ? this.state.itemError : ""}
-            </FormHelperText>
-          </FormControl>
-        </TableCell>
+      <tbody>
+        <TableRow className="items-table">
+          <TableCell>
+            <FormControl>
+              <InputLabel htmlFor="customer-select">Item</InputLabel>
+              <Select
+                className="estimate-item-select-width"
+                id="item-select"
+                onChange={this.handleChange}
+                onOpen={this.handleOpen}
+                value={this.state.serviceItem}
+                name="serviceItem"
+                required
+              >
+                {this.props.services
+                  ? this.props.services.sort().map(item => (
+                      <MenuItem value={item} key={item}>
+                        {item}
+                      </MenuItem>
+                    ))
+                  : ""}
+              </Select>
+              <FormHelperText>
+                {this.state.serviceItem === "" ? this.state.itemError : ""}
+              </FormHelperText>
+            </FormControl>
+          </TableCell>
 
-        <TableCell>
-          {/* <div className="login"> */}
-          <TextField
-            name="itemDescription"
-            type="text"
-            color="secondary"
-            placeholder="Description"
-            value={this.state.itemDescription}
-            helperText={
-              this.state.itemDescription === ""
-                ? this.state.descriptionError
-                : ""
-            }
-            onChange={this.handleChange}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            name="quantity"
-            type="number"
-            color="secondary"
-            placeholder="Quantity"
-            helperText={
-              this.state.quantity === "" ? this.state.quantityError : ""
-            }
-            value={this.state.quantity}
-            onChange={this.handleChange}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            name="dollarAmount"
-            type="text"
-            color="secondary"
-            placeholder="$0.00"
-            helperText={
-              this.state.dollarAmount === "" || this.state.dollarAmount === "$"
-                ? this.state.amountError
-                : ""
-            }
-            value={this.state.dollarAmount}
-            onChange={this.handleMoney}
-          />
-        </TableCell>
-        <TableCell>
-          {/* checkboxes */}
-          <FormControlLabel
-            checked={this.state.tax}
-            color="secondary"
-            name="tax"
-            control={<Checkbox color="secondary" />}
-            onChange={this.handleCheckbox}
-          />
-        </TableCell>
-        <TableCell>
-          <FormControlLabel
-            checked={this.state.expense}
-            color="secondary"
-            name="expense"
-            control={<Checkbox color="secondary" />}
-            onChange={this.handleCheckbox}
-          />
-        </TableCell>
-        <TableCell>
-          <IconButton
-            color="secondary"
-            onClick={() => this.props.removeItem(this.props.num)}
-            title="Delete"
-          >
-            <DeleteOutlinedIcon />
-          </IconButton>
-        </TableCell>
-      </TableRow>
+          <TableCell>
+            {/* <div className="login"> */}
+            <TextField
+              name="itemDescription"
+              type="text"
+              color="secondary"
+              placeholder="Description"
+              value={this.state.itemDescription}
+              helperText={
+                this.state.itemDescription === ""
+                  ? this.state.descriptionError
+                  : ""
+              }
+              onChange={this.handleChange}
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              name="quantity"
+              type="number"
+              color="secondary"
+              placeholder="Quantity"
+              helperText={
+                this.state.quantity === "" ? this.state.quantityError : ""
+              }
+              value={this.state.quantity}
+              onChange={this.handleChange}
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              name="dollarAmount"
+              type="text"
+              color="secondary"
+              placeholder="$0.00"
+              helperText={
+                this.state.dollarAmount === "" ||
+                this.state.dollarAmount === "$"
+                  ? this.state.amountError
+                  : ""
+              }
+              value={this.state.dollarAmount}
+              onChange={this.handleMoney}
+            />
+          </TableCell>
+          <TableCell>
+            {/* checkboxes */}
+            <FormControlLabel
+              checked={this.state.tax}
+              color="secondary"
+              name="tax"
+              control={<Checkbox color="secondary" />}
+              onChange={this.handleCheckbox}
+            />
+          </TableCell>
+          <TableCell>
+            <FormControlLabel
+              checked={this.state.expense}
+              color="secondary"
+              name="expense"
+              control={<Checkbox color="secondary" />}
+              onChange={this.handleCheckbox}
+            />
+          </TableCell>
+          <TableCell>
+            <IconButton
+              color="secondary"
+              onClick={() => this.props.removeItem(this.props.num)}
+              title="Delete"
+            >
+              <DeleteOutlinedIcon />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      </tbody>
+
       //   </div>
       //   {/* </div> */}
       // </form>

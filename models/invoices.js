@@ -2,7 +2,7 @@ var mongoUtil = require("../mongoUtil");
 var db = mongoUtil.getDb();
 const invoices = db.collection("invoices");
 var ObjectId = require("mongodb").ObjectID;
-require('dotenv').config()
+require("dotenv").config();
 
 function getAllInvoices() {
   return new Promise((resolve, reject) => {
@@ -23,45 +23,56 @@ function getServices() {
 }
 
 function sendEmail(query) {
-  const email = require('../node_modules/');
-  // TODO: Add real server information here
-  var server = email.server.connect({
-    user: process.env.EMAIL,
-    password: process.env.EMAIL_PASSWORD,
-    host: process.env.EMAIL_HOST,
-    ssl: true,
-  }, (err, msg) => {
-    console.log(err || msg)
-  });
-  let estimateOrInvoiceOrReceipt = query.estimate.paid
-    ? "a receipt"
-    : query.estimate.invoice
-    ? "an invoice"
-    : "an estimate";
-  server.send(
+  const email = require("emailjs");
+  var server = email.server.connect(
     {
-      text: `Estimate Number: ${
-        query.estimate.estimateNum
-      }\nTotal: $${query.estimate.total.toLocaleString("en-US", {
-        type: "currency",
-        currency: "USD"
-      })}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
-      from: process.env.EMAIL,
-      to: query.client.email,
-      subject: "EF Contractors LLC",
-      attachment: [
-        {
-          name: "Estimate.pdf",
-          type: "application/pdf",
-          data: query.pdf.replace("data:application/pdf;base64,", ""),
-          encoded: true
-        }
-      ]
+      user: process.env.EMAIL,
+      password: process.env.EMAIL_PASSWORD,
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      ssl: true
     },
     (err, msg) => {
       console.log(err || msg);
     }
   );
+  let emails = [query.client.email, ...query.emails];
+  // console.log('Emails to send to: ' + emails);
+  emails.forEach(currentEmail => {
+    let estimateOrInvoiceOrReceipt = query.estimate.paid
+      ? "a receipt"
+      : query.estimate.invoice
+      ? "an invoice"
+      : "an estimate";
+    server.send(
+      {
+        text: `Estimate Number: ${
+          query.estimate.estimateNum
+        }\nTotal: $${query.estimate.total.toLocaleString("en-US", {
+          type: "currency",
+          currency: "USD"
+        })}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
+        from: process.env.EMAIL,
+        to: currentEmail,
+        subject: "EF Contractors LLC",
+        attachment: [
+          {
+            name: "Estimate.pdf",
+            type: "application/pdf",
+            data: query.pdf.replace("data:application/pdf;base64,", ""),
+            encoded: true
+          }
+        ]
+      },
+      (err, msg) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`Email sent to ${currentEmail}`);
+        }
+      }
+    );
+  });
 }
 
 function getInvoiceCustomers() {
@@ -148,9 +159,8 @@ function deleteEstimate(id, query) {
 
 function getFullLogoURI() {
   return new Promise((resolve, reject) => {
-    resolve('https://efcontractors.s3.us-east-2.amazonaws.com/logo.png')
-
-  })
+    resolve("https://efcontractors.s3.us-east-2.amazonaws.com/logo.png");
+  });
 }
 
 function getLogoURI() {

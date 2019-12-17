@@ -109,13 +109,13 @@ export default class CreateEstimate extends React.Component {
   addItem() {
     let date = Date.now();
     let newItem = (
-        <ItemField
-          key={date}
-          num={date}
-          removeItem={this.removeItem}
-          services={this.state.services}
-          updateItems={this.updateItems}
-        />
+      <ItemField
+        key={date}
+        num={date}
+        removeItem={this.removeItem}
+        services={this.state.services}
+        updateItems={this.updateItems}
+      />
     );
     this.setState(prevState => ({
       itemsField: [...prevState.itemsField, newItem]
@@ -293,7 +293,7 @@ export default class CreateEstimate extends React.Component {
           ""
         )}
 
-        <div className='estimates-form'>
+        <div className="estimates-form">
           <form autoComplete="off" id="create-form">
             <div className="top login">
               <TextField
@@ -433,10 +433,10 @@ export default class CreateEstimate extends React.Component {
         >
           Add Item
         </Button>
-        <div className='items-container'>
-        <Paper className='estimates-items-table'>
-          <Table size='small' >
-            <TableHead>
+        <div className="items-container">
+          <Paper className="estimates-items-table">
+            <Table className="items-fields" size="small">
+              {/* <TableHead>
               <TableRow>
                 <TableCell>Item</TableCell>
                 <TableCell>Description</TableCell>
@@ -446,10 +446,10 @@ export default class CreateEstimate extends React.Component {
                 <TableCell>Expense</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
-            </TableHead>
+            </TableHead> */}
               {this.state.itemsField}
-          </Table>
-        </Paper>
+            </Table>
+          </Paper>
         </div>
         <Button
           color="secondary"
