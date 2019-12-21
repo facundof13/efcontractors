@@ -74,43 +74,70 @@ function renderPdf(data, cb) {
   let grandTotal = taxes + data.estimate.total;
   //row height = 8
 
+  const DESCRIPTION_DIVISOR = 45.3;
   for (let i = 0; i < data.estimate.items.length; i++) {
-    let numRows = Math.ceil(data.estimate.items[i].description.length / 41) - 1;
-    let margin = 0;
-    if (numRows > 0) {
-      margin = numRows * 13;
+    let numDescriptionRows = Math.round(
+      data.estimate.items[i].description.length / DESCRIPTION_DIVISOR
+    );
+    let numItemRows = Math.ceil(data.estimate.items[i].item.length / 18);
+
+    let itemMargin = 0;
+    let descriptionMargin = 0;
+    let otherMargins = 0;
+    // a row is 14 in height,
+    const ROW = 14;
+
+    if (numItemRows === numDescriptionRows) {
+      if (numItemRows > 1) {
+        otherMargins = numItemRows * ROW;
+      }
+    } else if (numDescriptionRows > numItemRows) {
+      descriptionMargin = 0;
+      itemMargin = numDescriptionRows * ROW - numItemRows * ROW;
+      otherMargins = numDescriptionRows * ROW - ROW;
+    } else if (numItemRows > numDescriptionRows) {
+      itemMargin = 0;
+      descriptionMargin = numItemRows * ROW - numDescriptionRows * ROW;
+      otherMargins = numItemRows * ROW - ROW;
     }
+
+    console.log(
+      `${i}: ${data.estimate.items[i].description.length / DESCRIPTION_DIVISOR}`
+    );
+
+    itemMargin += ROW;
+    otherMargins += ROW;
+    descriptionMargin += ROW;
+
     items.push({
       text: data.estimate.items[i].item,
       alignment: "center",
-      fontSize: 10,
+      fontSize: 12,
       height: "auto",
-      margin: [0, 0, 0, margin],
-      font: "RobotoMono"
+      margin: [0, 0, 0, itemMargin]
     });
     descriptions.push({
       text: data.estimate.items[i].description,
-      alignment: "center",
-      fontSize: 10,
-      font: "RobotoMono"
+      alignment: "left",
+      fontSize: 12,
+      // font: "RobotoMono",
+      margin: [0, 0, 0, descriptionMargin]
     });
     quantities.push({
       text: data.estimate.items[i].quantity,
       alignment: "center",
-      fontSize: 10,
+      fontSize: 12,
       height: "auto",
-      margin: [0, 0, 0, margin],
-      font: "RobotoMono"
+      margin: [0, 0, 0, otherMargins]
     });
     amounts.push({
       text: currencyFormatter.format(
         data.estimate.items[i].amount.replace(/\$/g, "").replace(/\.00+/, "")
       ),
       alignment: "right",
-      fontSize: 10,
+      fontSize: 12,
       height: "auto",
-      margin: [0, 0, 0, margin],
-      font: "RobotoMono"
+      margin: [0, 0, 0, otherMargins]
     });
   }
 
@@ -184,7 +211,7 @@ function renderPdf(data, cb) {
       },
       {
         table: {
-          widths: [100, 250, "*", "auto"],
+          widths: [100, 320, 20, "auto"],
           fontSize: 10,
           headerRows: 1,
           body: [
@@ -202,7 +229,7 @@ function renderPdf(data, cb) {
                 bold: true
               },
               {
-                text: "Quantity",
+                text: "Qty.",
                 alignment: "center",
                 fontSize: 10,
                 bold: true
@@ -223,24 +250,24 @@ function renderPdf(data, cb) {
           widths: [60, 60],
           body: [
             [
-              { text: "Subtotal", fontSize: 8 },
+              { text: "Subtotal", fontSize: 12 },
               {
                 text: currencyFormatter.format(data.estimate.total),
-                fontSize: 8
+                fontSize: 12
               }
             ],
             [
-              { text: "Taxes", fontSize: 8 },
+              { text: "Taxes", fontSize: 12 },
               {
                 text: currencyFormatter.format(taxes),
-                fontSize: 8
+                fontSize: 12
               }
             ],
             [
-              { text: "Total", fontSize: 8 },
+              { text: "Total", fontSize: 12 },
               {
                 text: currencyFormatter.format(grandTotal),
-                fontSize: 8
+                fontSize: 12
               }
             ]
           ]
