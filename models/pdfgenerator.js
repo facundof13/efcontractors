@@ -40,10 +40,6 @@ function renderPdf(data, cb) {
     : data.estimate.invoice
     ? "Invoice"
     : "Estimate";
-  var items = [];
-  var descriptions = [];
-  var quantities = [];
-  var amounts = [];
   var taxes = 0;
   let paymentSchedule = [];
 
@@ -52,97 +48,63 @@ function renderPdf(data, cb) {
     currency: "USD"
   });
 
-  for (let j = 0; j < data.estimate.paymentSteps.length; j++) {
-    console.log(data.estimate.paymentSteps[j].stepAmount);
+  data.estimate.paymentSteps.forEach(i => {
+    console.log(i.stepAmount);
     paymentSchedule.push(
-      `${data.estimate.paymentSteps[j].stepName} ${
-        data.estimate.paymentSteps[j].stepDescription
-      } ${currencyFormatter.format(
-        Number(data.estimate.paymentSteps[j].stepAmount.replace("$", ""))
+      `${i.stepName} ${i.stepDescription} ${currencyFormatter.format(
+        Number(i.stepAmount.replace("$", ""))
       )}\n`
     );
-  }
+  });
 
-  // console.log(paymentSchedule);
+  let item = [];
+  data.estimate.items.forEach(i => {
+    item.push({
+      table: {
+        widths: [100, 315, 20, 41],
+        fontSize: 10,
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              text: i.item,
+              alignment: "center",
+              fontSize: 12
+            },
+            {
+              border: [true, false, true, true],
+              text: i.description,
+              alignment: "center",
+              fontSize: 12
+            },
+            {
+              border: [true, false, true, true],
+              text: i.quantity,
+              alignment: "center",
+              fontSize: 12
+            },
+            {
+              border: [true, false, true, true],
+              text: i.amount,
+              alignment: "center",
+              fontSize: 12
+            }
+          ]
+        ]
+      }
+    });
+  });
 
-  for (let i = 0; i < data.estimate.items.length; i++) {
-    let num = data.estimate.items[i].amount;
-    if (data.estimate.items[i].tax) {
+  data.estimate.items.forEach(i => {
+    let num = i.amount;
+    if (i.tax) {
       taxes += num.replace("$", "") / taxAmt;
     }
-  }
+  });
+
   let grandTotal = taxes + data.estimate.total;
-  //row height = 8
-
-  const DESCRIPTION_DIVISOR = 45.3;
-  for (let i = 0; i < data.estimate.items.length; i++) {
-    let numDescriptionRows = Math.round(
-      data.estimate.items[i].description.length / DESCRIPTION_DIVISOR
-    );
-    let numItemRows = Math.ceil(data.estimate.items[i].item.length / 18);
-
-    let itemMargin = 0;
-    let descriptionMargin = 0;
-    let otherMargins = 0;
-    // a row is 14 in height,
-    const ROW = 14;
-
-    if (numItemRows === numDescriptionRows) {
-      if (numItemRows > 1) {
-        otherMargins = numItemRows * ROW;
-      }
-    } else if (numDescriptionRows > numItemRows) {
-      descriptionMargin = 0;
-      itemMargin = numDescriptionRows * ROW - numItemRows * ROW;
-      otherMargins = numDescriptionRows * ROW - ROW;
-    } else if (numItemRows > numDescriptionRows) {
-      itemMargin = 0;
-      descriptionMargin = numItemRows * ROW - numDescriptionRows * ROW;
-      otherMargins = numItemRows * ROW - ROW;
-    }
-
-    console.log(
-      `${i}: ${data.estimate.items[i].description.length / DESCRIPTION_DIVISOR}`
-    );
-
-    itemMargin += ROW;
-    otherMargins += ROW;
-    descriptionMargin += ROW;
-
-    items.push({
-      text: data.estimate.items[i].item,
-      alignment: "center",
-      fontSize: 12,
-      height: "auto",
-      margin: [0, 0, 0, itemMargin]
-    });
-    descriptions.push({
-      text: data.estimate.items[i].description,
-      alignment: "left",
-      fontSize: 12,
-      // font: "RobotoMono",
-      margin: [0, 0, 0, descriptionMargin]
-    });
-    quantities.push({
-      text: data.estimate.items[i].quantity,
-      alignment: "center",
-      fontSize: 12,
-      height: "auto",
-      margin: [0, 0, 0, otherMargins]
-    });
-    amounts.push({
-      text: currencyFormatter.format(
-        data.estimate.items[i].amount.replace(/\$/g, "").replace(/\.00+/, "")
-      ),
-      alignment: "right",
-      fontSize: 12,
-      height: "auto",
-      margin: [0, 0, 0, otherMargins]
-    });
-  }
 
   var docDefinition = {
-    // ...
     info: {
       title: `Estimate for ${data.client.name}`
     },
@@ -211,7 +173,7 @@ function renderPdf(data, cb) {
       },
       {
         table: {
-          widths: [100, 320, 20, "auto"],
+          widths: [100, 315, 20, 41],
           fontSize: 10,
           headerRows: 1,
           body: [
@@ -240,11 +202,13 @@ function renderPdf(data, cb) {
                 fontSize: 10,
                 bold: true
               }
-            ],
-            [[items], [descriptions], [quantities], [amounts]]
+            ]
+            // [["test"]]
+            // [[items], [descriptions], [quantities], [amounts]]
           ]
         }
       },
+      item,
       {
         table: {
           widths: [60, 60],
