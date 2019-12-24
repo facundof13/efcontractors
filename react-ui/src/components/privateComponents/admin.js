@@ -1,19 +1,19 @@
-import React from "react";
-import MonthlyIncome from './monthly-income'
+import React from 'react';
+import MonthlyIncome from './monthly-income';
 
 export default class Admin extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 
-  componentDidMount() {}
+	componentDidMount() {}
 
-  render() {
-    return (
-      <div>
-      <MonthlyIncome />
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				<MonthlyIncome />
+			</div>
+		);
+	}
 }

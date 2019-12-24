@@ -1,114 +1,113 @@
-import React from "react";
-import orderBy from "lodash/orderBy";
+import React from 'react';
+import orderBy from 'lodash/orderBy';
 import {
-  TableRow,
-  TableCell,
-  Table,
-  TableHead,
-  TableBody,
-  TableSortLabel
-} from "@material-ui/core";
-import CheckOutlined from "@material-ui/icons/CheckOutlined";
-import Axios from "axios";
+	TableRow,
+	TableCell,
+	Table,
+	TableHead,
+	TableBody,
+	TableSortLabel
+} from '@material-ui/core';
+import CheckOutlined from '@material-ui/icons/CheckOutlined';
+import Axios from 'axios';
 
 const invertDirection = {
-  asc: "desc",
-  desc: "asc"
+	asc: 'desc',
+	desc: 'asc'
 };
 
 export default class Services extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      services: [],
-      columnToSort: "Service",
-      sortDirection: "asc"
-    };
+		this.state = {
+			services: [],
+			columnToSort: 'Service',
+			sortDirection: 'asc'
+		};
 
-    this.getServices = this.getServices.bind(this);
-  }
+		this.getServices = this.getServices.bind(this);
+	}
 
-  componentDidMount() {
-    this.getServices();
-  }
+	componentDidMount() {
+		this.getServices();
+	}
 
-  getServices() {
-    Axios.get("/api/services").then(res => {
-      this.setState({ services: res.data });
-    });
-  }
+	getServices() {
+		Axios.get('/api/services').then((res) => {
+			this.setState({ services: res.data });
+		});
+	}
 
-  handleSort(name) {
-    this.setState(prevState => ({
-      columnToSort: name,
-      sortDirection:
-        prevState.columnToSort === name
-          ? invertDirection[prevState.sortDirection]
-          : "asc"
-    }));
-  }
+	handleSort(name) {
+		this.setState((prevState) => ({
+			columnToSort: name,
+			sortDirection:
+				prevState.columnToSort === name
+					? invertDirection[prevState.sortDirection]
+					: 'asc'
+		}));
+	}
 
-  render() {
-    return (
-      <div>
-        <div>
-          <p className='services-text'>All the services you need, and a lot more.</p>
-        </div>
-        <div className="services-table-root">
-          {/* <Paper> */}
-            <Table size='small' >
-              <TableHead>
-                <TableRow >
-                  <TableCell>
-                    <TableSortLabel
-                      direction={this.state.sortDirection}
-                      onClick={() => this.handleSort("Service")}
-                    >
-                      Services
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="right">
-                    <TableSortLabel
-                      direction={this.state.sortDirection}
-                      onClick={() => this.handleSort("Residential")}
-                    >
-                      Residential
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="right">
-                    <TableSortLabel
-                      direction={this.state.sortDirection}
-                      onClick={() => this.handleSort("Commercial")}
-                    >
-                      Commercial
-                    </TableSortLabel>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody >
-                {orderBy(
-                  this.state.services,
-                  this.state.columnToSort,
-                  this.state.sortDirection
-                ).map(row => (
-                  <TableRow className='services-text-body' key={row._id}>
-                    <TableCell component="th" scope="row">
-                      {row.Service}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.Residential ? <CheckOutlined /> : ""}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.Commercial ? <CheckOutlined /> : ""}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          {/* </Paper> */}
-        </div>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				<div>
+					<p className='services-text'>
+						All the services you need, and a lot more.
+					</p>
+				</div>
+				<div className='services-table-root'>
+					{/* <Paper> */}
+					<Table size='small'>
+						<TableHead>
+							<TableRow>
+								<TableCell>
+									<TableSortLabel
+										direction={this.state.sortDirection}
+										onClick={() => this.handleSort('Service')}>
+										Services
+									</TableSortLabel>
+								</TableCell>
+								<TableCell align='right'>
+									<TableSortLabel
+										direction={this.state.sortDirection}
+										onClick={() => this.handleSort('Residential')}>
+										Residential
+									</TableSortLabel>
+								</TableCell>
+								<TableCell align='right'>
+									<TableSortLabel
+										direction={this.state.sortDirection}
+										onClick={() => this.handleSort('Commercial')}>
+										Commercial
+									</TableSortLabel>
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{orderBy(
+								this.state.services,
+								this.state.columnToSort,
+								this.state.sortDirection
+							).map((row) => (
+								<TableRow className='services-text-body' key={row._id}>
+									<TableCell component='th' scope='row'>
+										{row.Service}
+									</TableCell>
+									<TableCell align='right'>
+										{row.Residential ? <CheckOutlined /> : ''}
+									</TableCell>
+									<TableCell align='right'>
+										{row.Commercial ? <CheckOutlined /> : ''}
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+					{/* </Paper> */}
+				</div>
+			</div>
+		);
+	}
 }
