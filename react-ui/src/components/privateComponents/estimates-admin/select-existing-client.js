@@ -19,7 +19,7 @@ export default class SelectExistingClient extends React.Component {
 	}
 
 	render() {
-		return (
+		let value = (
 			<form id='item-form'>
 				<div className='login'>
 					<FormControl>
@@ -27,29 +27,21 @@ export default class SelectExistingClient extends React.Component {
 						<Select
 							className='estimate-item-select-width'
 							id='item-select'
-							// className="estimate-item-select-width"
-							// id="customer-select"
 							onChange={this.handleChange}
-							// onOpen={this.handleOpen}
 							value={this.state.selectedCustomer}
-							name='selectedCustomer'
-							// required
-						>
+							name='selectedCustomer'>
 							<MenuItem value=''>None</MenuItem>
-							{this.props.customers
-								? this.props.customers.map((customer) => (
-										<MenuItem value={customer} key={customer._id}>
-											{customer.name}
-										</MenuItem>
-								  ))
-								: ''}
+							{this.props.customers.map((customer) => (
+								<MenuItem value={customer} key={customer._id}>
+									{customer.name}
+								</MenuItem>
+							))}
 						</Select>
-						{/* <FormHelperText>
-              {this.state.serviceItem === "" ? this.state.itemError : ""}
-            </FormHelperText> */}
 					</FormControl>
 				</div>
 			</form>
 		);
+
+		return this.props.customers ? value : '';
 	}
 }

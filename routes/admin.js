@@ -74,6 +74,11 @@ router.post('/api/addservices', function(req, res, next) {
 	res.end();
 });
 
+router.post('/api/addinvoiceservice', (req, res, next) => {
+	invoices.addInvoiceService(req.body.service);
+	res.end();
+});
+
 //delete service
 router.delete('/api/services', function(req, res, next) {
 	services.removeService(req.body._id);

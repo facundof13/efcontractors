@@ -3,6 +3,7 @@ import { Tabs, Tab, AppBar } from '@material-ui/core';
 import CompanyInformation from './company-information';
 import ManageServices from './manage-services';
 import InvoiceSettings from './invoice-settings';
+import AddInvoiceService from './add-invoice-service';
 
 export default class Settings extends React.Component {
 	constructor(props) {

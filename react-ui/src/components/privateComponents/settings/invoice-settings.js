@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField, Button } from '@material-ui/core';
 import Axios from 'axios';
+import { AddInvoiceService } from './add-invoice-service';
 export default class InvoiceSettings extends React.Component {
 	constructor(props) {
 		super(props);
@@ -51,51 +52,54 @@ export default class InvoiceSettings extends React.Component {
 		return (
 			<div>
 				<div>
-					<TextField
-						value={this.state.company}
-						name='company'
-						label='Company'
-						color='secondary'
-						onChange={this.handleChange}
-					/>
-					<TextField
-						value={this.state.address}
-						name='address'
-						label='Address'
-						color='secondary'
-						onChange={this.handleChange}
-					/>
-					<TextField
-						value={this.state.cityState}
-						name='cityState'
-						label='City, State'
-						color='secondary'
-						onChange={this.handleChange}
-					/>
-					<TextField
-						value={this.state.zip}
-						name='zip'
-						label='Zip'
-						color='secondary'
-						onChange={this.handleChange}
-					/>
-					<TextField
-						value={this.state.taxAmt}
-						name='taxAmt'
-						label='Tax Amount'
-						color='secondary'
-						onChange={this.handleChange}
-					/>
+					<div>
+						<TextField
+							value={this.state.company}
+							name='company'
+							label='Company'
+							color='secondary'
+							onChange={this.handleChange}
+						/>
+						<TextField
+							value={this.state.address}
+							name='address'
+							label='Address'
+							color='secondary'
+							onChange={this.handleChange}
+						/>
+						<TextField
+							value={this.state.cityState}
+							name='cityState'
+							label='City, State'
+							color='secondary'
+							onChange={this.handleChange}
+						/>
+						<TextField
+							value={this.state.zip}
+							name='zip'
+							label='Zip'
+							color='secondary'
+							onChange={this.handleChange}
+						/>
+						<TextField
+							value={this.state.taxAmt}
+							name='taxAmt'
+							label='Tax Amount'
+							color='secondary'
+							onChange={this.handleChange}
+						/>
+					</div>
+					<div>
+						<Button
+							className='btn-login'
+							variant='outlined'
+							color='secondary'
+							onClick={this.handleSave}>
+							Save
+						</Button>
+					</div>
 				</div>
-				<div>
-					<Button
-						className='btn-login'
-						variant='outlined'
-						color='secondary'
-						onClick={this.handleSave}>
-						Save
-					</Button>
-				</div>
+				<AddInvoiceService />
 			</div>
 		);
 	}

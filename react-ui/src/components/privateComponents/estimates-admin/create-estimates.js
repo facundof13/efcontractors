@@ -307,14 +307,10 @@ export default class CreateEstimate extends React.Component {
 		return (
 			<div>
 				{/* //update existing customer */}
-				{this.state.customers.length > 0 ? (
-					<SelectExistingClient
-						update={this.fillWithSelectedCustomer}
-						customers={this.state.customers}
-					/>
-				) : (
-					''
-				)}
+				<SelectExistingClient
+					update={this.fillWithSelectedCustomer}
+					customers={this.state.customers}
+				/>
 
 				<div className='estimates-form'>
 					<form autoComplete='off' id='create-form'>
