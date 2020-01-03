@@ -83,12 +83,14 @@ class LoginForm extends Component {
 							</Typography>
 							<div className='login'>
 								<TextField
+									autoCorrect='off'
+									autoCapitalize='none'
 									autoComplete='username'
 									type='text'
 									id='username'
 									name='username'
 									color='secondary'
-									placeholder='Username'
+									placeholder='username'
 									variant='outlined'
 									value={this.state.username}
 									onChange={this.handleChange}
@@ -98,10 +100,12 @@ class LoginForm extends Component {
 								</Typography>
 
 								<TextField
+									autoCorrect='off'
+									autoCapitalize='none'
 									autoComplete='current-password'
 									name='password'
 									type='password'
-									placeholder='password'
+									placeholder='&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;'
 									color='secondary'
 									variant='outlined'
 									value={this.state.password}

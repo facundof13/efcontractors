@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-	Typography,
-	IconButton,
-	Divider,
-	Button,
-	ButtonBase
-} from '@material-ui/core';
+import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { Swipeable } from 'react-swipeable';
@@ -15,11 +9,10 @@ const videoTypes = ['.mp4', '.mov'];
 export default class ExpandedProject extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			photoIndex: 0,
 			videoThumbs: [],
-			project: JSON.parse(JSON.stringify(this.props.project))
+			project: undefined
 		};
 
 		this.handleArrows = this.handleArrows.bind(this);
@@ -31,6 +24,14 @@ export default class ExpandedProject extends React.Component {
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.handleArrows, false);
+		// if undefined, go to home
+		if (this.props.location.state) {
+			this.setState({
+				project: JSON.parse(JSON.stringify(this.props.location.state.project))
+			});
+		} else {
+			this.props.history.go(-1);
+		}
 	}
 
 	componentWillUnmount() {
@@ -58,9 +59,6 @@ export default class ExpandedProject extends React.Component {
 		} else if (e.keyCode === 37) {
 			// Move index -1
 			this.gotoPrev();
-		} else if (e.keyCode === 27) {
-			// close project
-			this.props.closeProject();
 		}
 	}
 
@@ -77,19 +75,19 @@ export default class ExpandedProject extends React.Component {
 	}
 
 	render() {
-		return (
+		let value = this.state.project && (
 			<div>
 				<Typography color='secondary' component='span' variant='h5'>
 					<h5>{this.state.project.name + ' ' + this.state.project.location}</h5>
 				</Typography>
-
-				<Divider className='top' />
 				<div>
 					<Button
 						variant='outlined'
 						color='secondary'
 						className='btn-login'
-						onClick={this.props.closeProject}>
+						onClick={() => {
+							this.props.history.push('/projects');
+						}}>
 						Back to projects
 					</Button>
 				</div>
@@ -108,14 +106,6 @@ export default class ExpandedProject extends React.Component {
 							this.state.project.images[this.state.photoIndex].url.slice(-4)
 						) ? (
 							<div className='fade-in'>
-								{/* <video controls playsInline id='myVid'
-                  poster={this.state.project.images[this.state.photoIndex].thumbUrl}
-                >
-                  <source
-                    type=
-                    src={this.state.project.images[this.state.photoIndex].url}
-                  />
-                </video> */}
 								<video
 									src={this.state.project.images[this.state.photoIndex].url}
 									className='big-image'
@@ -189,5 +179,8 @@ export default class ExpandedProject extends React.Component {
 				</div>
 			</div>
 		);
+		if (this.state.project) {
+			return value;
+		} else return '';
 	}
 }

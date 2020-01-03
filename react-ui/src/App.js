@@ -19,6 +19,7 @@ import AboutUs from './components/about-us';
 import Services from './components/services';
 import ManageTestimonials from './components/privateComponents/manage-testimonials';
 import Settings from './components/privateComponents/settings/settings';
+import ExpandedProject from './components/expanded-project';
 
 class App extends Component {
 	constructor() {
@@ -72,7 +73,17 @@ class App extends Component {
 
 					<Switch>
 						<Route exact path='/' component={Home} />
-						<Route path='/projects' render={() => <ViewProjects />} />
+						<Route
+							exact
+							path='/projects'
+							render={(props) => <ViewProjects {...props} />}
+						/>
+						<Route
+							exact
+							path='/projects/:userId'
+							// component={ExpandedProject}
+							render={(props) => <ExpandedProject {...props} />}
+						/>
 						<Route path='/testimonials' render={() => <Testimonials />} />
 						<Route path='/about' render={() => <AboutUs />} />
 						<Route path='/services' render={() => <Services />} />

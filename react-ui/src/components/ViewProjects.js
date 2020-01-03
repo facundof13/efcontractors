@@ -1,23 +1,18 @@
 import React from 'react';
 import axios from 'axios';
 import { Card, CardHeader, CardMedia, CardActionArea } from '@material-ui/core';
-import ExpandedProject from './expanded-project';
+import { Link } from 'react-router-dom';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class Viewprojects extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			projects: [],
-			selected: {},
-			elemArr: '',
-			open: false
+			projects: []
 		};
 		this.render = this.render.bind(this);
 		this.componentDidMount = this.componentDidMount.bind(this);
 		this.getAllProjects = this.getAllProjects.bind(this);
-		this.closeProject = this.closeProject.bind(this);
-		this.showProject = this.showProject.bind(this);
 	}
 
 	componentDidMount() {
@@ -49,75 +44,41 @@ export default class Viewprojects extends React.Component {
 		});
 	}
 
-	showProject(project) {
-		let arr = [];
-		this.setState({ selected: project, open: true }, () => {
-			this.state.selected.images.map((img) => {
-				let item = (
-					<div key='img'>
-						{videoTypes.includes(img.url.slice(-4)) ? (
-							<video controls src={img.url} />
-						) : (
-							<img src={img.url} alt='' />
-						)}
-					</div>
-				);
-				arr = [...arr, item];
-				return 0;
-			});
-			this.setState({ elemArr: arr });
-		});
-	}
-
-	closeProject() {
-		this.setState({ selected: {}, open: false });
-	}
-
 	render() {
 		return (
 			<div>
-				{this.state.open ? (
-					''
-				) : (
-					<div className='project-card'>
-						{this.state.projects.map((project) =>
-							project.images.length < 1 ? (
-								''
-							) : (
+				<div className='project-card'>
+					{this.state.projects.map(
+						(project) =>
+							project.images.length > 0 && (
 								<div key={project._id}>
-									<Card>
-										<CardActionArea
-											onClick={(e) => {
-												this.showProject(project);
-											}}>
-											<CardMedia
-												component='img'
-												// {
-												//   videoTypes.includes(project.images[0].slice(-4))
-												//     ? "video"
-												//     : "img"
-												// }
-												image={
-													project.images[0].thumbUrl || project.images[0].url
-												}
-												height={200}
-											/>
-											<CardHeader
-												subheader={project.name + ' - ' + project.location}
-											/>
-										</CardActionArea>
-									</Card>
+									<Link
+										to={{
+											pathname: `/projects/${project._id}`,
+											state: {
+												project: project,
+												scrollPos: window.pageYOffset
+											}
+										}}>
+										<Card>
+											<CardActionArea>
+												<CardMedia
+													component='img'
+													image={
+														project.images[0].thumbUrl || project.images[0].url
+													}
+													height={200}
+												/>
+												<CardHeader
+													subheader={project.name + ' - ' + project.location}
+												/>
+											</CardActionArea>
+										</Card>
+									</Link>
 								</div>
 							)
-						)}
-					</div>
-				)}
-				{this.state.open && this.state.selected.images.length > 0 && (
-					<ExpandedProject
-						project={this.state.selected}
-						closeProject={this.closeProject}
-					/>
-				)}
+					)}
+				</div>
 			</div>
 		);
 	}
