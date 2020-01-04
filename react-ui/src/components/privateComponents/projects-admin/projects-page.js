@@ -11,13 +11,13 @@ export default class ProjectsPage extends Component {
 		this.state = {
 			name: '',
 			location: '',
-			currentUser: [],
+			currentUser: {},
 			newName: '',
-			newLocation: ''
+			newLocation: '',
+			data: []
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.getUser = this.getUser.bind(this);
-		this.finished = this.finished.bind(this);
 		this.render = this.render.bind(this);
 		this.getProjects = this.getProjects.bind(this);
 		this.componentDidMount = this.componentDidMount.bind(this);
@@ -32,11 +32,11 @@ export default class ProjectsPage extends Component {
 		if (id) {
 			Axios.get('/admin/api/projectname', { params: { id: id } }).then(
 				(res) => {
-					this.setState({ currentUser: res.data });
+					this.setState({ currentUser: res.data[0] });
 				}
 			);
 		} else {
-			this.setState({ currentUser: [] });
+			this.setState({ currentUser: {} });
 		}
 	}
 
@@ -45,7 +45,7 @@ export default class ProjectsPage extends Component {
 			this.setState(
 				{ currentUser: this.state.data[this.state.data.length - 1] },
 				() => {
-					this.finished(this.state.currentUser._id);
+					this.getUser(this.state.currentUser._id);
 				}
 			);
 		});
@@ -58,30 +58,18 @@ export default class ProjectsPage extends Component {
 		});
 	}
 
-	finished(id) {
-		if (id) {
-			this.getUser(id);
-		} else {
-			this.getProjects();
-		}
-	}
-
 	deleteProject(project) {
 		if (
 			window.confirm(`Delete project ${project.name} from ${project.location}?`)
 		) {
-			if (project.images.length > 0) {
-				window.alert('You must delete all images from a project first!');
-			} else {
-				Axios.delete('/admin/api/deleteproject', {
-					data: {
-						id: project._id
-					}
-				});
-				this.setState({ currentUser: [], data: [] }, () => {
-					this.getProjects();
-				});
-			}
+			Axios.delete('/admin/api/deleteproject', {
+				data: {
+					id: project._id
+				}
+			}).then(() => {
+				this.getProjects();
+				this.setState({ currentUser: {} });
+			});
 		}
 	}
 
@@ -93,20 +81,19 @@ export default class ProjectsPage extends Component {
 					<ProjectList
 						projects={this.state.data}
 						getUser={this.getUser}
-						finishedFunction={this.getProjects}
+						getProjects={this.getProjects}
 						user={this.state.currentUser}
 					/>
 				</div>
 				<Divider />
 				<div className='container'>
-					{this.state.currentUser.length > 0 ? (
+					{Object.keys(this.state.currentUser).length !== 0 && (
 						<Project
 							deleteProject={this.deleteProject}
 							user={this.state.currentUser}
-							finishedFunction={this.finished}
+							getProjects={this.getProjects}
+							getUser={this.getUser}
 						/>
-					) : (
-						''
 					)}
 				</div>
 			</div>

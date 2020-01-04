@@ -54,7 +54,7 @@ export default class Viewprojects extends React.Component {
 								<div key={project._id}>
 									<Link
 										to={{
-											pathname: `/projects/${project._id}`,
+											pathname: `/projects/${project.name}`,
 											state: {
 												project: project,
 												scrollPos: window.pageYOffset

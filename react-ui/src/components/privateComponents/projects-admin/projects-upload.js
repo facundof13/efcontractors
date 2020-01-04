@@ -151,8 +151,8 @@ class ProjectsUpload extends Component {
 									}
 								} else {
 									setTimeout(() => {
-										this.props.finishedFunction(this.props.user._id);
-										this.props.finishedFunction();
+										this.props.getUser(this.props.user._id);
+										this.props.getProjects();
 									}, 2000); // wait 2 seconds for videos/files to finish uploading
 								}
 							}

@@ -4,9 +4,13 @@ import { FormControl, Select, MenuItem, InputLabel } from '@material-ui/core';
 export default class ProjectList extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { project: ' ' };
+
+		this.state = {
+			project: ''
+		};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.render = this.render.bind(this);
 	}
 
 	handleChange(event, value) {
@@ -14,11 +18,13 @@ export default class ProjectList extends React.Component {
 		this.props.getUser(value.key);
 	}
 
-	static getDerivedStateFromProps(props, state) {
-		if (props.user.name !== undefined) {
-			return (state = { project: props.user.name });
-		} else {
-			return state;
+	componentDidUpdate(prevProps) {
+		if (this.props !== prevProps) {
+			if (Object.keys(this.props.user).length !== 0) {
+				this.setState({ project: this.props.user.name });
+			} else {
+				this.setState({ project: '' });
+			}
 		}
 	}
 
@@ -34,25 +40,19 @@ export default class ProjectList extends React.Component {
 							<Select
 								className='estimate-item-select-width'
 								id='item-select'
-								// className="estimate-item-select-width"
-								// id="customer-select"
 								onChange={this.handleChange}
-								// onOpen={this.handleOpen}
 								value={this.state.project}
-								name='selectedCustomer'
-								// required
-							>
+								name='selectedCustomer'>
 								<MenuItem value=''>None</MenuItem>
-								{this.props.projects
-									? this.props.projects.map((project) => (
-											<MenuItem
-												value={project.name}
-												id={project._id}
-												key={project._id}>
-												{project.name}
-											</MenuItem>
-									  ))
-									: ''}
+								{this.props.projects &&
+									this.props.projects.map((project) => (
+										<MenuItem
+											value={project.name}
+											id={project._id}
+											key={project._id}>
+											{project.name}
+										</MenuItem>
+									))}
 							</Select>
 						</FormControl>
 					</div>
