@@ -32,6 +32,8 @@ export default class ExpandedProject extends React.Component {
 		} else {
 			this.props.history.go(-1);
 		}
+
+		window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount() {
@@ -78,19 +80,10 @@ export default class ExpandedProject extends React.Component {
 		let value = this.state.project && (
 			<div>
 				<Typography color='secondary' component='span' variant='h5'>
-					<h5>{this.state.project.name + ' ' + this.state.project.location}</h5>
+					<h4>
+						{this.state.project.name + ' - ' + this.state.project.location}
+					</h4>
 				</Typography>
-				<div>
-					<Button
-						variant='outlined'
-						color='secondary'
-						className='btn-login'
-						onClick={() => {
-							this.props.history.push('/projects');
-						}}>
-						Back to projects
-					</Button>
-				</div>
 				<div className='expanded-project'>
 					<div className='arrow'>
 						<IconButton
@@ -176,6 +169,17 @@ export default class ExpandedProject extends React.Component {
 							</div>
 						);
 					})}
+				</div>
+				<div>
+					<Button
+						variant='outlined'
+						color='secondary'
+						className='btn-login'
+						onClick={() => {
+							this.props.history.push('/projects');
+						}}>
+						Back to projects
+					</Button>
 				</div>
 			</div>
 		);
