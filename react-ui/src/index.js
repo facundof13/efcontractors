@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import HttpsRedirect from 'react-https-redirect';
 import { BrowserRouter } from 'react-router-dom'; //don't need to specify localhost url in axios http address
 import {
 	MuiThemeProvider,
@@ -29,7 +30,9 @@ theme = responsiveFontSizes(theme);
 ReactDOM.render(
 	<MuiThemeProvider theme={theme}>
 		<BrowserRouter>
-			<App />
+			<HttpsRedirect>
+				<App />
+			</HttpsRedirect>
 		</BrowserRouter>
 	</MuiThemeProvider>,
 	document.getElementById('root')
