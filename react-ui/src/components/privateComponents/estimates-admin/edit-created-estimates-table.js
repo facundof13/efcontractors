@@ -52,8 +52,15 @@ export default class EditCreatedEstimatesTable extends React.Component {
 			copyPayments: [],
 			copySteps: [],
 			estimateNum: this.props.estimateToEdit.estimateNum,
-			paidDate: this.props.estimateToEdit.paidDate
+			paidDate: this.props.estimateToEdit.paidDate,
+			softTotal: 0
 		};
+
+		let total = 0;
+		for (const item of this.state.items) {
+			total += Number(item.amount.replace('$', ''));
+		}
+		this.state.softTotal = total;
 
 		this.handleChange = this.handleChange.bind(this);
 		this.render = this.render.bind(this);
@@ -155,9 +162,18 @@ export default class EditCreatedEstimatesTable extends React.Component {
 			});
 		} else {
 			stateToChange[index][key] = value;
-			this.setState({
-				items: stateToChange
-			});
+			this.setState(
+				{
+					items: stateToChange
+				},
+				() => {
+					let total = 0;
+					for (const item of this.state.items) {
+						total += Number(item.amount.replace('$', ''));
+					}
+					this.setState({ softTotal: total });
+				}
+			);
 		}
 	}
 
@@ -330,7 +346,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 							<TableCell>Expiration</TableCell>
 							<TableCell>Invoice</TableCell>
 							<TableCell>Contract</TableCell>
-							<TableCell />
+							<TableCell>Total</TableCell>
 							<TableCell />
 							<TableCell />
 							<TableCell />
@@ -371,6 +387,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 									onChange={(event) => this.handleChange(event)}
 								/>
 							</TableCell>
+							<TableCell>${this.state.softTotal}</TableCell>
 							<TableCell>
 								<Button
 									onClick={this.handleClickOpen}

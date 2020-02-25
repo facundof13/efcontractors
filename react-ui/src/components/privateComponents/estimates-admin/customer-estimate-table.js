@@ -76,6 +76,7 @@ export default class CustomerEstimateTable extends React.Component {
 	}
 
 	handleEdit(row) {
+		this.props.editing(true);
 		this.setState({
 			currentlyEditing: true,
 			estimateToEdit: JSON.parse(JSON.stringify(row))
@@ -118,11 +119,13 @@ export default class CustomerEstimateTable extends React.Component {
 
 	cancelEdit() {
 		this.setState({ currentlyEditing: false, estimateToEdit: [] });
+		this.props.editing(false);
 	}
 
 	handleEstimateSave(estimate) {
 		this.props.handleSave(estimate);
 		this.setState({ currentlyEditing: false, estimateToEdit: [] });
+		this.props.editing(false);
 	}
 
 	async createPdf(row) {

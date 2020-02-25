@@ -50,7 +50,7 @@ function renderPdf(data, cb) {
 
 	data.estimate.paymentSteps.forEach((i) => {
 		console.log(i.stepAmount);
-		paymentSchedule.push(
+		paymentSchedule.unshift(
 			`${i.stepName} ${i.stepDescription} ${currencyFormatter.format(
 				Number(i.stepAmount.replace('$', ''))
 			)}\n`

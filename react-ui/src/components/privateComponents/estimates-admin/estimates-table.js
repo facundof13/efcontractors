@@ -50,7 +50,8 @@ export default class EstimatesTable extends React.Component {
 			unChangedArray: [],
 			customerInfo: [],
 			searchValue: 'Search',
-			filteredCustomers: []
+			filteredCustomers: [],
+			editingEstimate: false
 		};
 		this.componentDidMount = this.componentDidMount.bind(this);
 		this.getCustomers = this.getCustomers.bind(this);
@@ -65,6 +66,7 @@ export default class EstimatesTable extends React.Component {
 		this.handleEstimateDelete = this.handleEstimateDelete.bind(this);
 		this.markEstimatePaid = this.markEstimatePaid.bind(this);
 		this.handleSearchChange = this.handleSearchChange.bind(this);
+		this.editing = this.editing.bind(this);
 	}
 
 	componentDidMount() {
@@ -303,6 +305,10 @@ export default class EstimatesTable extends React.Component {
 		);
 	}
 
+	editing(bool) {
+		this.setState({ editingEstimate: bool });
+	}
+
 	render() {
 		return (
 			<div>
@@ -321,188 +327,190 @@ export default class EstimatesTable extends React.Component {
 						}}
 					/>
 				</div>
-				<Grid container justify='center'>
-					<Paper className='customer-table'>
-						<Table size='small'>
-							<TableHead>
-								<TableRow>
-									<TableCell>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											align='left'
-											onClick={() => this.handleSort('name')}>
-											Client Name
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('email')}>
-											Client Email
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('phone')}>
-											Client Phone Number
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('address')}>
-											Client Street Address
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('cityState')}>
-											Client City, State
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('zip')}>
-											Client Zip Code
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right'>
-										<TableSortLabel
-											direction={this.state.sortDirection}
-											onClick={() => this.handleSort('date')}>
-											Date Created
-										</TableSortLabel>
-									</TableCell>
-									<TableCell align='right' />
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{this.state.currentlyEditing
-									? this.state.customerToEdit.map((customer) => (
-											<TableRow key={customer._id}>
-												<TableCell component='th' scope='row' align='left'>
-													<TextField
-														name='name'
-														onChange={this.handleChange}
-														value={customer.name}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														name='email'
-														onChange={this.handleChange}
-														value={customer.email}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														name='phone'
-														onChange={this.handleChange}
-														value={customer.phone}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														name='address'
-														onChange={this.handleChange}
-														value={customer.address}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														name='cityState'
-														onChange={this.handleChange}
-														value={customer.cityState}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														name='zip'
-														onChange={this.handleChange}
-														value={customer.zip}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<TextField
-														disabled
-														name='date'
-														onChange={this.handleChange}
-														value={prettifyDate(customer.date)}
-													/>
-												</TableCell>
-												<TableCell align='right'>
-													<IconButton
-														size='small'
-														title='Save estimate'
-														onClick={this.handleSave}>
-														<SaveOutlinedIcon />
-													</IconButton>
-													<IconButton
-														size='small'
-														title='Cancel'
-														onClick={this.handleCancel}>
-														<CancelOutlinedIcon />
-													</IconButton>
-												</TableCell>
-											</TableRow>
-									  ))
-									: orderBy(
-											this.state.filteredCustomers,
-											this.state.columnToSort,
-											this.state.sortDirection
-									  ).map((row, index) => (
-											<TableRow hover={true} key={row._id}>
-												<TableCell component='th' scope='row'>
-													{row.name}
-												</TableCell>
-												<TableCell align='right'>{row.email}</TableCell>
-												<TableCell align='right'>{row.phone}</TableCell>
-												<TableCell align='right'>{row.address}</TableCell>
-												<TableCell align='right'>{row.cityState}</TableCell>
-												<TableCell align='right'>{row.zip}</TableCell>
-												<TableCell align='right'>
-													{prettifyDate(row.date)}
-												</TableCell>
-												<TableCell align='right'>
-													<div>
-														{this.state.customerItems === row.estimates ? (
-															<IconButton
-																size='small'
-																title='Hide estimates'
-																onClick={() => this.handleClick(row, index)}>
-																<KeyboardArrowUpOutlined />
-															</IconButton>
-														) : (
-															<IconButton
-																size='small'
-																title='Show estimates'
-																onClick={() => this.handleClick(row, index)}>
-																<KeyboardArrowDownOutlined />
-															</IconButton>
-														)}
+				{!this.state.editingEstimate && (
+					<Grid container justify='center'>
+						<Paper className='customer-table'>
+							<Table size='small'>
+								<TableHead>
+									<TableRow>
+										<TableCell>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												align='left'
+												onClick={() => this.handleSort('name')}>
+												Client Name
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('email')}>
+												Client Email
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('phone')}>
+												Client Phone Number
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('address')}>
+												Client Street Address
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('cityState')}>
+												Client City, State
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('zip')}>
+												Client Zip Code
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right'>
+											<TableSortLabel
+												direction={this.state.sortDirection}
+												onClick={() => this.handleSort('date')}>
+												Date Created
+											</TableSortLabel>
+										</TableCell>
+										<TableCell align='right' />
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{this.state.currentlyEditing
+										? this.state.customerToEdit.map((customer) => (
+												<TableRow key={customer._id}>
+													<TableCell component='th' scope='row' align='left'>
+														<TextField
+															name='name'
+															onChange={this.handleChange}
+															value={customer.name}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															name='email'
+															onChange={this.handleChange}
+															value={customer.email}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															name='phone'
+															onChange={this.handleChange}
+															value={customer.phone}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															name='address'
+															onChange={this.handleChange}
+															value={customer.address}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															name='cityState'
+															onChange={this.handleChange}
+															value={customer.cityState}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															name='zip'
+															onChange={this.handleChange}
+															value={customer.zip}
+														/>
+													</TableCell>
+													<TableCell align='right'>
+														<TextField
+															disabled
+															name='date'
+															onChange={this.handleChange}
+															value={prettifyDate(customer.date)}
+														/>
+													</TableCell>
+													<TableCell align='right'>
 														<IconButton
 															size='small'
-															title='Edit client info'
-															onClick={() => this.editCustomer(row)}>
-															<CreateOutlinedIcon />
+															title='Save estimate'
+															onClick={this.handleSave}>
+															<SaveOutlinedIcon />
 														</IconButton>
 														<IconButton
 															size='small'
-															title='Delete client'
-															onClick={() => this.deleteCustomer(row)}>
-															<DeleteOutlinedIcon />
+															title='Cancel'
+															onClick={this.handleCancel}>
+															<CancelOutlinedIcon />
 														</IconButton>
-													</div>
-												</TableCell>
-											</TableRow>
-									  ))}
-							</TableBody>
-						</Table>
-					</Paper>
-				</Grid>
+													</TableCell>
+												</TableRow>
+										  ))
+										: orderBy(
+												this.state.filteredCustomers,
+												this.state.columnToSort,
+												this.state.sortDirection
+										  ).map((row, index) => (
+												<TableRow hover={true} key={row._id}>
+													<TableCell component='th' scope='row'>
+														{row.name}
+													</TableCell>
+													<TableCell align='right'>{row.email}</TableCell>
+													<TableCell align='right'>{row.phone}</TableCell>
+													<TableCell align='right'>{row.address}</TableCell>
+													<TableCell align='right'>{row.cityState}</TableCell>
+													<TableCell align='right'>{row.zip}</TableCell>
+													<TableCell align='right'>
+														{prettifyDate(row.date)}
+													</TableCell>
+													<TableCell align='right'>
+														<div>
+															{this.state.customerItems === row.estimates ? (
+																<IconButton
+																	size='small'
+																	title='Hide estimates'
+																	onClick={() => this.handleClick(row, index)}>
+																	<KeyboardArrowUpOutlined />
+																</IconButton>
+															) : (
+																<IconButton
+																	size='small'
+																	title='Show estimates'
+																	onClick={() => this.handleClick(row, index)}>
+																	<KeyboardArrowDownOutlined />
+																</IconButton>
+															)}
+															<IconButton
+																size='small'
+																title='Edit client info'
+																onClick={() => this.editCustomer(row)}>
+																<CreateOutlinedIcon />
+															</IconButton>
+															<IconButton
+																size='small'
+																title='Delete client'
+																onClick={() => this.deleteCustomer(row)}>
+																<DeleteOutlinedIcon />
+															</IconButton>
+														</div>
+													</TableCell>
+												</TableRow>
+										  ))}
+								</TableBody>
+							</Table>
+						</Paper>
+					</Grid>
+				)}
 				<Grid container justify='center'>
 					<div>
 						{this.state.customerItems.length > 0 ? (
@@ -514,6 +522,7 @@ export default class EstimatesTable extends React.Component {
 								handleSave={this.handleEstimateSave}
 								handleDelete={this.handleEstimateDelete}
 								markEstimatePaid={this.markEstimatePaid}
+								editing={this.editing}
 							/>
 						) : (
 							''
