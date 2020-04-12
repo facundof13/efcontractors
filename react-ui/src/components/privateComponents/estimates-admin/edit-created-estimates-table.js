@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
 	TableHead,
 	Paper,
@@ -17,19 +17,19 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogTitle
-} from '@material-ui/core';
-import Axios from 'axios';
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import AddCircleOutlined from '@material-ui/icons/AddCircleOutlined';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import { subtractDates, addDates } from '../helperComponents/prettify-date';
-import PaymentSchedule from './payment-schedule';
+	DialogTitle,
+} from '@material-ui/core'
+import Axios from 'axios'
+import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined'
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined'
+import AddCircleOutlined from '@material-ui/icons/AddCircleOutlined'
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'
+import { subtractDates, addDates } from '../helperComponents/prettify-date'
+import PaymentSchedule from './payment-schedule'
 
 export default class EditCreatedEstimatesTable extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 
 		this.state = {
 			selectItem: null,
@@ -53,35 +53,35 @@ export default class EditCreatedEstimatesTable extends React.Component {
 			copySteps: [],
 			estimateNum: this.props.estimateToEdit.estimateNum,
 			paidDate: this.props.estimateToEdit.paidDate,
-			softTotal: 0
-		};
-
-		let total = 0;
-		for (const item of this.state.items) {
-			total += Number(item.amount.replace('$', ''));
+			softTotal: 0,
 		}
-		this.state.softTotal = total;
 
-		this.handleChange = this.handleChange.bind(this);
-		this.render = this.render.bind(this);
-		this.componentDidMount = this.componentDidMount.bind(this);
-		this.getServices = this.getServices.bind(this);
-		this.getSelector = this.getSelector.bind(this);
-		this.handleSave = this.handleSave.bind(this);
-		this.cancelEdit = this.cancelEdit.bind(this);
-		this.addItemField = this.addItemField.bind(this);
-		this.deleteRow = this.deleteRow.bind(this);
-		this.handleClickOpen = this.handleClickOpen.bind(this);
-		this.handleCancel = this.handleCancel.bind(this);
-		this.addStep = this.addStep.bind(this);
-		this.removeStep = this.removeStep.bind(this);
-		this.updateStep = this.updateStep.bind(this);
-		this.handleContractSave = this.handleContractSave.bind(this);
+		let total = 0
+		for (const item of this.state.items) {
+			total += Number(item.amount.replace('$', ''))
+		}
+		this.state.softTotal = total
+
+		this.handleChange = this.handleChange.bind(this)
+		this.render = this.render.bind(this)
+		this.componentDidMount = this.componentDidMount.bind(this)
+		this.getServices = this.getServices.bind(this)
+		this.getSelector = this.getSelector.bind(this)
+		this.handleSave = this.handleSave.bind(this)
+		this.cancelEdit = this.cancelEdit.bind(this)
+		this.addItemField = this.addItemField.bind(this)
+		this.deleteRow = this.deleteRow.bind(this)
+		this.handleClickOpen = this.handleClickOpen.bind(this)
+		this.handleCancel = this.handleCancel.bind(this)
+		this.addStep = this.addStep.bind(this)
+		this.removeStep = this.removeStep.bind(this)
+		this.updateStep = this.updateStep.bind(this)
+		this.handleContractSave = this.handleContractSave.bind(this)
 	}
 
 	componentDidMount() {
-		this.getServices();
-		let newStepsArr = [];
+		this.getServices()
+		let newStepsArr = []
 		this.state.paymentSteps.map((item, i) => {
 			var step = (
 				<PaymentSchedule
@@ -91,12 +91,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
 					updateStep={this.updateStep}
 					existingStep={item}
 				/>
-			);
-			newStepsArr.push(step);
-			return true;
-		});
+			)
+			newStepsArr.push(step)
+			return true
+		})
 		if (this.state.paymentSteps.length > 0) {
-			this.setState({ steps: newStepsArr });
+			this.setState({ steps: newStepsArr })
 		}
 	}
 
@@ -124,76 +124,76 @@ export default class EditCreatedEstimatesTable extends React.Component {
 					)}
 				</Select>
 			</FormControl>
-		);
+		)
 	}
 
 	getServices() {
 		return new Promise((resolve, reject) => {
 			Axios.get('/admin/api/invoiceServices').then((res) => {
-				this.setState({ services: res.data });
-				resolve();
-			});
-		});
+				this.setState({ services: res.data })
+				resolve()
+			})
+		})
 	}
 
 	handleChange(event, index) {
-		let key = event.target.name;
-		let value = event.target.value;
+		let key = event.target.name
+		let value = event.target.value
 
-		let stateToChange = [...this.state.items];
+		let stateToChange = [...this.state.items]
 		if (
 			event.target.name === 'title' ||
 			event.target.name === 'expiration' ||
 			event.target.name === 'contractSpecs'
 		) {
-			this.setState({ [key]: value });
+			this.setState({ [key]: value })
 		} else if (
 			event.target.name === 'attachContract' ||
 			event.target.name === 'invoice'
 		) {
 			if (event.target.name === 'invoice' && !event.target.value) {
-				this.setState({ attachContract: false });
+				this.setState({ attachContract: false })
 			}
-			this.setState({ [key]: event.target.checked });
+			this.setState({ [key]: event.target.checked })
 		} else if (event.target.name === 'tax' || event.target.name === 'expense') {
-			stateToChange[index][key] = event.target.checked;
+			stateToChange[index][key] = event.target.checked
 			this.setState({
-				items: stateToChange
-			});
+				items: stateToChange,
+			})
 		} else {
-			stateToChange[index][key] = value;
+			stateToChange[index][key] = value
 			this.setState(
 				{
-					items: stateToChange
+					items: stateToChange,
 				},
 				() => {
-					let total = 0;
+					let total = 0
 					for (const item of this.state.items) {
-						total += Number(item.amount.replace('$', ''));
+						total += Number(item.amount.replace('$', ''))
 					}
-					this.setState({ softTotal: total });
+					this.setState({ softTotal: total })
 				}
-			);
+			)
 		}
 	}
 
 	cancelEdit() {
-		this.props.cancelEdit();
+		this.props.cancelEdit()
 	}
 
 	handleSave() {
-		let itemsNotEmpty = true;
+		let itemsNotEmpty = true
 
-		let total = 0;
+		let total = 0
 		this.state.items.forEach((item) => {
-			total += Number(item.amount.replace('$', ''));
+			total += Number(item.amount.replace('$', ''))
 			item.amount === '$' ||
 			item.item === '' ||
 			item.quantity === '' ||
 			item.description === ''
 				? (itemsNotEmpty = false)
-				: (itemsNotEmpty = true);
-		});
+				: (itemsNotEmpty = true)
+		})
 
 		let object = {
 			items: [...this.state.items],
@@ -208,12 +208,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
 			paid: this.state.paid,
 			pdfLink: this.state.pdfLink,
 			estimateNum: this.state.estimateNum,
-			paidDate: this.state.paidDate
-		};
+			paidDate: this.state.paidDate,
+		}
 		if (itemsNotEmpty) {
-			this.props.handleSave(object);
+			this.props.handleSave(object)
 		} else {
-			window.alert('Empty item');
+			window.alert('Empty item')
 		}
 	}
 
@@ -228,26 +228,26 @@ export default class EditCreatedEstimatesTable extends React.Component {
 					expense: false,
 					item: '',
 					quantity: '',
-					tax: false
-				}
-			]
-		}));
-		setTimeout(() => {}, 200);
+					tax: false,
+				},
+			],
+		}))
+		setTimeout(() => {}, 200)
 	}
 
 	deleteRow(row) {
-		let filter = this.state.items.filter(function(item) {
-			return item.num !== row.num;
-		});
-		this.setState({ items: filter });
+		let filter = this.state.items.filter(function (item) {
+			return item.num !== row.num
+		})
+		this.setState({ items: filter })
 	}
 
 	handleClickOpen() {
 		if (this.state.steps.length === this.state.paymentSteps.length) {
 			var filter = this.state.steps.filter((item) => {
-				return !item.props.existingStep;
-			});
-			var newSteps = [];
+				return !item.props.existingStep
+			})
+			var newSteps = []
 			if (filter.length > 0) {
 				this.state.paymentSteps.map((payment) => {
 					newSteps.push(
@@ -258,18 +258,18 @@ export default class EditCreatedEstimatesTable extends React.Component {
 							updateStep={this.updateStep}
 							existingStep={payment}
 						/>
-					);
-					return true;
-				});
+					)
+					return true
+				})
 				this.setState({
-					steps: [...newSteps]
-				});
+					steps: [...newSteps],
+				})
 			}
 			this.setState({
 				open: true,
 				copyPayments: [...this.state.paymentSteps],
-				copySteps: [...this.state.steps]
-			});
+				copySteps: [...this.state.steps],
+			})
 		}
 	}
 
@@ -277,12 +277,12 @@ export default class EditCreatedEstimatesTable extends React.Component {
 		this.setState({
 			open: false,
 			paymentSteps: [...this.state.copyPayments],
-			steps: [...this.state.copySteps]
-		});
+			steps: [...this.state.copySteps],
+		})
 	}
 
 	addStep() {
-		var id = Date.now();
+		var id = Date.now()
 		var step = (
 			<PaymentSchedule
 				key={id}
@@ -290,32 +290,32 @@ export default class EditCreatedEstimatesTable extends React.Component {
 				removeStep={() => this.removeStep(id)}
 				updateStep={this.updateStep}
 			/>
-		);
-		this.setState({ steps: [...this.state.steps, step] });
+		)
+		this.setState({ steps: [...this.state.steps, step] })
 	}
 
 	removeStep(id) {
-		let stepsArr = this.state.steps.filter(function(item) {
-			return item.props.id !== id;
-		});
-		let paymentStepsArr = this.state.paymentSteps.filter(function(item) {
-			return item.id !== id;
-		});
+		let stepsArr = this.state.steps.filter(function (item) {
+			return item.props.id !== id
+		})
+		let paymentStepsArr = this.state.paymentSteps.filter(function (item) {
+			return item.id !== id
+		})
 
 		this.setState({
 			paymentSteps: [...paymentStepsArr],
-			steps: [...stepsArr]
-		});
+			steps: [...stepsArr],
+		})
 	}
 
 	updateStep(obj) {
-		var filter = [];
+		var filter = []
 		if (this.state.paymentSteps.length > 0) {
 			filter = this.state.paymentSteps.filter((item) => {
-				return item.id !== obj.id;
-			});
+				return item.id !== obj.id
+			})
 		}
-		this.setState({ paymentSteps: [...filter, obj] });
+		this.setState({ paymentSteps: [...filter, obj] })
 	}
 
 	handleContractSave() {
@@ -326,13 +326,13 @@ export default class EditCreatedEstimatesTable extends React.Component {
 				item.stepAmount === '' ||
 				item.stepDescription === ''
 			) {
-				window.alert('Incorrect step');
+				window.alert('Incorrect step')
 			} else {
-				this.setState({ open: false });
+				this.setState({ open: false })
 			}
-		});
+		})
 		if (this.state.paymentSteps.length === 0) {
-			this.setState({ open: false });
+			this.setState({ open: false })
 		}
 	}
 
@@ -382,7 +382,6 @@ export default class EditCreatedEstimatesTable extends React.Component {
 									name='attachContract'
 									className='estimate-checkbox'
 									control={<Checkbox />}
-									disabled={!this.state.invoice}
 									checked={this.state.attachContract}
 									onChange={(event) => this.handleChange(event)}
 								/>
@@ -459,7 +458,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{this.state.items.map(function(item, index) {
+						{this.state.items.map(function (item, index) {
 							return (
 								<TableRow key={item.num}>
 									<TableCell>{this.getSelector(item.item, index)}</TableCell>
@@ -512,11 +511,11 @@ export default class EditCreatedEstimatesTable extends React.Component {
 									</TableCell>
 									<TableCell />
 								</TableRow>
-							);
+							)
 						}, this)}
 					</TableBody>
 				</Table>
 			</Paper>
-		);
+		)
 	}
 }
