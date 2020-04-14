@@ -1,62 +1,65 @@
-import React from 'react'
-import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core'
-import ArrowForward from '@material-ui/icons/ArrowForward'
-import ArrowBack from '@material-ui/icons/ArrowBack'
-import { Swipeable } from 'react-swipeable'
+import React from 'react';
+import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import { Swipeable } from 'react-swipeable';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import LazyLoad from 'react-lazyload';
 
-const videoTypes = ['.mp4', '.mov']
+const videoTypes = ['.mp4', '.mov'];
 
 export default class ExpandedProject extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
 		this.state = {
 			photoIndex: 0,
 			videoThumbs: [],
 			project: undefined,
-		}
+		};
 
-		this.handleArrows = this.handleArrows.bind(this)
-		this.gotoNext = this.gotoNext.bind(this)
-		this.gotoPrev = this.gotoPrev.bind(this)
-		this.gotoThumb = this.gotoThumb.bind(this)
-		this.componentDidMount = this.componentDidMount.bind(this)
+		this.handleArrows = this.handleArrows.bind(this);
+		this.gotoNext = this.gotoNext.bind(this);
+		this.gotoPrev = this.gotoPrev.bind(this);
+		this.gotoThumb = this.gotoThumb.bind(this);
+		this.componentDidMount = this.componentDidMount.bind(this);
 	}
 
 	componentDidMount() {
-		document.addEventListener('keydown', this.handleArrows, false)
+		document.addEventListener('keydown', this.handleArrows, false);
 		// if undefined, go to home
 		if (this.props.location.state) {
-			let cp = JSON.parse(JSON.stringify(this.props.location.state.project))
+			let cp = JSON.parse(JSON.stringify(this.props.location.state.project));
 
 			let vids = cp.images.filter((obj) => {
-				return obj.url.slice(-4) === '.mp4' || obj.url.slice(-4) === '.mov'
-			})
+				return obj.url.slice(-4) === '.mp4' || obj.url.slice(-4) === '.mov';
+			});
 
 			cp.images = cp.images.filter((obj) => {
-				return obj.url.slice(-4) !== '.mp4' && obj.url.slice(-4) !== '.mov'
-			})
+				return obj.url.slice(-4) !== '.mp4' && obj.url.slice(-4) !== '.mov';
+			});
 
 			vids.forEach((vid) => {
-				cp.images.unshift(vid)
-			})
+				cp.images.unshift(vid);
+			});
 			this.setState({
 				project: cp,
-			})
+			});
 		} else {
-			this.props.history.go(-1)
+			this.props.history.go(-1);
 		}
 
-		window.scrollTo(0, 0)
+		window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener('keydown', this.handleArrows, false)
+		document.removeEventListener('keydown', this.handleArrows, false);
 	}
 
 	gotoNext() {
 		this.setState((prevState) => ({
 			photoIndex: (prevState.photoIndex + 1) % this.state.project.images.length,
-		}))
+		}));
 	}
 
 	gotoPrev() {
@@ -64,29 +67,29 @@ export default class ExpandedProject extends React.Component {
 			photoIndex:
 				(prevState.photoIndex + this.state.project.images.length - 1) %
 				this.state.project.images.length,
-		}))
+		}));
 	}
 
 	handleArrows(e) {
 		if (e.keyCode === 39) {
 			// Move index + 1
-			this.gotoNext()
+			this.gotoNext();
 		} else if (e.keyCode === 37) {
 			// Move index -1
-			this.gotoPrev()
+			this.gotoPrev();
 		}
 	}
 
 	gotoThumb(img) {
-		let index = 0
+		let index = 0;
 		for (let i = 0; i < this.state.project.images.length; i++) {
 			if (this.state.project.images[i].url === img) {
-				index = i
+				index = i;
 			}
 		}
 		this.setState({
 			photoIndex: index,
-		})
+		});
 	}
 
 	render() {
@@ -159,28 +162,34 @@ export default class ExpandedProject extends React.Component {
 				<div className='small-images-container'>
 					{this.state.project.images.map((img, i) => {
 						return (
-							<div className='small-images' key={img.url}>
-								<ButtonBase>
-									{videoTypes.includes(img.url.slice(-4)) ? (
-										<img
-											src={img.thumbUrl}
-											alt=''
-											onClick={() => {
-												this.gotoThumb(img.url)
-											}}
-										/>
-									) : (
-										<img
-											alt=''
-											src={img.url}
-											onClick={() => {
-												this.gotoThumb(img.url)
-											}}
-										/>
-									)}
-								</ButtonBase>
-							</div>
-						)
+							<LazyLoadComponent key={img.url}>
+								<div className='small-images'>
+									<ButtonBase>
+										{videoTypes.includes(img.url.slice(-4)) ? (
+											<LazyLoad height='105px'>
+												<img
+													src={img.thumbUrl}
+													alt=''
+													onClick={() => {
+														this.gotoThumb(img.url);
+													}}
+												/>
+											</LazyLoad>
+										) : (
+											<LazyLoad height='105px'>
+												<img
+													src={img.url}
+													alt=''
+													onClick={() => {
+														this.gotoThumb(img.url);
+													}}
+												/>
+											</LazyLoad>
+										)}
+									</ButtonBase>
+								</div>
+							</LazyLoadComponent>
+						);
 					})}
 				</div>
 				<div>
@@ -189,15 +198,15 @@ export default class ExpandedProject extends React.Component {
 						color='secondary'
 						className='btn-login'
 						onClick={() => {
-							this.props.history.push('/projects')
+							this.props.history.push('/projects');
 						}}>
 						Back to projects
 					</Button>
 				</div>
 			</div>
-		)
+		);
 		if (this.state.project) {
-			return value
-		} else return ''
+			return value;
+		} else return '';
 	}
 }
