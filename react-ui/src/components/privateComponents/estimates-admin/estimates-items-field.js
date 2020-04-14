@@ -155,7 +155,6 @@ export default class ItemField extends React.Component {
 							type='text'
 							color='secondary'
 							placeholder='Description'
-							multiline
 							value={this.state.itemDescription}
 							helperText={
 								this.state.itemDescription === ''
