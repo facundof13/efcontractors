@@ -3,8 +3,6 @@ import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { Swipeable } from 'react-swipeable';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import LazyLoad from 'react-lazyload';
 
 const videoTypes = ['.mp4', '.mov'];
@@ -162,7 +160,7 @@ export default class ExpandedProject extends React.Component {
 				<div className='small-images-container'>
 					{this.state.project.images.map((img, i) => {
 						return (
-							<LazyLoadComponent key={img.url}>
+							<LazyLoad key={img.url}>
 								<div className='small-images'>
 									<ButtonBase>
 										{videoTypes.includes(img.url.slice(-4)) ? (
@@ -188,7 +186,7 @@ export default class ExpandedProject extends React.Component {
 										)}
 									</ButtonBase>
 								</div>
-							</LazyLoadComponent>
+							</LazyLoad>
 						);
 					})}
 				</div>
