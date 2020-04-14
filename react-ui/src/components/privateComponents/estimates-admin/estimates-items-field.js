@@ -10,7 +10,12 @@ import {
 	FormControl,
 	InputLabel,
 	TableCell,
-	TableRow
+	TableRow,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	Button,
 } from '@material-ui/core';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 
@@ -29,7 +34,8 @@ export default class ItemField extends React.Component {
 			amountError: '',
 			tax: false,
 			expense: false,
-			neither: false
+			neither: false,
+			editDescription: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
@@ -39,7 +45,7 @@ export default class ItemField extends React.Component {
 
 	componentDidMount() {
 		this.setState({
-			num: this.props.num
+			num: this.props.num,
 		});
 	}
 
@@ -63,7 +69,7 @@ export default class ItemField extends React.Component {
 		this.setState(
 			{
 				[event.target.name]: event.target.value,
-				[error]: 'Required'
+				[error]: 'Required',
 			},
 			() => this.updateValues()
 		);
@@ -81,7 +87,7 @@ export default class ItemField extends React.Component {
 		this.setState(
 			{
 				dollarAmount: '$' + event.target.value.replace(/\$/g, ''),
-				amountError: 'Required'
+				amountError: 'Required',
 			},
 			() => this.updateValues()
 		);
@@ -102,7 +108,7 @@ export default class ItemField extends React.Component {
 				amount: this.state.dollarAmount,
 				tax: this.state.tax,
 				expense: this.state.expense,
-				num: this.props.num
+				num: this.props.num,
 			};
 			this.props.updateItems(itemsToReturn);
 		}
@@ -139,7 +145,10 @@ export default class ItemField extends React.Component {
 						</FormControl>
 					</TableCell>
 
-					<TableCell>
+					<TableCell
+						onClick={() => {
+							this.setState({ editDescription: true });
+						}}>
 						{/* <div className="login"> */}
 						<TextField
 							name='itemDescription'
@@ -153,7 +162,6 @@ export default class ItemField extends React.Component {
 									? this.state.descriptionError
 									: ''
 							}
-							onChange={this.handleChange}
 						/>
 					</TableCell>
 					<TableCell>
@@ -213,6 +221,35 @@ export default class ItemField extends React.Component {
 						</IconButton>
 					</TableCell>
 				</TableRow>
+				<Dialog
+					className='descriptionDialog'
+					open={this.state.editDescription}
+					onClose={() => {
+						this.setState({ editDescription: false });
+					}}>
+					<DialogTitle>Edit description</DialogTitle>
+					<DialogContent>
+						<div className='dialog-form'>
+							<TextField
+								autoFocus
+								label='Description'
+								name='itemDescription'
+								onChange={(event) => this.handleChange(event)}
+								value={this.state.itemDescription}
+								multiline
+								fullWidth
+							/>
+						</div>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							onClick={() => {
+								this.setState({ editDescription: false });
+							}}>
+							Done
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</tbody>
 
 			//   </div>

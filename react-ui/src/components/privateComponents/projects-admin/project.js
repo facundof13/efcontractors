@@ -18,7 +18,7 @@ class Project extends Component {
 		if (window.confirm('Delete this image?')) {
 			this.setState({ deleting: true });
 			Axios.delete('/admin/api/deleteimg', {
-				data: { id: this.props.user._id, image: event.target.src }
+				data: { id: this.props.user._id, image: event.target.src },
 			}).then((res) => {
 				this.props.getUser(this.props.user._id);
 				this.props.getProjects();
@@ -29,7 +29,7 @@ class Project extends Component {
 
 	toggleImages = () => {
 		this.setState((prevState) => ({
-			areImagesVisible: !prevState.areImagesVisible
+			areImagesVisible: !prevState.areImagesVisible,
 		}));
 	};
 
@@ -49,7 +49,7 @@ class Project extends Component {
 					Delete Project
 				</Button>
 				<div>
-					{this.state.uploading ? <CircularProgress color='secondary' /> : ''}
+					{this.state.uploading && <CircularProgress color='secondary' />}
 				</div>
 				{this.props.user.images.map((image) =>
 					image.url.substr(image.length - 4).match(/(mp4)|(mov)|(m4v)/) ? (

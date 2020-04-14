@@ -6,7 +6,7 @@ import {
 	Paper,
 	TableCell,
 	TableHead,
-	TableRow
+	TableRow,
 } from '@material-ui/core';
 import Axios from 'axios';
 import ItemField from './estimates-items-field';
@@ -14,7 +14,7 @@ import SelectExistingClient from './select-existing-client';
 
 var currencyFormatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
-	currency: 'USD'
+	currency: 'USD',
 });
 
 export default class CreateEstimate extends React.Component {
@@ -47,7 +47,7 @@ export default class CreateEstimate extends React.Component {
 			pdfLink: '',
 			estimateNum: 0,
 			paidDate: '',
-			runningTotal: 0
+			runningTotal: 0,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.addItem = this.addItem.bind(this);
@@ -86,7 +86,7 @@ export default class CreateEstimate extends React.Component {
 
 	handleChange(event) {
 		this.setState({
-			[event.target.name]: event.target.value
+			[event.target.name]: event.target.value,
 		});
 	}
 
@@ -116,7 +116,7 @@ export default class CreateEstimate extends React.Component {
 				cityState: client.cityState,
 				zip: client.zip,
 				phone: client.phone,
-				idToUpdate: client._id
+				idToUpdate: client._id,
 			});
 		} else {
 			this.resetFields();
@@ -135,19 +135,19 @@ export default class CreateEstimate extends React.Component {
 			/>
 		);
 		this.setState((prevState) => ({
-			itemsField: [...prevState.itemsField, newItem]
+			itemsField: [...prevState.itemsField, newItem],
 		}));
 	}
 
 	removeItem(date) {
 		if (this.state.itemsField.length !== 1) {
 			this.setState((prevState) => ({
-				itemsField: prevState.itemsField.filter(function(item) {
+				itemsField: prevState.itemsField.filter(function (item) {
 					return String(date) !== String(item.key);
 				}),
-				items: prevState.items.filter(function(item) {
+				items: prevState.items.filter(function (item) {
 					return String(date) !== String(item.num);
-				})
+				}),
 			}));
 		}
 	}
@@ -158,8 +158,8 @@ export default class CreateEstimate extends React.Component {
 				...prevState.items.filter((item) => {
 					return item.num !== itemArr.num;
 				}),
-				itemArr
-			]
+				itemArr,
+			],
 		}));
 	}
 
@@ -185,7 +185,7 @@ export default class CreateEstimate extends React.Component {
 				attachContract: false,
 				paid: this.state.paid,
 				pdfLink: '',
-				paidDate: this.state.paidDate
+				paidDate: this.state.paidDate,
 			},
 			() => {
 				this.addItem();
@@ -272,7 +272,7 @@ export default class CreateEstimate extends React.Component {
 			paymentSteps: this.state.paymentSteps,
 			paid: this.state.paid,
 			attachContract: this.state.attachContract,
-			contractSpecs: this.state.contractSpecs
+			contractSpecs: this.state.contractSpecs,
 		};
 
 		if (this.state.clientSelected) {

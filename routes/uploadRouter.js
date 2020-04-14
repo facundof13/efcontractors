@@ -33,10 +33,17 @@ function checkFileType(file, cb) {
 	const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 	// Check mime
 	const mimetype = filetypes.test(file.mimetype);
+
+	console.log(path.extname(file.originalname));
+	console.log(file.mimetype);
 	if (mimetype && extname) {
 		return cb(null, true);
 	} else {
-		cb('Error: .jpeg, .jpg, .png, .gif, .m4v, .mp4, .mov extensions only!');
+		cb(
+			`Error: .jpeg, .jpg, .png, .gif, .m4v, .mp4, .mov extensions only!, Given ${path.extname(
+				file.originalname
+			)} and ${file.mimetype}`
+		);
 	}
 }
 /*
@@ -48,7 +55,7 @@ const uploadsBusinessGallery = multer({
 		s3: s3,
 		bucket: 'efcontractors',
 		acl: 'public-read',
-		key: function(req, file, cb) {
+		key: function (req, file, cb) {
 			name = req.query.projectName;
 			var partPath =
 				path.basename(file.originalname, path.extname(file.originalname)) +
@@ -56,12 +63,12 @@ const uploadsBusinessGallery = multer({
 			var fullpath = req.query.projectName + '/' + partPath;
 			fileUrls.push(`${baseurl}${fullpath}`);
 			cb(null, fullpath);
-		}
+		},
 	}),
 	limits: { fileSize: 524288000 },
-	fileFilter: function(req, file, cb) {
+	fileFilter: function (req, file, cb) {
 		checkFileType(file, cb);
-	}
+	},
 }).array('galleryImage', 30);
 
 router.post('/multiple-file-upload', (req, res) => {
@@ -112,7 +119,7 @@ router.post('/multiple-file-upload', (req, res) => {
 				// Save the file name into database
 				res.json({
 					filesArray: fileArray,
-					locationArray: galleryImgLocationArray
+					locationArray: galleryImgLocationArray,
 				});
 			}
 		}

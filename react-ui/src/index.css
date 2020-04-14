@@ -709,3 +709,7 @@ header.MuiPaper-elevation4 {
 .no-shadow {
 	box-shadow: none !important;
 }
+
+.MuiPaper-root.MuiPaper-elevation24.MuiDialog-paper {
+	width: 100%;
+}

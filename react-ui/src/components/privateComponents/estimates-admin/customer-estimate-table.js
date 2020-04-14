@@ -8,7 +8,7 @@ import {
 	TableCell,
 	TableBody,
 	TableSortLabel,
-	IconButton
+	IconButton,
 } from '@material-ui/core';
 import InsertDriveFileOutlined from '@material-ui/icons/InsertDriveFileOutlined';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
@@ -22,7 +22,7 @@ import EditCreatedEstimatesTable from './edit-created-estimates-table';
 import Axios from 'axios';
 const invertDirection = {
 	asc: 'desc',
-	desc: 'asc'
+	desc: 'asc',
 };
 
 const getItemToSort = {
@@ -33,7 +33,7 @@ const getItemToSort = {
 	Invoice: 'invoice',
 	'Paid Date': 'paidDate',
 	Paid: 'paid',
-	Status: 'paid'
+	Status: 'paid',
 };
 
 export default class CustomerEstimateTable extends React.Component {
@@ -45,7 +45,7 @@ export default class CustomerEstimateTable extends React.Component {
 			sortDirection: 'desc',
 			currentlyEditing: false,
 			estimateToEdit: [],
-			imgUrl: ''
+			imgUrl: '',
 		};
 		this.handleSort = this.handleSort.bind(this);
 		this.createPdf = this.createPdf.bind(this);
@@ -60,7 +60,7 @@ export default class CustomerEstimateTable extends React.Component {
 	componentDidMount() {
 		Axios.get('/admin/api/imgurl').then((res) => {
 			this.setState({
-				imgUrl: res.data[0].img
+				imgUrl: res.data[0].img,
 			});
 		});
 	}
@@ -71,7 +71,7 @@ export default class CustomerEstimateTable extends React.Component {
 			sortDirection:
 				prevState.columnToSort === getItemToSort[item]
 					? invertDirection[prevState.sortDirection]
-					: 'asc'
+					: 'asc',
 		}));
 	}
 
@@ -79,7 +79,7 @@ export default class CustomerEstimateTable extends React.Component {
 		this.props.editing(true);
 		this.setState({
 			currentlyEditing: true,
-			estimateToEdit: JSON.parse(JSON.stringify(row))
+			estimateToEdit: JSON.parse(JSON.stringify(row)),
 		});
 	}
 
@@ -98,13 +98,13 @@ export default class CustomerEstimateTable extends React.Component {
 			Axios.post('/admin/api/generatePDF', {
 				client: this.props.customerInfo,
 				estimate: row,
-				imgUrl: this.state.imgUrl
+				imgUrl: this.state.imgUrl,
 			}).then((pdf) => {
 				Axios.post('/admin/api/sendemail', {
 					estimate: row,
 					client: this.props.customerInfo,
 					pdf: pdf.data,
-					emails: emails
+					emails: emails,
 				}).then(
 					(res) => {
 						window.alert('Email sent!');
@@ -132,7 +132,7 @@ export default class CustomerEstimateTable extends React.Component {
 		Axios.post('/admin/api/generatePDF', {
 			client: this.props.customerInfo,
 			estimate: row,
-			imgUrl: this.state.imgUrl
+			imgUrl: this.state.imgUrl,
 		}).then((pdf) => {
 			var x = window.open();
 			if (x == null || typeof x == 'undefined') {
@@ -200,11 +200,13 @@ export default class CustomerEstimateTable extends React.Component {
 										<TableCell align='right'>
 											{row.paid
 												? 'Receipt'
-												: row.invoice
+												: !row.invoice
 												? row.attachContract
-													? 'Invoice w/ contract'
-													: 'Invoice w/o contract'
-												: 'Estimate'}
+													? 'Estimate w/ Contract'
+													: 'Estimate'
+												: row.attachContract
+												? 'Invoice w/ Contract'
+												: 'Invoice'}
 										</TableCell>
 										<TableCell align='right'>
 											{row.invoice ? (row.paid ? 'Yes' : 'No') : 'N/A'}
