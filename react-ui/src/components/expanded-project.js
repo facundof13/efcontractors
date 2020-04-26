@@ -4,7 +4,7 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { Swipeable } from 'react-swipeable';
 import LazyLoad from 'react-lazyload';
-
+import Img from 'react-image';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class ExpandedProject extends React.Component {
@@ -135,7 +135,7 @@ export default class ExpandedProject extends React.Component {
 							</div>
 						) : (
 							<div className='fade-in'>
-								<img
+								<Img
 									key={this.state.project.images[this.state.photoIndex].url}
 									src={this.state.project.images[this.state.photoIndex].url}
 									alt=''
@@ -165,7 +165,7 @@ export default class ExpandedProject extends React.Component {
 									<ButtonBase>
 										{videoTypes.includes(img.url.slice(-4)) ? (
 											<LazyLoad height='105px'>
-												<img
+												<Img
 													src={img.thumbUrl}
 													alt=''
 													onClick={() => {
@@ -175,7 +175,7 @@ export default class ExpandedProject extends React.Component {
 											</LazyLoad>
 										) : (
 											<LazyLoad height='105px'>
-												<img
+												<Img
 													src={img.url}
 													alt=''
 													onClick={() => {

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Card, CardHeader, CardMedia, CardActionArea } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
-
+import Img from 'react-image';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class Viewprojects extends React.Component {
@@ -72,9 +72,16 @@ export default class Viewprojects extends React.Component {
 											}}>
 											<Card>
 												<CardActionArea>
-													<CardMedia
+													{/* <CardMedia
 														component='img'
 														image={
+															project.images[0].thumbUrl ||
+															project.images[0].url
+														}
+														height={200}
+													/> */}
+													<Img
+														src={
 															project.images[0].thumbUrl ||
 															project.images[0].url
 														}
