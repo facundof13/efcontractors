@@ -16,7 +16,7 @@ function getProjectById(id) {
 	return new Promise((resolve, reject) => {
 		projects
 			.find({
-				_id: ObjectId(id)
+				_id: ObjectId(id),
 			})
 			.toArray((err, item) => {
 				resolve(item);
@@ -33,7 +33,7 @@ function returnProject(query) {
 }
 
 function addProject(query) {
-	projects.insertOne(query, function(err, result) {
+	projects.insertOne(query, function (err, result) {
 		console.log(`Added doc id ${result.ops[0]._id} to db`);
 	});
 }
@@ -42,7 +42,7 @@ function findObjectsInFolder(name) {
 	return new Promise((resolve, reject) => {
 		const s3params = {
 			Bucket: 'efcontractors',
-			Prefix: `${name}/`
+			Prefix: `${name}/`,
 		};
 		s3.listObjectsV2(s3params, (err, data) => {
 			resolve(false);
@@ -55,7 +55,7 @@ function findMatchingFolder(name) {
 		const s3params = {
 			Bucket: 'efcontractors',
 			MaxKeys: 20,
-			Delimiter: '/'
+			Delimiter: '/',
 		};
 		s3.listObjectsV2(s3params, (err, data) => {
 			data.CommonPrefixes.forEach((item) => {
@@ -68,19 +68,19 @@ function findMatchingFolder(name) {
 
 function updateImagesSrc(id, imageUrl, thumbUrl) {
 	let obj = {
-		url: imageUrl
+		url: imageUrl,
 	};
 
 	thumbUrl ? (obj.thumbUrl = thumbUrl) : '';
 
 	projects.updateOne(
 		{
-			_id: ObjectId(id)
+			_id: ObjectId(id),
 		},
 		{
 			$addToSet: {
-				images: obj
-			}
+				images: obj,
+			},
 		},
 		(err, item) => {
 			console.log(err || 'Updated project image');
@@ -91,7 +91,7 @@ function updateImagesSrc(id, imageUrl, thumbUrl) {
 function removeImageFromFolder(id, imagesrc) {
 	projects.updateOne(
 		{
-			_id: ObjectId(id)
+			_id: ObjectId(id),
 		},
 		{ $pull: { images: { url: imagesrc } } },
 		(err, item) => {
@@ -103,21 +103,23 @@ function removeImageFromFolder(id, imagesrc) {
 function deleteImageFromS3(path) {
 	const s3params = {
 		Bucket: 'efcontractors',
-		Key: path
+		Key: path,
 	};
-	console.log(path);
-	s3.deleteObject(s3params, function(err, data) {});
+	s3.deleteObject(s3params, function (err, data) {});
 }
 
-async function deleteEntireProject(id) {
+async function deleteEntireProject(id, numImages) {
 	projects.deleteOne({ _id: ObjectId(id) }, (err, results) => {});
-	await emptyS3Directory('efcontractors', id);
+	if (numImages > 0) {
+		await emptyS3Directory('efcontractors', id);
+	}
 }
 
 async function emptyS3Directory(bucket, dir) {
+	console.log('Deleting directory');
 	const listParams = {
 		Bucket: bucket,
-		Prefix: dir
+		Prefix: dir,
 	};
 
 	const listedObjects = await s3.listObjectsV2(listParams).promise();
@@ -126,7 +128,7 @@ async function emptyS3Directory(bucket, dir) {
 
 	const deleteParams = {
 		Bucket: bucket,
-		Delete: { Objects: [] }
+		Delete: { Objects: [] },
 	};
 
 	listedObjects.Contents.forEach(({ Key }) => {
@@ -148,5 +150,5 @@ module.exports = {
 	deleteImageFromS3,
 	deleteEntireProject,
 	returnProject,
-	getProjectById
+	getProjectById,
 };

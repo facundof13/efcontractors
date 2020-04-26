@@ -14,7 +14,7 @@ export default class ProjectsPage extends Component {
 			currentUser: {},
 			newName: '',
 			newLocation: '',
-			data: []
+			data: [],
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.getUser = this.getUser.bind(this);
@@ -54,7 +54,7 @@ export default class ProjectsPage extends Component {
 	async getProjects() {
 		let projects = await Axios.get('/admin/api/projects');
 		this.setState({
-			data: projects.data
+			data: projects.data,
 		});
 	}
 
@@ -62,10 +62,12 @@ export default class ProjectsPage extends Component {
 		if (
 			window.confirm(`Delete project ${project.name} from ${project.location}?`)
 		) {
+			console.log(project);
 			Axios.delete('/admin/api/deleteproject', {
 				data: {
-					id: project._id
-				}
+					id: project._id,
+					numImages: project.images.length,
+				},
 			}).then(() => {
 				this.getProjects();
 				this.setState({ currentUser: {} });
