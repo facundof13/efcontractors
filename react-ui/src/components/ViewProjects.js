@@ -2,8 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Card, CardHeader, CardMedia, CardActionArea } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import LazyLoad from 'react-lazyload';
-import Img from 'react-image';
+import _ from 'lodash';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class Viewprojects extends React.Component {
@@ -41,8 +40,8 @@ export default class Viewprojects extends React.Component {
 			axios.get('/api/projects').then((res) =>
 				this.setState(
 					{
-						projects: res.data.sort((a, b) => {
-							return a.name > b.name;
+						projects: _.sortBy(res.data, (i) => {
+							return i.name;
 						}),
 					},
 					() => {
@@ -60,41 +59,31 @@ export default class Viewprojects extends React.Component {
 					{this.state.projects.map(
 						(project) =>
 							project.images.length > 0 && (
-								<LazyLoad key={project._id}>
-									<div>
-										<Link
-											to={{
-												pathname: `/projects/${project.name}`,
-												state: {
-													project: project,
-													scrollPos: window.pageYOffset,
-												},
-											}}>
-											<Card>
-												<CardActionArea>
-													{/* <CardMedia
-														component='img'
-														image={
-															project.images[0].thumbUrl ||
-															project.images[0].url
-														}
-														height={200}
-													/> */}
-													<Img
-														src={
-															project.images[0].thumbUrl ||
-															project.images[0].url
-														}
-														height={200}
-													/>
-													<CardHeader
-														subheader={project.name + ' - ' + project.location}
-													/>
-												</CardActionArea>
-											</Card>
-										</Link>
-									</div>
-								</LazyLoad>
+								<div key={project.name}>
+									<Link
+										to={{
+											pathname: `/projects/${project.name}`,
+											state: {
+												project: project,
+												scrollPos: window.pageYOffset,
+											},
+										}}>
+										<Card>
+											<CardActionArea>
+												<CardMedia
+													component='img'
+													image={
+														project.images[0].thumbUrl || project.images[0].url
+													}
+													height={200}
+												/>
+												<CardHeader
+													subheader={project.name + ' - ' + project.location}
+												/>
+											</CardActionArea>
+										</Card>
+									</Link>
+								</div>
 							)
 					)}
 				</div>
