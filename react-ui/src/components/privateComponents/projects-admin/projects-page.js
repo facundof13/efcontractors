@@ -4,6 +4,7 @@ import ProjectsCreate from './projects-create';
 import ProjectList from './project-list';
 import Axios from 'axios';
 import { Divider } from '@material-ui/core';
+import _ from 'lodash';
 
 export default class ProjectsPage extends Component {
 	constructor() {
@@ -54,7 +55,9 @@ export default class ProjectsPage extends Component {
 	async getProjects() {
 		let projects = await Axios.get('/admin/api/projects');
 		this.setState({
-			data: projects.data,
+			data: _.sortBy(projects.data, (project) => {
+				return project.name;
+			}),
 		});
 	}
 
