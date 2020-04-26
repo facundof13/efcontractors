@@ -530,8 +530,8 @@ header.MuiPaper-elevation4 {
 
 @media screen and (min-width: 641px) {
 	.big-image {
-		width: 60vw;
-		/* height: 75vh; */
+		/* width: 60vw; */
+		height: 50vh;
 	}
 }
 @media screen and (max-width: 640px) {
