@@ -55,9 +55,7 @@ export default class ProjectsPage extends Component {
 	async getProjects() {
 		let projects = await Axios.get('/admin/api/projects');
 		this.setState({
-			data: _.sortBy(projects.data, (project) => {
-				return project.name;
-			}),
+			data: projects.data,
 		});
 	}
 

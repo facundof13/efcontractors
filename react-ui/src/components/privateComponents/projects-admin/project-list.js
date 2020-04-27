@@ -6,7 +6,7 @@ export default class ProjectList extends React.Component {
 		super(props);
 
 		this.state = {
-			project: ''
+			project: '',
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -50,7 +50,7 @@ export default class ProjectList extends React.Component {
 											value={project.name}
 											id={project._id}
 											key={project._id}>
-											{project.name}
+											{project.name}, {project.location}
 										</MenuItem>
 									))}
 							</Select>

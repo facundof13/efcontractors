@@ -9,7 +9,7 @@ class ProjectsCreate extends Component {
 		this.state = {
 			correctInputs: false,
 			name: '',
-			location: ''
+			location: '',
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,7 +17,7 @@ class ProjectsCreate extends Component {
 
 	handleChange(event) {
 		this.setState({
-			[event.target.name]: event.target.value
+			[event.target.name]: event.target.value,
 		});
 	}
 
@@ -25,7 +25,7 @@ class ProjectsCreate extends Component {
 		event.preventDefault();
 		Axios.post('/admin/api/newproject', {
 			name: this.state.name,
-			location: this.state.location
+			location: this.state.location,
 		}).then((res) => {
 			if (res.data.error) {
 				window.alert(res.data.error);
