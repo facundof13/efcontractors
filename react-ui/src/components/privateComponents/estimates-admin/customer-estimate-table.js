@@ -189,7 +189,7 @@ export default class CustomerEstimateTable extends React.Component {
 									this.state.sortDirection
 								).map((row) => (
 									<TableRow hover={true} key={row.date}>
-										<TableCell align='left'>{row.title}</TableCell>
+										<TableCell align='left'>#{row.estimateNum}: {row.title}</TableCell>
 										<TableCell align='right'>${row.total}</TableCell>
 										<TableCell align='right'>
 											{prettifyDate(row.expiration)}
