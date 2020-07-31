@@ -212,23 +212,21 @@ export default class CreateEstimate extends React.Component {
 			this.state.phone !== ''
 		) {
 			titleOk = true;
-			if (this.state.zip.match(/^\d{5}$/)) {
+			if (this.state.zip && this.state.zip !== '') {
 				zipOk = true;
 			}
 			if (
-				this.state.cityState.match(/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/)
+				this.state.cityState && this.state.cityState !== ''
 			) {
 				cityStateOk = true;
 			}
 
-			if (this.state.email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/)) {
+			if (this.state.email && this.state.email !== '') {
 				emailOk = true;
 			}
 
 			if (
-				this.state.phone.match(
-					/^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
-				)
+				this.state.phone && this.state.phone !== ''
 			) {
 				phoneOk = true;
 			}
@@ -330,10 +328,7 @@ export default class CreateEstimate extends React.Component {
 							<TextField
 								value={this.state.email}
 								helperText={
-									this.state.email === '' ||
-									!this.state.email.match(
-										/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}/
-									)
+									this.state.email === ''
 										? this.state.helperText
 										: ''
 								}
@@ -348,10 +343,7 @@ export default class CreateEstimate extends React.Component {
 							<TextField
 								value={this.state.phone}
 								helperText={
-									this.state.phone === '' ||
-									!this.state.phone.match(
-										/^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s-]?[\0-9]{3}[\s-]?[0-9]{4}$/g
-									)
+									this.state.phone === ''
 										? this.state.helperText
 										: ''
 								}
@@ -381,10 +373,7 @@ export default class CreateEstimate extends React.Component {
 							<TextField
 								value={this.state.cityState}
 								helperText={
-									this.state.cityState === '' ||
-									!this.state.cityState.match(
-										/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
-									)
+									this.state.cityState === ''
 										? this.state.helperText
 										: ''
 								}
@@ -399,7 +388,7 @@ export default class CreateEstimate extends React.Component {
 							<TextField
 								value={this.state.zip}
 								helperText={
-									this.state.zip === '' || !this.state.zip.match(/^\d{5}$/)
+									this.state.zip === ''
 										? this.state.helperText
 										: ''
 								}
@@ -429,8 +418,7 @@ export default class CreateEstimate extends React.Component {
 							<TextField
 								value={this.state.expiration}
 								helperText={
-									this.state.expiration === '' ||
-									!this.state.expiration.match(/\d{1,3}/)
+									this.state.expiration === ''
 										? this.state.helperText
 										: ''
 								}
