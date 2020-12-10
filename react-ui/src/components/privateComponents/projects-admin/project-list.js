@@ -15,7 +15,7 @@ export default class ProjectList extends React.Component {
 
 	handleChange(event, value) {
 		this.setState({ project: event.target.value });
-		this.props.getUser(value.key);
+		this.props.getUser(value.props.id);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -49,7 +49,8 @@ export default class ProjectList extends React.Component {
 										<MenuItem
 											value={project.name}
 											id={project._id}
-											key={project._id}>
+											key={project._id}
+											>
 											{project.name}, {project.location}
 										</MenuItem>
 									))}

@@ -63,7 +63,6 @@ export default class ProjectsPage extends Component {
 		if (
 			window.confirm(`Delete project ${project.name} from ${project.location}?`)
 		) {
-			console.log(project);
 			Axios.delete('/admin/api/deleteproject', {
 				data: {
 					id: project._id,

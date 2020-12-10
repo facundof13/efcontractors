@@ -1,10 +1,6 @@
 import React from 'react';
 import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import { Swipeable } from 'react-swipeable';
-import LazyLoad from 'react-lazyload';
-import Img from 'react-image';
+import ImageGallery from './react-image-gallery/ImageGallery';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class ExpandedProject extends React.Component {
@@ -40,6 +36,20 @@ export default class ExpandedProject extends React.Component {
 			vids.forEach((vid) => {
 				cp.images.unshift(vid);
 			});
+
+			cp.images = cp.images.map(i => {
+				let obj = {};
+				if (i.thumbUrl) {
+					obj.original = i.url;
+					obj.thumbnail = i.thumbUrl;
+					obj.isVideo = true;
+				} else {
+					obj.original = i.url;
+					obj.thumbnail = i.url;
+					obj.isVideo = false;
+				}
+				return obj;
+			})
 			this.setState({
 				project: cp,
 			});
@@ -91,6 +101,7 @@ export default class ExpandedProject extends React.Component {
 	}
 
 	render() {
+
 		let value = this.state.project && (
 			<div>
 				<Typography color='secondary' component='span' variant='h5'>
@@ -98,110 +109,9 @@ export default class ExpandedProject extends React.Component {
 						{this.state.project.name + ' - ' + this.state.project.location}
 					</h4>
 				</Typography>
-				<div className='expanded-project'>
-					<div className='arrow'>
-						<IconButton
-							color='secondary'
-							onClick={this.gotoPrev}
-							disableRipple={true}
-							className='arrow-left'>
-							<ArrowBack />
-						</IconButton>
-					</div>
-					<Swipeable onSwipedRight={this.gotoPrev} onSwipedLeft={this.gotoNext}>
-						{videoTypes.includes(
-							this.state.project.images[this.state.photoIndex].url.slice(-4)
-						) ? (
-							<div className='fade-in'>
-								<video
-									src={this.state.project.images[this.state.photoIndex].url}
-									className='big-image'
-									playsInline
-									controls
-									loop
-									type={
-										this.state.project.images[this.state.photoIndex].url.slice(
-											-4
-										) === '.mp4'
-											? 'video/mp4'
-											: 'video/quicktime'
-									}
-									id='myVid'
-									key={this.state.project.images[this.state.photoIndex].url}
-									poster={
-										this.state.project.images[this.state.photoIndex].thumbUrl
-									}
-								/>
-							</div>
-						) : (
-							<div className='fade-in'>
-								<Img
-									key={this.state.project.images[this.state.photoIndex].url}
-									src={this.state.project.images[this.state.photoIndex].url}
-									alt=''
-									className='big-image'
-								/>
-							</div>
-						)}
-					</Swipeable>
-					<div className='arrow'>
-						<IconButton
-							onClick={this.gotoNext}
-							color='secondary'
-							disableRipple={true}
-							className='arrow-right'>
-							<ArrowForward />
-						</IconButton>
-					</div>
-				</div>
-				<Typography component='p' variant='caption' color='secondary'>
-					{this.state.photoIndex + 1}/{this.state.project.images.length}
-				</Typography>
-				<div className='small-images-container'>
-					{this.state.project.images.map((img, i) => {
-						return (
-							<LazyLoad key={img.url}>
-								<div className='small-images'>
-									<ButtonBase>
-										{videoTypes.includes(img.url.slice(-4)) ? (
-											<LazyLoad height='105px'>
-												<Img
-													src={img.thumbUrl}
-													alt=''
-													onClick={() => {
-														this.gotoThumb(img.url);
-													}}
-												/>
-											</LazyLoad>
-										) : (
-											<LazyLoad height='105px'>
-												<Img
-													src={img.url}
-													alt=''
-													onClick={() => {
-														this.gotoThumb(img.url);
-													}}
-												/>
-											</LazyLoad>
-										)}
-									</ButtonBase>
-								</div>
-							</LazyLoad>
-						);
-					})}
-				</div>
-				<div>
-					<Button
-						variant='outlined'
-						color='secondary'
-						className='btn-login'
-						onClick={() => {
-							this.props.history.push('/projects');
-						}}>
-						Back to projects
-					</Button>
-				</div>
+				<ImageGallery items={this.state.project.images} showPlayButton={false} showFullscreenButton={false}/>
 			</div>
+
 		);
 		if (this.state.project) {
 			return value;

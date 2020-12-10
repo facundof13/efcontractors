@@ -11,8 +11,11 @@ module.exports = {
   module: {
     rules: [
       { test: /\.(js)$/, use: 'babel-loader' },
-      { test: /\.css$/, use: [ 'style-loader', 'css-loader' ]}
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] }
     ]
+  },
+  resolve: {
+    modules: ['node_modules'],
   },
   devServer: {
     historyApiFallback: true,
