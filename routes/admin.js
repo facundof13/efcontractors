@@ -300,7 +300,7 @@ router.get('/api/months', function (req, res, next) {
 		});
 		datesArr.map((date) => {
 			var newDate = moment(date).format('MMMM YYYY');
-			if (!formattedDatesArr.includes(newDate)) {
+			if (!formattedDatesArr.includes(newDate) && moment(date).isValid()) {
 				formattedDatesArr.push(newDate);
 			}
 		});

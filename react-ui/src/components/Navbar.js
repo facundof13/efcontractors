@@ -64,7 +64,7 @@ class Navbar extends React.Component {
 		// console.log(this.state)
 		return (
 			<div className='root'>
-				<ClickAwayListener onClickAway={this.handleClose}>
+				<ClickAwayListener disableReactTree={true} onClickAway={this.handleClose}>
 					<AppBar position='static' className={this.state.class}>
 						<Toolbar>
 							<Button

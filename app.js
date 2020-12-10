@@ -20,7 +20,8 @@ mongoUtil.connectToServer((err, client) => {
 			extended: false
 		})
 	);
-	app.use(logger('dev'));
+	// app.use(logger('dev'));
+	console.clear();
 	app.use(express.json());
 	app.use(
 		express.urlencoded({

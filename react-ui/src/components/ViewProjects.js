@@ -59,7 +59,7 @@ export default class Viewprojects extends React.Component {
 					{this.state.projects.map(
 						(project) =>
 							project.images.length > 0 && (
-								<div key={project.name}>
+								<div key={project._id}>
 									<Link
 										to={{
 											pathname: `/projects/${project.name}`,
@@ -70,13 +70,14 @@ export default class Viewprojects extends React.Component {
 										}}>
 										<Card>
 											<CardActionArea>
-												<CardMedia
-													component='img'
-													image={
-														project.images[0].thumbUrl || project.images[0].url
-													}
-													height={200}
-												/>
+												<div>
+													<CardMedia
+														style={{ height: '200px' }}
+														image={
+															project.images[0].thumbUrl || project.images[0].url
+														}
+													/>
+												</div>
 												<CardHeader
 													subheader={project.name + ' - ' + project.location}
 												/>
