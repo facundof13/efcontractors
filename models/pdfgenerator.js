@@ -38,11 +38,8 @@ function renderPdf(data, cb) {
 	var estimateOrInvoice = data.estimate.paid
 		? 'Receipt'
 		: data.estimate.invoice
-		? 'Invoice'
-		: 'Estimate'
-	//pago es recibo
-	//invoice es invoice
-	//si no es estimado
+			? 'Invoice'
+			: 'Estimate'
 
 	var taxes = 0
 	let paymentSchedule = []
@@ -109,6 +106,8 @@ function renderPdf(data, cb) {
 	let grandTotal = taxes + data.estimate.total
 
 	var docDefinition = {
+		pageOrientation: 'portrait',
+		pageSize: 'LETTER',
 		info: {
 			title: `Estimate for ${data.client.name}`,
 		},

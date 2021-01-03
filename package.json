@@ -36,7 +36,7 @@
 		"passport-jwt": "^4.0.0",
 		"passport-local": "^1.0.0",
 		"path": "^0.12.7",
-		"pdfmake": "^0.1.58",
+		"pdfmake": "^0.1.69",
 		"prop-types": "^15.7.2",
 		"react-lazyload": "^2.6.7",
 		"react-player": "^2.7.0",
