@@ -66,7 +66,8 @@ export default class CreateEstimate extends React.Component {
 		this.state.items.forEach((i) => {
 			total = total + Number(i.amount.replace('$', '')) * i.quantity;
 		});
-		if (this.state.runningTotal !== total) {
+
+		if (this.state.runningTotal !== total && !isNaN(total)) {
 			this.setState({ runningTotal: total });
 		}
 	}
