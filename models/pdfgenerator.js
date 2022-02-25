@@ -370,6 +370,7 @@ function renderPdf(data, cb) {
 			{
 				text: paymentSchedule.length > 0 ? '\nPayment schedule\n\n' : '',
 				alignment: 'center',
+				bold: true,
 			},
 			{
 				text: paymentSchedule.reverse(),
