@@ -30,6 +30,9 @@ function renderPdf(data, cb) {
 			italics: 'fonts/RobotoMono-Regular.ttf',
 			bolditalics: 'fonts/RobotoMono-Regular.ttf',
 		},
+		'AlexBrush-Regular': {
+			normal: 'fonts/AlexBrush-Regular.ttf',
+		},
 	}
 
 	var PdfPrinter = require('pdfmake')
@@ -50,7 +53,6 @@ function renderPdf(data, cb) {
 	})
 
 	data.estimate.paymentSteps.forEach((i) => {
-		console.log(i.stepAmount)
 		paymentSchedule.unshift(
 			`${i.stepName} ${i.stepDescription} ${currencyFormatter.format(
 				Number(i.stepAmount.replace('$', ''))
@@ -344,7 +346,8 @@ function renderPdf(data, cb) {
 			},
 			{
 				text: [
-					"\n\nAny delays or changes in finish selection schedules may delay the projected completion date. Contractor's Initials ____",
+					"\n\nAny delays or changes in finish selection schedules may delay the projected completion date. Contractor's Initials ",
+					{ text: "  EF  \n", decoration: 'underline', font: 'AlexBrush-Regular' },
 					"\n\nOwner understands any Change Order will be a fee of $175.\nOwner's Initials ____",
 				],
 			},
@@ -390,11 +393,11 @@ function renderPdf(data, cb) {
 				pageBreak: 'before',
 				text: [
 					'\n\n\n',
-					'________________________________________',
+					{ text: 'Ernesto Figueroa                                     ', fontSize: 16, decoration: 'underline', 'font': 'AlexBrush-Regular' },
 					' \n',
 					'Ernesto Figueroa',
 					'\n\n',
-					'________________________________________',
+					{ text: `${prettifyDate(new Date().toString())}                                                     `, decoration: 'underline' },
 					'\n',
 					'Date',
 					'\n\n',
