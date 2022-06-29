@@ -32,7 +32,7 @@ export default class ManageServices extends React.Component {
 	}
 
 	getServices() {
-		Axios.get('/api/services').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/api/services`).then((res) => {
 			this.setState({ services: res.data });
 		});
 	}

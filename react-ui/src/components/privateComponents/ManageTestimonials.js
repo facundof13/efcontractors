@@ -28,7 +28,7 @@ export default class ManageTestimonials extends React.Component {
 	}
 
 	getTestimonials() {
-		Axios.get('/admin/api/testimonials').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/testimonials`).then((res) => {
 			this.setState({ testimonials: res.data });
 		});
 	}
@@ -69,7 +69,7 @@ export default class ManageTestimonials extends React.Component {
 
 	deleteTestimonial(id) {
 		if (window.confirm(`Delete testimonial?`)) {
-			Axios.delete(`/admin/api/testimonials`, { data: { id: id } }).then(() => {
+			Axios.delete('/admin/api/testimonials', { data: { id: id } }).then(() => {
 				this.getTestimonials();
 			});
 		}
@@ -84,49 +84,49 @@ export default class ManageTestimonials extends React.Component {
 					</Typography>
 					{this.state.testimonials.length > 0
 						? this.state.testimonials.map((i) => (
-								<div className='testimonials-field' key={i._id}>
-									<TextField
-										className='black-text'
-										value={i.text}
-										name='text'
-										type='text'
-										color='primary'
-										onChange={(event, key) => this.handleChange(event, i._id)}
-										// multiline
-									/>
-									<TextField
-										className='black-text'
-										value={i.name}
-										name='name'
-										type='text'
-										color='primary'
-										onChange={(event, key) => this.handleChange(event, i._id)}
-									/>
-									<TextField
-										className='black-text'
-										value={i.cityState}
-										name='cityState'
-										type='text'
-										color='primary'
-										onChange={(event, key) => this.handleChange(event, i._id)}
-										// multiline
-									/>
-									<FormControlLabel
-										label='Published'
-										name='verified'
-										className='estimate-checkbox'
-										control={<Checkbox />}
-										checked={i.verified}
-										onChange={(event, key) => this.handleChange(event, i._id)}
-									/>
-									<Button
-										variant='outlined'
-										color='secondary'
-										onClick={() => this.deleteTestimonial(i._id)}>
-										Delete
-									</Button>
-								</div>
-						  ))
+							<div className='testimonials-field' key={i._id}>
+								<TextField
+									className='black-text'
+									value={i.text}
+									name='text'
+									type='text'
+									color='primary'
+									onChange={(event, key) => this.handleChange(event, i._id)}
+								// multiline
+								/>
+								<TextField
+									className='black-text'
+									value={i.name}
+									name='name'
+									type='text'
+									color='primary'
+									onChange={(event, key) => this.handleChange(event, i._id)}
+								/>
+								<TextField
+									className='black-text'
+									value={i.cityState}
+									name='cityState'
+									type='text'
+									color='primary'
+									onChange={(event, key) => this.handleChange(event, i._id)}
+								// multiline
+								/>
+								<FormControlLabel
+									label='Published'
+									name='verified'
+									className='estimate-checkbox'
+									control={<Checkbox />}
+									checked={i.verified}
+									onChange={(event, key) => this.handleChange(event, i._id)}
+								/>
+								<Button
+									variant='outlined'
+									color='secondary'
+									onClick={() => this.deleteTestimonial(i._id)}>
+									Delete
+								</Button>
+							</div>
+						))
 						: ''}
 					<Button
 						variant='outlined'

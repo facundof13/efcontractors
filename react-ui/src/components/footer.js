@@ -19,7 +19,7 @@ export default class Footer extends React.Component {
 	componentDidMount() {
 		var date = new Date();
 		this.setState({ date: date.getFullYear() });
-		Axios.get('/admin/api/settings').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/settings`).then((res) => {
 			this.setState({
 				telephone: res.data.telephone,
 				email: res.data.email,

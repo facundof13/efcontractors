@@ -1,6 +1,7 @@
-import React from 'react';
-import { MenuItem, FormControl, InputLabel, Select, TextField} from '@material-ui/core';
+import { FormControl, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import React from 'react';
+
 export default class SelectExistingClient extends React.Component {
 	constructor(props) {
 		super(props);
@@ -10,7 +11,7 @@ export default class SelectExistingClient extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(event,value) {
+	handleChange(event, value) {
 		event.preventDefault();
 		console.log(value)
 		this.setState(
@@ -23,7 +24,7 @@ export default class SelectExistingClient extends React.Component {
 
 	render() {
 		let value = (
-			<form id='item-form' onSubmit={e => { e.preventDefault();}}>
+			<form id='item-form' onSubmit={e => { e.preventDefault(); }}>
 				<div className='login'>
 					<FormControl>
 						<Autocomplete
@@ -34,7 +35,7 @@ export default class SelectExistingClient extends React.Component {
 							getOptionSelected={(customer, value) => customer._id === value._id}
 							style={{ width: 300 }}
 							renderInput={(params) => <TextField {...params} label="Client" variant="standard" />}
-							/>
+						/>
 					</FormControl>
 				</div>
 			</form>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Project from './project';
-import ProjectsCreate from './projects-create';
-import ProjectList from './project-list';
+import Project from './Project';
+import ProjectsCreate from './ProjectsCreate';
+import ProjectList from './ProjectList';
 import Axios from 'axios';
 import { Divider } from '@material-ui/core';
 import _ from 'lodash';
@@ -53,7 +53,7 @@ export default class ProjectsPage extends Component {
 	}
 
 	async getProjects() {
-		let projects = await Axios.get('/admin/api/projects');
+		let projects = await Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/projects`);
 		this.setState({
 			data: projects.data,
 		});

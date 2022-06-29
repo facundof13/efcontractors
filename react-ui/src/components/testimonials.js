@@ -30,7 +30,7 @@ export default class Testimonials extends React.Component {
 	}
 	//get all testimonials
 	componentDidMount() {
-		Axios.get('/api/testimonials').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/api/testimonials`).then((res) => {
 			var arr = [];
 			res.data.map((testimonial, i) => {
 				arr.push(

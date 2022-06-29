@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button } from '@material-ui/core';
 import Axios from 'axios';
-import { AddInvoiceService } from './add-invoice-service';
+import { AddInvoiceService } from './AddInvoiceService';
 export default class InvoiceSettings extends React.Component {
 	constructor(props) {
 		super(props);
@@ -19,7 +19,7 @@ export default class InvoiceSettings extends React.Component {
 	}
 
 	componentDidMount() {
-		Axios.get('/admin/api/invoicesettings').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/invoicesettings`).then((res) => {
 			this.setState({
 				company: res.data.company,
 				address: res.data.address,

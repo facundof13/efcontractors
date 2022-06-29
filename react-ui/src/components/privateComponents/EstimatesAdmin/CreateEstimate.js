@@ -9,8 +9,8 @@ import {
 	TableRow,
 } from '@material-ui/core';
 import Axios from 'axios';
-import ItemField from './estimates-items-field';
-import SelectExistingClient from './select-existing-client';
+import ItemField from './EstimatesItemsField';
+import SelectExistingClient from './SelectExistingClient';
 
 var currencyFormatter = new Intl.NumberFormat('en-US', {
 	style: 'currency',
@@ -80,7 +80,7 @@ export default class CreateEstimate extends React.Component {
 
 		this.getCustomers();
 
-		Axios.get('/admin/api/estimateNum').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/estimateNum`).then((res) => {
 			this.setState({ estimateNum: res.data });
 		});
 	}
@@ -93,7 +93,7 @@ export default class CreateEstimate extends React.Component {
 
 	getServices() {
 		return new Promise((resolve, reject) => {
-			Axios.get('/admin/api/invoiceServices').then((res) => {
+			Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/invoiceServices`).then((res) => {
 				this.setState({ services: res.data });
 				resolve();
 			});
@@ -102,7 +102,7 @@ export default class CreateEstimate extends React.Component {
 
 	getCustomers() {
 		// get available customers
-		Axios.get('/admin/api/invoiceCustomers').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/invoiceCustomers`).then((res) => {
 			this.setState({ customers: res.data });
 		});
 	}

@@ -18,7 +18,7 @@ export default class CompanyInformation extends React.Component {
 	}
 
 	componentDidMount() {
-		Axios.get('/admin/api/settings').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/settings`).then((res) => {
 			this.setState({
 				telephone: res.data.telephone,
 				email: res.data.email,

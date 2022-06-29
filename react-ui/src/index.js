@@ -6,14 +6,14 @@ import HttpsRedirect from 'react-https-redirect';
 import { BrowserRouter } from 'react-router-dom'; //don't need to specify localhost url in axios http address
 import {
 	MuiThemeProvider,
-	createMuiTheme,
+	createTheme,
 	responsiveFontSizes
 } from '@material-ui/core/styles';
 
 //style
 import './index.css';
 
-let theme = createMuiTheme({
+let theme = createTheme({
 	palette: {
 		primary: {
 			main: '#212121',

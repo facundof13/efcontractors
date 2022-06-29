@@ -38,11 +38,10 @@ class LoginForm extends Component {
 	handleSubmit(event) {
 		event.preventDefault();
 
-		axios
-			.post('/api/login', {
-				username: this.state.username,
-				password: this.state.password
-			})
+		axios('admin/api/login', {
+			username: this.state.username,
+			password: this.state.password
+		})
 			.then((response) => {
 				if (response.status === 200) {
 					// update App.js state

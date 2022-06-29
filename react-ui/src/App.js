@@ -1,141 +1,120 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Favicon from 'react-favicon';
 import axios from 'axios';
-// components
-import LoginForm from './components/login-form';
+import LoginForm from './components/LoginForm';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Admin from './components/privateComponents/admin';
-import Logout from './components/logout';
-import ProjectsPage from './components/privateComponents/projects-admin/projects-page';
+import Admin from './components/PrivateComponents/Admin';
+import Logout from './components/Logout';
+import Estimates from './components/PrivateComponents/EstimatesAdmin/Estimates';
+import NotFound from './components/NotFound';
+import AboutUs from './components/AboutUs';
+import Testimonials from './components/Testimonials';
+import ExpandedProject from './components/ExpandedProject';
+import Services from './components/Services';
+import ProjectsPage from './components/PrivateComponents/ProjectsAdmin/ProjectsPage';
 import ViewProjects from './components/ViewProjects';
-import Footer from './components/footer';
-import NotFound from './components/not-found';
-import PrivateRoute from './components/privateComponents/private-route';
-import Estimates from './components/privateComponents/estimates-admin/estimates';
-import Testimonials from './components/testimonials';
-import AboutUs from './components/about-us';
-import Services from './components/services';
-import ManageTestimonials from './components/privateComponents/manage-testimonials';
-import Settings from './components/privateComponents/settings/settings';
-import ExpandedProject from './components/expanded-project';
+import PrivateRoute from './components/PrivateComponents/PrivateRoute';
+import Settings from './components/PrivateComponents/Settings/Settings';
+import Footer from './components/Footer';
+import ManageTestimonials from './components/PrivateComponents/ManageTestimonials';
 
-class App extends Component {
-	constructor() {
-		super();
-		this.getUser();
-		this.state = {
-			// Disable these for testing
-			loggedIn: false,
-			finished: false
+export default function App() {
+	const [user, setUser] = useState(null);
+	const [loggedIn, setLoggedIn] = useState(false);
+	const [finished, setFinished] = useState(false);
 
-			//Enable these when testing
-			// loggedIn: true,
-			// finished: true,
-		};
+	useEffect(() => {
+		try {
+			getUser();
+		} catch { }
+	}, []);
 
-		this.getUser = this.getUser.bind(this);
-		this.componentDidMount = this.componentDidMount.bind(this);
-		this.updateUser = this.updateUser.bind(this);
-		this.render = this.render.bind(this);
+	const updateUser = (data) => {
+		setLoggedIn(data.loggedIn);
+		setUser(data.user);
 	}
 
-	componentDidMount() {
-		this.getUser();
-	}
+	const getUser = async () => {
+		try {
+			const response = await axios.get(`${process.env.REACT_APP_ENDPOINT}/api/user`);
 
-	updateUser(userObject) {
-		this.setState(userObject);
-	}
-
-	getUser() {
-		// Disable here for testing
-		axios.get('/api/user').then((response) => {
-			if (response.data) {
-				this.setState({
-					loggedIn: true,
-					finished: true
-				});
-			} else {
-				this.setState({ loggedIn: false, finished: true });
+			if (response?.data) {
+				setLoggedIn(true);
 			}
-		});
+		} catch (err) {
+			console.error('Error Logging In');
+		} finally {
+			setFinished(true);
+		}
 	}
 
-	render() {
-		return this.state.finished ? (
-			<div className='App'>
-				<Favicon url='https://efcontractors.s3.us-east-2.amazonaws.com/favicon.ico' />
-				<div>
-					<Navbar updateUser={this.updateUser} loggedIn={this.state.loggedIn} />
-					{/* Routes to different components */}
 
-					<Switch>
-						<Route exact path='/' component={Home} />
-						<Route
-							exact
-							path='/projects'
-							render={(props) => <ViewProjects {...props} />}
-						/>
-						<Route
-							exact
-							path='/projects/:userId'
-							// component={ExpandedProject}
-							render={(props) => <ExpandedProject {...props} />}
-						/>
-						<Route path='/testimonials' render={() => <Testimonials />} />
-						<Route path='/about' render={() => <AboutUs />} />
-						<Route path='/services' render={() => <Services />} />
-						<Route
-							path='/login'
-							render={() => <LoginForm updateUser={this.updateUser} />}
-						/>
-						<Route
-							path='/logout'
-							render={() => (
-								<Logout
-									updateUser={this.updateUser}
-									loggedIn={this.state.loggedIn}
-								/>
-							)}
-						/>
-						<PrivateRoute
-							exact
-							path='/admin/estimates'
-							isAuthenticated={this.state.loggedIn}
-							component={Estimates}
-						/>
-						<PrivateRoute
-							exact
-							path='/admin/projects'
-							isAuthenticated={this.state.loggedIn}
-							component={ProjectsPage}
-						/>
-						<PrivateRoute
-							path='/admin/testimonials'
-							component={ManageTestimonials}
-							isAuthenticated={this.state.loggedIn}
-						/>
-						<PrivateRoute
-							path='/admin/settings'
-							component={Settings}
-							isAuthenticated={this.state.loggedIn}
-						/>
-						<PrivateRoute
-							path='/admin'
-							component={Admin}
-							isAuthenticated={this.state.loggedIn}
-						/>
-						<Route component={NotFound} />
-					</Switch>
-				</div>
-				<Footer />
+	return finished && (
+		<div className='App'>
+			<Favicon url='https://efcontractors.s3.us-east-2.amazonaws.com/favicon.ico' />
+			<div>
+				<Navbar updateUser={updateUser} loggedIn={loggedIn} />
+				<Switch>
+					<Route exact path='/' component={Home} />
+					<Route
+						exact
+						path='/projects'
+						render={(props) => <ViewProjects {...props} />}
+					/>
+					<Route
+						exact
+						path='/projects/:userId'
+						render={(props) => <ExpandedProject {...props} />}
+					/>
+					<Route path='/testimonials' render={() => <Testimonials />} />
+					<Route path='/about' render={() => <AboutUs />} />
+					<Route path='/services' render={() => <Services />} />
+					<Route
+						path='/login'
+						render={() => <LoginForm updateUser={updateUser} />}
+					/>
+					<Route
+						path='/logout'
+						render={() => (
+							<Logout
+								updateUser={updateUser}
+								loggedIn={loggedIn}
+							/>
+						)}
+					/>
+					<PrivateRoute
+						exact
+						path='/admin/estimates'
+						isAuthenticated={loggedIn}
+						component={Estimates}
+					/>
+					<PrivateRoute
+						exact
+						path='/admin/projects'
+						isAuthenticated={loggedIn}
+						component={ProjectsPage}
+					/>
+					<PrivateRoute
+						path='/admin/testimonials'
+						component={ManageTestimonials}
+						isAuthenticated={loggedIn}
+					/>
+					<PrivateRoute
+						path='/admin/settings'
+						component={Settings}
+						isAuthenticated={loggedIn}
+					/>
+					<PrivateRoute
+						path='/admin'
+						component={Admin}
+						isAuthenticated={loggedIn}
+					/>
+					<Route component={NotFound} />
+				</Switch>
 			</div>
-		) : (
-			''
-		);
-	}
+			<Footer />
+		</div>
+	);
 }
-
-export default App;

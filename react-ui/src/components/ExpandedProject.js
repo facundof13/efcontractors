@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, IconButton, Button, ButtonBase } from '@material-ui/core';
-import ImageGallery from './react-image-gallery/ImageGallery';
+import ImageGallery from './ImageGallery/ImageGallery';
 const videoTypes = ['.mp4', '.mov'];
 
 export default class ExpandedProject extends React.Component {
@@ -109,7 +109,7 @@ export default class ExpandedProject extends React.Component {
 						{this.state.project.name + ' - ' + this.state.project.location}
 					</h4>
 				</Typography>
-				<ImageGallery items={this.state.project.images} showPlayButton={false} showFullscreenButton={false}/>
+				<ImageGallery items={this.state.project.images} showPlayButton={false} showFullscreenButton={false} />
 			</div>
 
 		);

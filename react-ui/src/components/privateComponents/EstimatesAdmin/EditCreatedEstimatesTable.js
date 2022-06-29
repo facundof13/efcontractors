@@ -24,8 +24,8 @@ import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import AddCircleOutlined from '@material-ui/icons/AddCircleOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
-import { subtractDates, addDates } from '../helperComponents/prettify-date';
-import PaymentSchedule from './payment-schedule';
+import PaymentSchedule from './PaymentSchedule';
+import { addDates, subtractDates } from '../HelperComponents/prettifyDate';
 
 export default class EditCreatedEstimatesTable extends React.Component {
 	constructor(props) {
@@ -135,7 +135,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 
 	getServices() {
 		return new Promise((resolve, reject) => {
-			Axios.get('/admin/api/invoiceServices').then((res) => {
+			Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/invoiceServices`).then((res) => {
 				this.setState({ services: res.data });
 				resolve();
 			});
@@ -203,9 +203,9 @@ export default class EditCreatedEstimatesTable extends React.Component {
 		this.state.items.forEach((item) => {
 			total += Number(item.amount.replace('$', ''));
 			item.amount === '$' ||
-			item.item === '' ||
-			item.quantity === '' ||
-			item.description === ''
+				item.item === '' ||
+				item.quantity === '' ||
+				item.description === ''
 				? (itemsNotEmpty = false)
 				: (itemsNotEmpty = true);
 		});
@@ -247,7 +247,7 @@ export default class EditCreatedEstimatesTable extends React.Component {
 				},
 			],
 		}));
-		setTimeout(() => {}, 200);
+		setTimeout(() => { }, 200);
 	}
 
 	deleteRow(row) {

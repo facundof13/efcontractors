@@ -1,10 +1,11 @@
 var express = require('express');
 var app = express();
 var mongoUtil = require('./mongoUtil');
+const cors = require('cors');
 
-mongoUtil.connectToServer((err, client) => {
-	if (err) console.log(err);
-	// ----- REST OF APP SETUP ------
+const start = async () => {
+	await mongoUtil.connectToServer();
+
 	var createError = require('http-errors');
 	// var path = require('path');
 	var cookieParser = require('cookie-parser');
@@ -15,13 +16,13 @@ mongoUtil.connectToServer((err, client) => {
 	const bodyParser = require('body-parser');
 	var path = require('path');
 
+	app.use(cors());
 	app.use(
 		bodyParser.urlencoded({
 			extended: false
 		})
 	);
 	// app.use(logger('dev'));
-	console.clear();
 	app.use(express.json());
 	app.use(
 		express.urlencoded({
@@ -41,15 +42,14 @@ mongoUtil.connectToServer((err, client) => {
 
 	app.use(passport.initialize());
 	app.use(passport.session());
-	passport.serializeUser(function(user, done) {
+	passport.serializeUser(function (user, done) {
 		done(null, user._id);
 	});
-	passport.deserializeUser(function(id, done) {
-		users.getUserById(id, function(err, user) {
+	passport.deserializeUser(function (id, done) {
+		users.getUserById(id, function (err, user) {
 			done(err, user);
 		});
 	});
-	// app.use(express.static(path.join(__dirname, 'public')));
 
 	var uploadRouter = require('./routes/uploadRouter');
 	var indexRouter = require('./routes/index');
@@ -58,8 +58,8 @@ mongoUtil.connectToServer((err, client) => {
 	app.use('/admin', adminRouter);
 	app.use('/upload', uploadRouter);
 
-	app.get('/*', function(req, res) {
-		res.sendFile(path.join(__dirname, 'react-ui/build/index.html'), function(
+	app.get('/*', function (req, res) {
+		res.sendFile(path.join(__dirname, 'react-ui/build/index.html'), function (
 			err
 		) {
 			if (err) {
@@ -69,15 +69,15 @@ mongoUtil.connectToServer((err, client) => {
 	});
 	var localStrategy = require('passport-local').Strategy;
 	passport.use(
-		new localStrategy(function(username, password, done) {
-			users.getUserByUsername(username, function(err, user) {
+		new localStrategy(function (username, password, done) {
+			users.getUserByUsername(username, function (err, user) {
 				if (err) throw err;
 				if (!user) {
 					return done(null, false, {
 						message: 'Unknown User'
 					});
 				}
-				users.comparePassword(password, user.password, function(err, isMatch) {
+				users.comparePassword(password, user.password, function (err, isMatch) {
 					if (err) throw err;
 					if (isMatch) {
 						return done(null, user);
@@ -97,7 +97,7 @@ mongoUtil.connectToServer((err, client) => {
 	// });
 
 	// error handler
-	app.use(function(err, req, res, next) {
+	app.use(function (err, req, res, next) {
 		// set locals, only providing error in development
 		res.locals.message = err.message;
 		res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -108,6 +108,11 @@ mongoUtil.connectToServer((err, client) => {
 	});
 
 	// ----- FINISH REST OF APP SETUP ------
-});
+	// });
 
-module.exports = app;
+	app.listen(process.env.PORT || '5001', () => {
+		console.log('listening');
+	});
+}
+
+start();

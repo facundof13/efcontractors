@@ -1,6 +1,6 @@
 var mongoUtil = require('../mongoUtil');
 var db = mongoUtil.getDb();
-const invoices = db.collection('invoices');
+const invoices = db?.collection('invoices');
 var ObjectId = require('mongodb').ObjectID;
 require('dotenv').config();
 

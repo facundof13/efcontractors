@@ -97,7 +97,7 @@ export default class MonthlyIncome extends React.Component {
 	}
 
 	getDates() {
-		Axios.get('/admin/api/months').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/months`).then((res) => {
 			this.setState({
 				months: res.data
 			});

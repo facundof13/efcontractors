@@ -1411,16 +1411,16 @@ export default class ImageGallery extends React.Component {
                                     </React.Fragment>
                                 )
                             }
-                            <Swipeable
+                            {/* <Swipeable
                                 className="image-gallery-swipe"
                                 delta={0}
                                 onSwiping={this.handleSwiping}
                                 onSwiped={this.handleOnSwiped}
-                            >
+                            > */}
                                 <div className="image-gallery-slides">
                                     {slides}
                                 </div>
-                            </Swipeable>
+                            {/* </Swipeable> */}
                         </React.Fragment>
                     ) : (
                             <div className="image-gallery-slides">

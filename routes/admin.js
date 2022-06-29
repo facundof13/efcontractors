@@ -5,7 +5,6 @@ var testimonials = require('../models/testimonials.js');
 var projects = require('../models/projects');
 var invoices = require('../models/invoices');
 var settings = require('../models/settings');
-const titleize = require('titleize');
 const moment = require('moment');
 const pdfgenerator = require('../models/pdfgenerator');
 
@@ -178,7 +177,7 @@ router.post('/api/invoiceupdate', function (req, res, next) {
 
 	let query = {
 		expiration: req.body.expiration,
-		title: titleize(req.body.title),
+		title: _.startCase(req.body.title),
 		items: req.body.items,
 		date: req.body.date,
 		total: total,
@@ -208,7 +207,7 @@ router.post('/api/invoice', function (req, res, next) {
 		items: req.body.items,
 		total: total,
 		expiration: req.body.expiration,
-		title: titleize(req.body.title),
+		title: _.startCase(req.body.title),
 		date: req.body.dateSubmitted,
 		invoice: req.body.invoice,
 		paid: req.body.paid,
@@ -221,9 +220,9 @@ router.post('/api/invoice', function (req, res, next) {
 	};
 
 	let query = {
-		name: titleize(req.body.name),
-		address: titleize(req.body.address),
-		cityState: titleize(req.body.cityState),
+		name: _.startCase(req.body.name),
+		address: _.startCase(req.body.address),
+		cityState: _.startCase(req.body.cityState),
 		zip: req.body.zip,
 		email: req.body.email,
 		date: req.body.dateSubmitted,
@@ -320,9 +319,9 @@ router.post('/api/estimatesinmonth', function (req, res, next) {
 				if (req.body.month) {
 					if (
 						new Date(estimate.paidDate).getMonth() + 1 ===
-							new Date(req.body.month).getMonth() + 1 &&
+						new Date(req.body.month).getMonth() + 1 &&
 						new Date(estimate.paidDate).getFullYear() ===
-							new Date(req.body.month).getFullYear()
+						new Date(req.body.month).getFullYear()
 					) {
 						estimates.push(estimate);
 					}

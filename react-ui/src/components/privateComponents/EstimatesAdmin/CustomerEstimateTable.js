@@ -17,9 +17,9 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import ReceiptOutlined from '@material-ui/icons/ReceiptOutlined';
 import PaymentOutlined from '@material-ui/icons/PaymentOutlined';
 import orderBy from 'lodash/orderBy';
-import prettifyDate from '../helperComponents/prettify-date';
-import EditCreatedEstimatesTable from './edit-created-estimates-table';
+import EditCreatedEstimatesTable from './EditCreatedEstimatesTable';
 import Axios from 'axios';
+import prettifyDate from '../HelperComponents/prettifyDate';
 const invertDirection = {
 	asc: 'desc',
 	desc: 'asc',
@@ -58,7 +58,7 @@ export default class CustomerEstimateTable extends React.Component {
 	}
 
 	componentDidMount() {
-		Axios.get('/admin/api/imgurl').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/imgurl`).then((res) => {
 			this.setState({
 				imgUrl: res.data[0].img,
 			});
@@ -201,12 +201,12 @@ export default class CustomerEstimateTable extends React.Component {
 											{row.paid
 												? 'Receipt'
 												: !row.invoice
-												? row.attachContract
-													? 'Estimate w/ Contract'
-													: 'Estimate'
-												: row.attachContract
-												? 'Invoice w/ Contract'
-												: 'Invoice'}
+													? row.attachContract
+														? 'Estimate w/ Contract'
+														: 'Estimate'
+													: row.attachContract
+														? 'Invoice w/ Contract'
+														: 'Invoice'}
 										</TableCell>
 										<TableCell align='right'>
 											{row.invoice ? (row.paid ? 'Yes' : 'No') : 'N/A'}

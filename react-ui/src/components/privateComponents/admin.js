@@ -1,5 +1,5 @@
 import React from 'react';
-import MonthlyIncome from './monthly-income';
+import MonthlyIncome from './MonthlyIncome';
 
 export default class Admin extends React.Component {
 	constructor(props) {

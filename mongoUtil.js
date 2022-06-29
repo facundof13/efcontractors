@@ -5,21 +5,21 @@ const uri = process.env.MONGO_USER;
 var _db;
 
 module.exports = {
-	connectToServer: function(callback) {
-		MongoClient.connect(
-			uri,
-			{
-				useNewUrlParser: true
-			},
-			function(err, client) {
-				if (err) console.log(err);
-				_db = client.db('EFContractors');
-				return callback(err);
-			}
-		);
+	connectToServer: async function () {
+		const client = await MongoClient.connect(uri, { useNewUrlParser: true });
+		_db = client.db('EFContractors');
+		console.log('we have a connection');
+
+		// .then(client => {
+		// console.log(client);
+		// });
+		// function(err, client) {
+		// 	if (err) console.log(err);
+		// 	return callback(err);
+		// }
 	},
 
-	getDb: function() {
+	getDb: function () {
 		return _db;
 	}
 };

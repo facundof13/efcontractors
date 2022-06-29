@@ -9,10 +9,10 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		Axios.get('/admin/api/imgurl').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/admin/api/imgurl`).then((res) => {
 			this.setState({ logoUrl: res.data[0].img });
 		});
-		Axios.get('/api/testimonials').then((res) => {
+		Axios.get(`${process.env.REACT_APP_ENDPOINT}/api/testimonials`).then((res) => {
 			this.setState({
 				testimonial: res.data[Math.floor(Math.random() * res.data.length)]
 			});

@@ -2,8 +2,8 @@ import React from 'react';
 import { Tabs, Tab, AppBar } from '@material-ui/core';
 
 //components
-import EstimatesTable from './estimates-table';
-import CreateEstimate from './create-estimates';
+import EstimatesTable from './EstimatesTable';
+import CreateEstimate from './CreateEstimate';
 
 export default class Estimates extends React.Component {
 	constructor() {
