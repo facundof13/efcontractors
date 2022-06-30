@@ -30,44 +30,46 @@ function addInvoiceService(service) {
 }
 
 function sendEmail(query) {
-	const email = require('emailjs');
-	var server = email.server.connect(
-		{
-			user: process.env.EMAIL,
-			password: process.env.EMAIL_PASSWORD,
-			host: process.env.EMAIL_HOST,
-			port: process.env.EMAIL_PORT,
-			ssl: true
-		},
-		(err, msg) => {
-			console.log(msg || err);
-		}
-	);
+	try {
+		const nodemailer = require('nodemailer');
+
+		var transporter = nodemailer.createTransport({
+			host: 'smtp.office365.com', // Office 365 server
+			port: 587,     // secure SMTP
+			secure: false, // false for TLS - as a boolean not string - but the default is false so just remove this completely
+			auth: {
+				user: process.env.EMAIL,
+				pass: process.env.EMAIL_PASSWORD
+			},
+			tls: {
+				ciphers: 'SSLv3'
+			}
+		});
+	} catch (err) {
+		console.error(err);
+	}
 	let emails = [query.client.email, ...query.emails];
-	// console.log('Emails to send to: ' + emails);
 	emails.forEach((currentEmail) => {
 		let estimateOrInvoiceOrReceipt = query.estimate.paid
 			? 'a receipt'
 			: query.estimate.invoice
-			? 'an invoice'
-			: 'an estimate';
-		server.send(
+				? 'an invoice'
+				: 'an estimate';
+		transporter.sendMail(
 			{
-				text: `Estimate Number: ${
-					query.estimate.estimateNum
-				}\nTotal: $${query.estimate.total.toLocaleString('en-US', {
-					type: 'currency',
-					currency: 'USD'
-				})}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
+				text: `Estimate Number: ${query.estimate.estimateNum
+					}\nTotal: $${query.estimate.total.toLocaleString('en-US', {
+						type: 'currency',
+						currency: 'USD'
+					})}\n\nEFContractors LLC has prepared ${estimateOrInvoiceOrReceipt}. Your document has been attached below. \n\n\nIf you have any issues or questions please contact us directly.\n\nThank you for your business!\n\n\EFContractors LLC`,
 				from: process.env.EMAIL,
 				to: currentEmail,
 				subject: 'EF Contractors LLC',
-				attachment: [
+				attachments: [
 					{
-						name: 'Estimate.pdf',
-						type: 'application/pdf',
-						data: query.pdf.replace('data:application/pdf;base64,', ''),
-						encoded: true
+						filename: 'Estimate.pdf',
+						content: query.pdf.replace('data:application/pdf;base64,', ''),
+						encoding: 'base64',
 					}
 				]
 			},
@@ -108,7 +110,7 @@ function addEstimateToCustomer(id, query) {
 }
 
 function deleteCustomer(id) {
-	invoices.deleteOne({ _id: ObjectId(id) }, (err, results) => {});
+	invoices.deleteOne({ _id: ObjectId(id) }, (err, results) => { });
 }
 
 function updateCustomer(id, query) {
