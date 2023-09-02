@@ -56,7 +56,7 @@ function renderPdf(data, cb) {
     data.estimate.paymentSteps.forEach((i) => {
       paymentSchedule.unshift(
         `${i.stepName} ${i.stepDescription} ${currencyFormatter.format(
-          Number(i.stepAmount.replace("$", ""))
+          Number(i.stepAmount.replace(/[^0-9.-]+/g, ""))
         )}\n`
       );
     });
@@ -65,42 +65,33 @@ function renderPdf(data, cb) {
     data.estimate.items.forEach((i) => {
       let num = i.amount;
       if (i.tax) {
-        taxes += num.replace("$", "") / taxAmt;
+        taxes += num.replace(/[^0-9.-]+/g, "") / taxAmt;
       }
-      item.push({
-        table: {
-          widths: [100, 315, 20, 41],
-          fontSize: 10,
-          body: [
-            [
-              {
-                border: [true, false, true, true],
-                text: i.item,
-                alignment: "center",
-                fontSize: 12,
-              },
-              {
-                border: [true, false, true, true],
-                text: i.description,
-                alignment: "center",
-                fontSize: 12,
-              },
-              {
-                border: [true, false, true, true],
-                text: i.quantity,
-                alignment: "center",
-                fontSize: 12,
-              },
-              {
-                border: [true, false, true, true],
-                text: i.amount,
-                alignment: "center",
-                fontSize: 12,
-              },
-            ],
-          ],
+      item.push([
+        {
+          text: i.item,
+          alignment: "center",
+          fontSize: 12,
         },
-      });
+        {
+          border: [true, false, true, true],
+          text: i.description,
+          alignment: "center",
+          fontSize: 12,
+        },
+        {
+          border: [true, false, true, true],
+          text: i.quantity,
+          alignment: "center",
+          fontSize: 12,
+        },
+        {
+          border: [true, false, true, true],
+          text: i.amount,
+          alignment: "center",
+          fontSize: 12,
+        },
+      ]);
     });
 
     let grandTotal = taxes + data.estimate.total;
@@ -176,7 +167,7 @@ function renderPdf(data, cb) {
         },
         {
           table: {
-            widths: [100, 315, 20, 41],
+            widths: [100, 315, 20, "*"],
             fontSize: 10,
             headerRows: 1,
             body: [
@@ -206,12 +197,10 @@ function renderPdf(data, cb) {
                   bold: true,
                 },
               ],
-              // [["test"]]
-              // [[items], [descriptions], [quantities], [amounts]]
+              ...item,
             ],
           },
         },
-        item,
         {
           columns: [
             {
