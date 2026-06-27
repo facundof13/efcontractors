@@ -1,129 +1,111 @@
 const express = require('express');
-const multerS3 = require('multer-s3');
-const multer = require('multer');
 const path = require('path');
 var projects = require('../models/projects');
-var name;
+const s3 = require('../aws');
 
 /**
- * express.Router() creates modular, mountable route handlers
- * A Router instance is a complete middleware and routing system; for this reason, it is often referred to as a “mini-app”.
+ * Direct-to-S3 uploads via presigned URLs.
+ *
+ * Large files used to be streamed browser -> dyno -> S3, which blows past
+ * Heroku's 30s request timeout (seen as a 499 on the client). Now the browser
+ * uploads straight to S3 and the server only (a) signs short-lived PUT URLs and
+ * (b) records the resulting public URLs on the project. Neither call carries the
+ * file payload, so the dyno is never the bottleneck.
  */
 const router = express.Router();
-/**
- * PROFILE IMAGE STORING STARTS
- */
-const baseurl = 'https://efcontractors.s3.us-east-2.amazonaws.com/';
-const s3 = require('../aws');
-var fileUrls = [];
 
-/**
- * Check File Type
- * 
-@param file
- * 
-@param cb
- * 
-@return {*}
- */
-function checkFileType(file, cb) {
-	// Allowed ext
-	const filetypes = /jpeg|jpg|png|gif|m4v|mp4|mov|quicktime/;
-	// Check ext
-	const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-	// Check mime
-	const mimetype = filetypes.test(file.mimetype);
+const BUCKET = 'efcontractors';
+const BASE_URL = 'https://efcontractors.s3.us-east-2.amazonaws.com/';
+const URL_EXPIRY_SECONDS = 300; // presigned PUT URLs are valid for 5 minutes
 
-	console.log(path.extname(file.originalname));
-	console.log(file.mimetype);
-	if (mimetype && extname) {
-		return cb(null, true);
-	} else {
-		cb(
-			`Error: .jpeg, .jpg, .png, .gif, .m4v, .mp4, .mov extensions only!, Given ${path.extname(
-				file.originalname
-			)} and ${file.mimetype}`
-		);
-	}
+// Same allow-list the old multer fileFilter used.
+const allowedTypes = /jpeg|jpg|png|gif|m4v|mp4|mov|quicktime/;
+
+function sanitizeName(filename) {
+	return path
+		.basename(filename)
+		.toLowerCase()
+		.replace(/\s/g, '');
 }
-/*
- * MULTIPLE FILE UPLOADS
+
+function isAllowed(filename, contentType) {
+	const extOk = allowedTypes.test(path.extname(filename).toLowerCase());
+	const mimeOk = allowedTypes.test((contentType || '').toLowerCase());
+	return extOk && mimeOk;
+}
+
+/**
+ * Step 1: hand the browser a presigned PUT URL per file so it can upload
+ * directly to S3. Body: { projectName, files: [{ filename, contentType }] }
  */
-// Multiple File Uploads ( max 4 )
-const uploadsBusinessGallery = multer({
-	storage: multerS3({
-		s3: s3,
-		bucket: 'efcontractors',
-		acl: 'public-read',
-		key: function (req, file, cb) {
-			name = req.query.projectName;
-			var partPath =
-				path.basename(file.originalname, path.extname(file.originalname)) +
-				path.extname(file.originalname);
-			var fullpath = req.query.projectName + '/' + partPath;
-			fileUrls.push(`${baseurl}${fullpath}`);
-			cb(null, fullpath);
-		},
-	}),
-	limits: { fileSize: 524288000 },
-	fileFilter: function (req, file, cb) {
-		checkFileType(file, cb);
-	},
-}).array('galleryImage', 30);
+router.post('/presign', async (req, res) => {
+	try {
+		const projectName = req.body.projectName || req.query.projectName;
+		const files = req.body.files;
 
-router.post('/multiple-file-upload', (req, res) => {
-	uploadsBusinessGallery(req, res, (error) => {
-		if (error) {
-			console.log(error);
-			res.json({ error: error });
-		} else {
-			// If File not found
-			if (req.files === undefined) {
-				res.json('Error: No File Selected');
-			} else {
-				// If Success
-				//add each file to project user's db
-				let videos = fileUrls.filter((item) => {
-					return item.includes('.mov') || item.includes('.mp4');
-				});
+		if (!projectName || !Array.isArray(files) || files.length === 0) {
+			return res
+				.status(400)
+				.json({ error: 'projectName and a non-empty files[] are required' });
+		}
+		// up to 30 media files + up to 30 generated video thumbnails
+		if (files.length > 60) {
+			return res.status(400).json({ error: 'Too many files in one batch' });
+		}
 
-				fileUrls = fileUrls.filter((item) => {
-					return (
-						!item.includes('.mov') &&
-						!item.includes('.mp4') &&
-						!item.includes('thumb')
-					);
-				});
-
-				fileUrls.forEach((url) => {
-					//these are just the pictures
-					projects.updateImagesSrc(name, url);
-				});
-
-				videos.forEach((url) => {
-					//these are videos urls w/o thumbnails
-					projects.updateImagesSrc(
-						name,
-						url,
-						url.slice(0, -4) + 'thumb' + '.jpg'
-					);
-				});
-				fileUrls = [];
-				let fileArray = req.files,
-					fileLocation;
-				const galleryImgLocationArray = [];
-				for (let i = 0; i < fileArray.length; i++) {
-					fileLocation = fileArray[i].location;
-					galleryImgLocationArray.push(fileLocation);
+		const signed = await Promise.all(
+			files.map(async (f) => {
+				const filename = sanitizeName(f.filename);
+				if (!isAllowed(filename, f.contentType)) {
+					throw new Error(`Invalid file type: ${f.filename}`);
 				}
-				// Save the file name into database
-				res.json({
-					filesArray: fileArray,
-					locationArray: galleryImgLocationArray,
+				const key = `${projectName}/${filename}`;
+				const uploadUrl = await s3.getSignedUrlPromise('putObject', {
+					Bucket: BUCKET,
+					Key: key,
+					ContentType: f.contentType,
+					ACL: 'public-read',
+					Expires: URL_EXPIRY_SECONDS,
 				});
-			}
+				return {
+					filename,
+					key,
+					uploadUrl,
+					publicUrl: `${BASE_URL}${key}`,
+					contentType: f.contentType,
+				};
+			})
+		);
+
+		res.json({ files: signed });
+	} catch (err) {
+		console.log(err);
+		res.status(400).json({ error: err.message });
+	}
+});
+
+/**
+ * Step 2: once the browser has finished uploading straight to S3, it reports
+ * the final public URLs and we record them on the project.
+ * Body: { projectName, images: [{ url, thumbUrl? }] }
+ */
+router.post('/confirm', (req, res) => {
+	const projectName = req.body.projectName || req.query.projectName;
+	const images = req.body.images;
+
+	if (!projectName || !Array.isArray(images)) {
+		return res
+			.status(400)
+			.json({ error: 'projectName and images[] are required' });
+	}
+
+	images.forEach((img) => {
+		if (img && img.url) {
+			projects.updateImagesSrc(projectName, img.url, img.thumbUrl);
 		}
 	});
+
+	res.json({ ok: true, count: images.length });
 });
-// We export the router so that the server.js file can pick it up
+
 module.exports = router;

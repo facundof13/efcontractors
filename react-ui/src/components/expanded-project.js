@@ -38,17 +38,13 @@ export default class ExpandedProject extends React.Component {
 			});
 
 			cp.images = cp.images.map(i => {
-				let obj = {};
-				if (i.thumbUrl) {
-					obj.original = i.url;
-					obj.thumbnail = i.thumbUrl;
-					obj.isVideo = true;
-				} else {
-					obj.original = i.url;
-					obj.thumbnail = i.url;
-					obj.isVideo = false;
-				}
-				return obj;
+				// Detect videos by extension, not by the presence of a thumbnail:
+				// images now have thumbnails too, so thumbUrl is no longer a video flag.
+				return {
+					original: i.url,
+					thumbnail: i.thumbUrl || i.url,
+					isVideo: videoTypes.includes(i.url.slice(-4).toLowerCase()),
+				};
 			})
 			this.setState({
 				project: cp,

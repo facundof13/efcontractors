@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Card, CardHeader, CardMedia, CardActionArea } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-const videoTypes = ['.mp4', '.mov'];
 
 export default class Viewprojects extends React.Component {
 	constructor(props) {
@@ -17,22 +16,7 @@ export default class Viewprojects extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getAllProjects().then(() => {
-			var newProjects = [...this.state.projects];
-			this.state.projects.forEach((project, i) => {
-				if (videoTypes.includes(project.images[0])) {
-					var firstThumbIndex = project.images.findIndex((elem) => {
-						return elem.includes('thumb');
-					});
-					var firstThumb = project.images.find((elem) => {
-						return elem.includes('thumb');
-					});
-					newProjects[i].images.splice(firstThumbIndex, 1);
-					newProjects[i].images.unshift(firstThumb);
-				}
-			});
-			this.setState({ projects: [...newProjects] });
-		});
+		this.getAllProjects();
 	}
 
 	getAllProjects() {
@@ -72,10 +56,14 @@ export default class Viewprojects extends React.Component {
 											<CardActionArea>
 												<div>
 													<CardMedia
-														style={{ height: '200px' }}
+														component='img'
+														loading='lazy'
+														decoding='async'
+														style={{ height: '200px', objectFit: 'cover' }}
 														image={
 															project.images[0].thumbUrl || project.images[0].url
 														}
+														alt={project.name}
 													/>
 												</div>
 												<CardHeader
