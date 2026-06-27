@@ -61,3 +61,6 @@ typings/
 .next
 .DS_Store
 /.DS_Store
+
+# Local DB snapshots (may contain data; keep out of git)
+backups/

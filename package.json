@@ -2,13 +2,13 @@
 	"name": "efcontractors",
 	"version": "0.0.0",
 	"private": true,
-  "engines": {
-    "node": "16.x"
-  },
+	"engines": {
+		"node": "16.x"
+	},
 	"scripts": {
 		"start": "node ./bin/www",
-		"server": "nodemon app.js",
-		"client": "npm start --prefix client",
+		"server": "nodemon ./bin/www",
+		"client": "npm start --prefix react-ui",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"heroku-postbuild": "cd react-ui && npm install && npm run build"
 	},
@@ -44,10 +44,13 @@
 		"prop-types": "^15.7.2",
 		"react-lazyload": "^2.6.7",
 		"react-player": "^2.7.0",
-		"react-private-route": "^1.1.2",
 		"react-responsive-carousel": "^3.1.50",
 		"react-swipeable": "^5.4.0",
 		"titleize": "^2.1.0",
 		"url": "^0.11.0"
+	},
+	"devDependencies": {
+		"concurrently": "^8.2.2",
+		"jimp": "^0.22.12"
 	}
 }
